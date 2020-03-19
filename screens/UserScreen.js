@@ -53,7 +53,7 @@ export default function UserScreen() {
                                         <Picker.Item label={item} value={item} />
                                     )
                             :
-                                <Text>A7tm 7alk</Text>
+                                <Picker.Item label={"A7tm 7alk"} value={"A7tm 7alk"} />
                             }
                     </Picker>
                 </View>
