@@ -19,16 +19,16 @@ const DELAY = 10;
 
  // an array to be filled from db
  // - change to suit your own db schema and simulation needs
-const parking = [];
+const parkings = [];
 
 const init = async () => {
 
     // do once only, not a listener
     const querySnapshot = await db.collection("parking").get()
     querySnapshot.forEach(doc => {
-        parking.push({ id: doc.id, ...doc.data() });
+        parkings.push({ id: doc.id, ...doc.data() });
     });
-    console.log("done init: ", parking);
+    console.log("done init: ", parkings);
 
 };
 
@@ -41,7 +41,7 @@ const simulate = async () => {
     setInterval(async () => {
         
         // select a random item
-        const i = Math.floor(Math.random() * parking.length)
+        const i = Math.floor(Math.random() * parkings.length)
 
         // change it somehow
         // - must modify local copy of db data
@@ -58,13 +58,13 @@ const simulate = async () => {
         } else {
             choice = "OnHold"
         }
-        parking[i].text += choice
+        parkings[i].status += choice
         
         // update the db
-        const { id, ...message } = parking[i]
-        await db.collection("parking").doc(id).set(message);
+        const { id, ...parking } = parkings[i]
+        await db.collection("parking").doc(id).set(parking);
     
-        console.log('simulated with item[', i, ']: ', message.text)
+        console.log('simulated with item[', i, ']: ', parking.status)
     }, DELAY * 1000)
 
 }
