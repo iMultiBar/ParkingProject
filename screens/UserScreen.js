@@ -6,9 +6,9 @@ import firebase from "firebase/app";
 import "firebase/auth";
 
 export default function UserScreen() {
-    const [user , setUser] = useState(null)
-    const [serviceList , setServiceList] = useState([])
-    const [service , setService] = useState(null)
+    const [user , setUser] = useState(false)
+    const [serviceList , setServiceList] = useState(false)
+    const [service , setService] = useState(false)
     const [reservation, setReservation] = useState(false)
     const [subscription, setSubscription] = useState(false)
 
@@ -42,7 +42,7 @@ export default function UserScreen() {
                 <View>
                     <Text>Request Service</Text>
                     <Picker
-                        selectedValue={}
+                        selectedValue={""}
                         style={{height: 50, width: 100}}
                         onValueChange={(itemValue, itemIndex) =>
                             setService(itemValue)
@@ -53,7 +53,7 @@ export default function UserScreen() {
                                         <Picker.Item label={item} value={item} />
                                     )
                             :
-                                null
+                                <Text>A7tm 7alk</Text>
                             }
                     </Picker>
                 </View>
