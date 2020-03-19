@@ -36,29 +36,30 @@ export default function App(props) {
 
   const [email, setEmail] = useState("");  
   const [password, setPassword] = useState("");
-  const [number, setNumber] = useState("");
-  const [role, setRole] = useState("");
+  const [phone, setPhone] = useState("");
   const [department, setDepartment] = useState("");
+  const [displayName, setDisplayName] = useState("");
+
 
   useEffect(() => {
     return firebase.auth().onAuthStateChanged(setUser);
   }, []);
 
   const handleRegister = async () => {
-    // await firebase.auth().createUserWithEmailAndPassword(email, password);
+    await firebase.auth().createUserWithEmailAndPassword(email, password);
 
-    // const response = await fetch(
-    //   `https://us-central1-parkingcp3445.cloudfunctions.net/initUser?uid=${
-    //   firebase.auth().currentUser.uid
-    //   }`
-    // );
-    // updateUserLogin();
+    const response = await fetch(
+      `https://us-central1-parkingcp3445.cloudfunctions.net/initUser?uid=${
+      firebase.auth().currentUser.uid
+      }`
+    );
+    updateUserLogin();
     console.log("register time")
   };
 
   const handleLogin = async () => {
-    // await firebase.auth().signInWithEmailAndPassword(email, password);
-    // updateUserLogin();
+    await firebase.auth().signInWithEmailAndPassword(email, password);
+    updateUserLogin();
     console.log("yoohoo")
   };
 
@@ -76,7 +77,10 @@ export default function App(props) {
     db.collection("users")
       .doc(firebase.auth().currentUser.uid)
       .set({
-        lastLogin: new Date()
+        displayName,
+        email,
+        phone,
+        department,
       });
   };
 
@@ -116,6 +120,12 @@ export default function App(props) {
       <View style={styles.contentContainer}>
         <TextInput
           style={{ height: 40, borderColor: "gray", borderWidth: 1 }}
+          onChangeText={setDisplayName}
+          placeholder="Display Name"
+          value={displayName}
+        />
+        <TextInput
+          style={{ height: 40, borderColor: "gray", borderWidth: 1 }}
           onChangeText={setEmail}
           placeholder="Email"
           value={email}
@@ -131,10 +141,10 @@ export default function App(props) {
 
         <TextInput
           style={{ height: 40, borderColor: "gray", borderWidth: 1 }}
-          onChangeText={setNumber}
+          onChangeText={setPhone}
           placeholder="mobile number"
           secureTextEntry={true}
-          value={number}
+          value={phone}
         />
 
         <Picker
