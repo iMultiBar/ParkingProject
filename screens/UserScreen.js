@@ -2,8 +2,10 @@ import React,{ useState, useEffect} from 'react';
 import { ScrollView, StyleSheet,Text, Picker, Button,View } from 'react-native';
 import db from '../db';
 
+import firebase from "firebase/app";
+import "firebase/auth";
 
-export default function UserScreen(props) {
+export default function UserScreen() {
     const [user , setUser] = useState(null)
     const [serviceList , setServiceList] = useState([])
     const [service , setService] = useState(null)
@@ -11,7 +13,7 @@ export default function UserScreen(props) {
     const [subscription, setSubscription] = useState(false)
 
 
-    useEffect(()=>{
+    useEffect(() => {
         temp = []
         db.collection("reservation").doc(user.id).onSnapshot(snapShot => {
                 temp.push(snapShot.data())
@@ -21,87 +23,91 @@ export default function UserScreen(props) {
         setReservation(temp)
     },[])
 
-    const GetUser = () => {
-        setUser(props.user)
+    useEffect(()=>{
+        GetUser()
+        
+    },[])
+    const GetUser = async () => {
+        const User = await db.collection("users").doc(firebase.auth().currentUser.uid).get()
+        setUser(User)
     }
   return (
       user ? 
-      <View>
-            <img source={{uri:`${user.photoURL}`}}/>
-            <Text>{user.displayName}</Text>
-        <ScrollView style={styles.container}>
+        <View>
+                <img source={{uri:`${user.photoURL}`}}/>
+                <Text>{user.displayName}</Text>
+            <ScrollView style={styles.container}>
 
-            // User Service Tab
-            <View>
-                <Text>Request Service</Text>
-                <Picker
-                    selectedValue={}
-                    style={{height: 50, width: 100}}
-                    onValueChange={(itemValue, itemIndex) =>
-                        setService(itemValue)
-                    }>
-                        {
-                        serviceList ? 
-                            serviceList.map( item =>
-                                    <Picker.Item label={item} value={item} />
-                                )
-                        :
-                            null
-                        }
-                </Picker>
-            </View>
-
-
-            // User Parking Reservation List Tap
-            <View>
-                <Text>Reservation List</Text>
-                <ScrollView>
-                    { reservation ?
-                        <View>
-                            {reservation.map((item, index) => 
-                            
-                                    <Text>Parking Location: {item.parking.location} Start Time: {item.startTime} End Time: {item.endTime}</Text>
-                            
-                            )}
-                            <Button title="Reserve"/>
-                        </View>
-                        :
-                            <>
-                                <Text> Empty</Text>
-                                <Button title="Reserve"/>
-                            </>
-                    }
-                </ScrollView>
-            </View>
+                // User Service Tab
+                <View>
+                    <Text>Request Service</Text>
+                    <Picker
+                        selectedValue={}
+                        style={{height: 50, width: 100}}
+                        onValueChange={(itemValue, itemIndex) =>
+                            setService(itemValue)
+                        }>
+                            {
+                            serviceList ? 
+                                serviceList.map( item =>
+                                        <Picker.Item label={item} value={item} />
+                                    )
+                            :
+                                null
+                            }
+                    </Picker>
+                </View>
 
 
-            // Your subscription Tap
-            <View>
-                    <Text>Your subscription</Text>
-                    {
-                        subscription ?
+                // User Parking Reservation List Tap
+                <View>
+                    <Text>Reservation List</Text>
+                    <ScrollView>
+                        { reservation ?
                             <View>
-                                <Text>subscription End Date: {subscription.endDate}</Text>
-                                <Text>subscription Level: {subscription.level} </Text>
-                                <Button title="Extend"/>  
+                                {reservation.map((item, index) => 
+                                
+                                        <Text>Parking Location: {item.parking.location} Start Time: {item.startTime} End Time: {item.endTime}</Text>
+                                
+                                )}
+                                <Button title="Reserve"/>
                             </View>
-                        :
-                            <>
-                                <Text>You are not Subscriped</Text>
-                                <Button title="Subscripe" />
-                            </>
-                    }
-            </View>
+                            :
+                                <>
+                                    <Text> Empty</Text>
+                                    <Button title="Reserve"/>
+                                </>
+                        }
+                    </ScrollView>
+                </View>
 
-        </ScrollView>
-    </View>
-    
+
+                // Your subscription Tap
+                <View>
+                        <Text>Your subscription</Text>
+                        {
+                            subscription ?
+                                <View>
+                                    <Text>subscription End Date: {subscription.endDate}</Text>
+                                    <Text>subscription Level: {subscription.level} </Text>
+                                    <Button title="Extend"/>  
+                                </View>
+                            :
+                                <>
+                                    <Text>You are not Subscriped</Text>
+                                    <Button title="Subscripe" />
+                                </>
+                        }
+                </View>
+
+            </ScrollView>
+        </View> 
     :
     <Text>Loadiing...</Text>
   );
 }
 
-TestScreen.navigationOptions = {
+UserScreen.navigationOptions = {
   title: 'User Screen',
 };
 
