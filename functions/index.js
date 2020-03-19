@@ -68,5 +68,18 @@ exports.initUser = functions.https.onRequest(async (request, response) => {
     console.log("user", userRecord.toJSON());
   });
 
+
   response.send("All done ");
+});
+
+exports.requestCarClean = functions.https.onCall(async (data, context) => {
+  db.collection("requests").doc("clean").collection("cleanRequest").add({
+    parkingLocation: data.parkingLocation,
+    platNumber: data.plat,
+    date: data.dateSubmit,
+    status: false,
+    cleanerUid: null
+  })
+  // check for things not allowed
+  // only if ok then add message
 });
