@@ -1,6 +1,7 @@
-import {decode, encode} from 'base-64'
-if (!global.btoa) {global.btoa = encode}
-if (!global.atob) {global.atob = decode}
+ // bugfix for firebase 7.11.0
+ import { decode, encode } from 'base-64'
+ global.btoa = global.btoa || encode;
+ global.atob = global.atob || decode;
 import { AppLoading } from "expo";
 import { Asset } from "expo-asset";
 import * as Font from "expo-font";
@@ -11,9 +12,16 @@ import {
   StyleSheet,
   View,
   TextInput,
-  Button
+  Button,
+  Picker,r
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+
+// import {
+//   Select,
+//   Option,
+// } from 'react-native-option-select';
+ 
 
 import AppNavigator from "./navigation/AppNavigator";
 
@@ -24,27 +32,44 @@ import db from "./db";
 export default function App(props) {
   const [isLoadingComplete, setLoadingComplete] = useState(false);
   const [user, setUser] = useState(null);
-  const [email, setEmail] = useState("");
+  const [view, setView] = useState("register");
+
+  const [email, setEmail] = useState("");  
   const [password, setPassword] = useState("");
+  const [number, setNumber] = useState("");
+  const [role, setRole] = useState("");
+  const [department, setDepartment] = useState("");
 
   useEffect(() => {
     return firebase.auth().onAuthStateChanged(setUser);
   }, []);
 
   const handleRegister = async () => {
-    await firebase.auth().createUserWithEmailAndPassword(email, password);
+    // await firebase.auth().createUserWithEmailAndPassword(email, password);
 
-    const response = await fetch(
-      `https://us-central1-parkingcp3445.cloudfunctions.net/initUser?uid=${
-        firebase.auth().currentUser.uid
-      }`
-    );
-    updateUserLogin();
+    // const response = await fetch(
+    //   `https://us-central1-parkingcp3445.cloudfunctions.net/initUser?uid=${
+    //   firebase.auth().currentUser.uid
+    //   }`
+    // );
+    // updateUserLogin();
+    console.log("register time")
   };
 
   const handleLogin = async () => {
-    await firebase.auth().signInWithEmailAndPassword(email, password);
-    updateUserLogin();
+    // await firebase.auth().signInWithEmailAndPassword(email, password);
+    // updateUserLogin();
+    console.log("yoohoo")
+  };
+
+  const handleView = async () => {
+    if (view === "login") {
+      setView( "register" )
+    }
+    else {
+      console.log("sup")
+      setView("login" )
+    }
   };
 
   const updateUserLogin = () => {
@@ -63,7 +88,7 @@ export default function App(props) {
         onFinish={() => handleFinishLoading(setLoadingComplete)}
       />
     );
-  } else if (!user) {
+  } else if (!user && view === "login") {
     return (
       <View style={styles.contentContainer}>
         <TextInput
@@ -79,13 +104,62 @@ export default function App(props) {
           secureTextEntry={true}
           value={password}
         />
-        <Button title="Register" onPress={handleRegister} />
-        <Button title="Login" onPress={handleLogin} />
+    
+        <Button title="submit" onPress={handleLogin} />
+        <Button title="go to register" onPress={handleView} />
+      </View>
+    );
+  }
+
+  else if (!user && view === "register") {
+    return (
+      <View style={styles.contentContainer}>
+        <TextInput
+          style={{ height: 40, borderColor: "gray", borderWidth: 1 }}
+          onChangeText={setEmail}
+          placeholder="Email"
+          value={email}
+        />
+
+        <TextInput
+          style={{ height: 40, borderColor: "gray", borderWidth: 1 }}
+          onChangeText={setPassword}
+          placeholder="Password"
+          secureTextEntry={true}
+          value={password}
+        />
+
+        <TextInput
+          style={{ height: 40, borderColor: "gray", borderWidth: 1 }}
+          onChangeText={setNumber}
+          placeholder="mobile number"
+          secureTextEntry={true}
+          value={number}
+        />
+
+        <Picker
+          selectedValue={"Pick a Department"}
+          style={{height: 50, width: "100%"}}
+          onValueChange={(itemValue, itemIndex) =>
+            setDepartment(itemValue)
+          }>
+          <Picker.Item label="Select a Department" value="" />
+          <Picker.Item label="IT" value="IT" />
+          <Picker.Item label="business" value="business" />
+          <Picker.Item label="engineering" value="engineering" />
+          <Picker.Item label="health and science" value="health and science" />
+          <Picker.Item label="faculty" value="faculty" />
+        </Picker>
+
+
+        <Button title="submit" onPress={handleRegister} />
+        <Button title="have and account? go to login" onPress={handleView} />
       </View>
     );
   } else {
     return (
       <View style={styles.container}>
+        {console.log(user,view)}
         {Platform.OS === "ios" && <StatusBar barStyle="default" />}
         <AppNavigator />
       </View>
