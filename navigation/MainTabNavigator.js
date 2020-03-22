@@ -159,7 +159,7 @@ const tabNavigator = createBottomTabNavigator({
 
 // if(firebase.auth().currentUser === null){
 //  console.log("still did not log in")
-// }else{
+// }else{..
   
 //   let role;
 //   console.log(firebase.auth().currentUser.uid)
