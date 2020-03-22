@@ -13,7 +13,7 @@ import {
   View,
   TextInput,
   Button,
-  Picker,r
+  Picker,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 

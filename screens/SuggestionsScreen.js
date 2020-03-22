@@ -9,7 +9,9 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  View
+  View,
+  Picker,
+
 } from "react-native";
 
 import { MonoText } from "../components/StyledText";
@@ -17,51 +19,46 @@ import firebase from "firebase/app";
 import "firebase/auth";
 import db from "../db.js";
 
+import moment from 'moment';
 
-export default function NewsScreen() {
-  const [news, setNews] = useState([]);
-  // const [pDate, setPDate] = React.useState("");
-  // const [eDate, setEDate] = React.useState("");
-  // const [subjet, setSubjet] = React.useState("");
-  // const [description, setDescription] = React.useState("");
+export default function SuggestionsScreen() {
+  const [suggestions, setSuggestions] = useState([]);
 
+  const [email, setEmail] = useState("");  
+  const [description, setDescription] = useState("");
+  const [dateTime, setDateTime] = useState("");
+  const [type, setType] = useState("");
+  const [status, setStatus] = useState("");
 
-  useEffect(() => {
-    db.collection("news").onSnapshot(querySnapshot => {
-      const news = [];
-      querySnapshot.forEach(doc => {
-        news.push({ id: doc.id, ...doc.data() });
+//   useEffect(() => {
+//     db.collection("messages").onSnapshot(querySnapshot => {
+//       const messages = [];
+//       querySnapshot.forEach(doc => {
+//         messages.push({ id: doc.id, ...doc.data() });
+//       });
+//       console.log(" Current messages: ", messages);
+//       setMessages([...messages]);
+//     });
+//   }, []);
+
+  const handleSubmit = async () => {
+    const uid = firebase.auth().currentUser.uid;
+    db.collection("suggestions")
+      .doc()
+      .set({
+        uid,
+        description,
+        dateTime: moment().format('DD/MM/YYYY, h:mm:ss a'),
+        type,
+        status:'unapproved'
       });
-      console.log(" Current news: ", news);
-      setNews([...news]);
-    });
-  }, []);
+  };
 
-  // const handleSend = async () => {
-  //   const from = firebase.auth().currentUser.uid;
-  //   if (id) {
-  //     db.collection("messages")
-  //       .doc(id)
-  //       .update({ from, to, text });
-  //   } else {
-
-  //     // call serverless function instead
-  //     const sendMessage = firebase.functions().httpsCallable("sendMessage");
-  //     const response2 = await sendMessage({ from, to, text });
-  //     console.log("sendMessage response", response2);
-
-  //     // db.collection("messages").add({ from, to, text });
-  //   }
-  //   setTo("");
-  //   setText("");
-  //   setId("");
-  // };
-
-  // const handleEdit = message => {
-  //   setTo(message.to);
-  //   setText(message.text);
-  //   setId(message.id);
-  // };
+//   const handleEdit = message => {
+//     setTo(message.to);
+//     setText(message.text);
+//     setId(message.id);
+//   };
 
   const handleLogout = () => {
     firebase.auth().signOut();
@@ -69,23 +66,36 @@ export default function NewsScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={{textAlign:"center",fontSize:50, flex:1,marginTop:15}}>News Feed</Text>
-      <View style={{flex:4}}>
-      {news.map((n,i) => (
-        <View key={i} style={{borderColor:"black",borderWidth:3,borderStyle:"solid", marginBottom:20,padding:5}}>
-          <Text><Text style={{ fontWeight: 'bold' }}>Subject</Text>: {n.subject}</Text>
-          <Text><Text style={{ fontWeight: 'bold' }}>Description</Text>: {n.description}</Text>
-          <Text><Text style={{ fontWeight: 'bold' }}>Publish Date</Text>: {n.datePublished}</Text>
-          <Text><Text style={{ fontWeight: 'bold' }}>End Date</Text>: {n.endDate}</Text>
+        <Text style={{textAlign:"center",fontSize:40, flex:1,marginTop:15}}>submit your suggestion below</Text>
+        <View style={{flex:1}}>
+        <TextInput
+            style={{ height: 40, borderColor: "gray", borderWidth: 1 }}
+            onChangeText={setDescription}
+            placeholder="What is your suggestion"
+            value={description}
+        />
+        <Picker
+          selectedValue={type}
+          style={{height: 50, width: "100%"}}
+          onValueChange={(itemValue, itemIndex) =>
+            setType(itemValue)
+          }>
+          <Picker.Item label="who should see this suggestion" value="" />
+          <Picker.Item label="Cleaners" value="Cleaners" />
+          <Picker.Item label="Porters" value="Porters" />
+          <Picker.Item label="Parking Maintenance" value="Maintenance" />
+          <Picker.Item label="Managment" value="health and science" />
+          <Picker.Item label="IT Department" value="IT Department" />
+        </Picker>
+
         </View>
-      ))}
-      </View>
-      <Button title="Logout" onPress={handleLogout} /> 
+        <Button title="submit" onPress={handleSubmit} />
+        <Button title="Logout" onPress={handleLogout} />
     </View>
   );
 }
 
-NewsScreen.navigationOptions = {
+SuggestionsScreen.navigationOptions = {
   header: null
 };
 
@@ -127,9 +137,7 @@ function handleHelpPress() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
-    justifyContent:"center",
-    alignContent:"center"
+    backgroundColor: "#fff"
   },
   developmentModeText: {
     marginBottom: 20,

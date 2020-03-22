@@ -14,6 +14,7 @@ import UserScreen from '../screens/UserScreen';
 import TestScreen from '../screens/TestScreen';
 import NewsScreen from '../screens/NewsScreen';
 import SettingsScreen from '../screens/SettingsScreen';
+import SuggestionsScreen from '../screens/SuggestionsScreen';
 
 
 
@@ -62,6 +63,22 @@ LinksStack.navigationOptions = {
 
 LinksStack.path = '';
 //////////////////////////////////////////////////////////
+const SuggestionsStack = createStackNavigator(
+  {
+    Suggestions: SuggestionsScreen,
+  },
+  config
+);
+
+SuggestionsStack.navigationOptions = {
+  tabBarLabel: 'Suggestions',
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-link' : 'md-link'} />
+  ),
+};
+
+SuggestionsStack.path = '';
+////////////////////////////////////////////////////////////////
 const TestStack = createStackNavigator(
   {
     Test: TestScreen,
@@ -80,7 +97,7 @@ TestStack.path = '';
 ////////////////////////////////////////////////////////////////
 const NewsStack = createStackNavigator(
   {
-    Test: NewsScreen,
+    News: NewsScreen,
   },
   config
 );
@@ -134,7 +151,8 @@ const tabNavigator = createBottomTabNavigator({
   SettingsStack,
   UserScreenStack,
   LinksStack,
-  NewsStack
+  NewsStack,
+  SuggestionsStack
 });
 
 // work in progress...
