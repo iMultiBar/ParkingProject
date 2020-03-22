@@ -12,6 +12,7 @@ import HomeScreen from '../screens/HomeScreen';
 import LinksScreen from '../screens/LinksScreen';
 import UserScreen from '../screens/UserScreen';
 import TestScreen from '../screens/TestScreen';
+import CleanerScreen from '../screens/CleanerScreen';
 import NewsScreen from '../screens/NewsScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import SuggestionsScreen from '../screens/SuggestionsScreen';
@@ -124,6 +125,23 @@ SettingsStack.navigationOptions = {
     <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-options' : 'md-options'} />
   ),
 };
+////////////////////////////////////////////////////////////////
+const CleanerStack = createStackNavigator(
+  {
+    Cleaner: CleanerScreen,
+  },
+  config
+);
+
+CleanerStack.navigationOptions = {
+  tabBarLabel: 'CleanerScreen',
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-link' : 'md-link'} />
+  ),
+};
+
+CleanerStack.path = '';
+//////////////////////////////////////////////////////////////
 
 SettingsStack.path = '';
 
@@ -152,7 +170,8 @@ const tabNavigator = createBottomTabNavigator({
   UserScreenStack,
   LinksStack,
   NewsStack,
-  SuggestionsStack
+  SuggestionsStack,
+  CleanerStack
 });
 
 // work in progress...
