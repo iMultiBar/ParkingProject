@@ -75,6 +75,7 @@ export default function SuggestionsScreen() {
             value={description}
         />
         <Picker
+        mode="dialog"
           selectedValue={type}
           style={{height: 50, width: "100%"}}
           onValueChange={(itemValue, itemIndex) =>
@@ -96,7 +97,7 @@ export default function SuggestionsScreen() {
 }
 
 SuggestionsScreen.navigationOptions = {
-  header: null
+    title:"suggestion",
 };
 
 function DevelopmentModeNotice() {

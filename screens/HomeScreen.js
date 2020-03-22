@@ -12,6 +12,9 @@ import {
   View
 } from "react-native";
 
+import {Marker} from 'react-native-maps';
+import MapView from 'react-native-maps';
+
 import { MonoText } from "../components/StyledText";
 import firebase from "firebase/app";
 import "firebase/auth";
@@ -67,31 +70,36 @@ export default function HomeScreen() {
     firebase.auth().signOut();
   };
 
+  const markers = 
+  [
+    {
+      latlng:{latitude: 25.360646,longitude: 51.479599},
+      title:"My Car",
+      description:"this is your car's current location"
+    },
+  ]
+
   return (
     <View style={styles.container}>
-      <ScrollView
-        style={styles.container}
-        contentContainerStyle={styles.contentContainer}
-        keyboardShouldPersistTaps="always"
+    <MapView
+    style={{width:"100%",height:500,flex:1}}
+      region={{
+        latitude: 25.360646,
+        longitude: 51.479599,
+      }}
+      
       >
-        {messages.map((message, i) => (
-          <Message key={i} message={message} handleEdit={handleEdit} />
-        ))}
-      </ScrollView>
-      <TextInput
-        style={{ height: 40, borderColor: "gray", borderWidth: 1 }}
-        onChangeText={setTo}
-        placeholder="To"
-        value={to}
+      {markers.map(marker => (
+      <Marker
+      image={require('../assets/images/carIcon.png')}
+      coordinate={marker.latlng}
+      title={marker.title}
+      description={marker.description}
       />
-      <TextInput
-        style={{ height: 40, borderColor: "gray", borderWidth: 1 }}
-        onChangeText={setText}
-        placeholder="Text"
-        value={text}
-      />
-      <Button title="Send" onPress={handleSend} />
-      <Button title="Logout" onPress={handleLogout} />
+      ))}
+    </MapView>
+        
+    <Button title="Logout" onPress={handleLogout} />  
     </View>
   );
 }
