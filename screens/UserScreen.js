@@ -7,39 +7,60 @@ import "firebase/auth";
 
 export default function UserScreen() {
     const [user , setUser] = useState(false)
-    const [serviceList , setServiceList] = useState(false)
+    const [serviceList , setServiceList] = useState([])
     const [service , setService] = useState(false)
-    const [reservation, setReservation] = useState(false)
+    const [reservation, setReservation] = useState([])
     const [subscription, setSubscription] = useState(false)
 
 
-    useEffect(() => {
-        temp = []
-        db.collection("reservation").doc(user.id).onSnapshot(snapShot => {
-                temp.push(snapShot.data())
-                console.log("fetching reservation data", snapShot.data())
-            }
-        )
-        setReservation(temp)
-    },[])
 
     useEffect(()=>{
         GetUser()
-        
+        getServices()
+    },[])
+    
+    useEffect(() => {
+        let temp = []
+        if(user){
+            db.collection("reservation").doc(firebase.auth().currentUser.uid).onSnapshot(snapShot => {
+                    temp.push(snapShot.data())
+                    console.log("fetching reservation data", snapShot.data())
+                }
+            )
+            if(temp && temp != []){
+                setReservation(temp)
+                console.log("reservation:", temp)
+            }
+        }
     },[])
     const GetUser = async () => {
-        const User = await db.collection("users").doc(firebase.auth().currentUser.uid).get()
-        setUser(User)
+        const User =await db.collection("users").doc(firebase.auth().currentUser.uid).get()
+        setUser(User.data())
+    }
+    const getServices = () => {
+        let temp = []
+        db.collection('services').get()
+        .then((snapshot) => {
+          snapshot.forEach((doc) => {
+            console.log(doc.id, '=>', doc.data());
+            temp.push(doc.id)
+          });
+        })
+        .catch((err) => {
+          console.log('Error getting documents', err);
+        });
+        setServiceList(temp)
+        
     }
   return (
       user ? 
-        <View>
-                <img source={{uri:`${user.photoURL}`}}/>
+        <View style={styles.container}>
+                {/* <img source={{ uri:`${user.photoURL}`} }/> */}
                 <Text>{user.displayName}</Text>
-            <ScrollView style={styles.container}>
+            <ScrollView >
 
-                // User Service Tab
-                <View>
+                {/* // User Service Tab */}
+                <View style={{borderColor:"black",borderWidth:3,borderStyle:"solid", marginBottom:20,padding:5}}>
                     <Text>Request Service</Text>
                     <Picker
                         selectedValue={""}
@@ -49,29 +70,33 @@ export default function UserScreen() {
                         }>
                             {
                             serviceList ? 
-                                serviceList.map( item =>
-                                        <Picker.Item label={item} value={item} />
+                                serviceList.map( (item, index) =>
+                                        <Picker.Item key={index} label={item} value={item} />
                                     )
                             :
-                                <Picker.Item label={"A7tm 7alk"} value={"A7tm 7alk"} />
+                               null
                             }
                     </Picker>
                 </View>
 
 
-                // User Parking Reservation List Tap
-                <View>
+                 {/* User Parking Reservation List Tap */}
+                <View style={{borderColor:"black",borderWidth:3,borderStyle:"solid", marginBottom:20,padding:5}}>
                     <Text>Reservation List</Text>
                     <ScrollView>
-                        { reservation ?
+
+                        { 
+                         reservation ?
+                         
                             <View>
                                 {reservation.map((item, index) => 
-                                
-                                        <Text>Parking Location: {item.parking.location} Start Time: {item.startTime} End Time: {item.endTime}</Text>
-                                
+                                        <View key={index}>
+                                            <Text> Parking Location: { item.parking.location } Start Time: {item.startTime } End Time: { item.endTime }</Text>
+                                        </View>
                                 )}
                                 <Button title="Reserve"/>
                             </View>
+                           
                             :
                                 <>
                                     <Text> Empty</Text>
@@ -82,8 +107,8 @@ export default function UserScreen() {
                 </View>
 
 
-                // Your subscription Tap
-                <View>
+                {/* // Your subscription Tap */}
+                <View style={{borderColor:"black",borderWidth:3,borderStyle:"solid", marginBottom:20,padding:5}}>
                         <Text>Your subscription</Text>
                         {
                             subscription ?
