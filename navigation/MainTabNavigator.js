@@ -1,14 +1,22 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Platform } from 'react-native';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
+
+import db from '../db';
+import firebase from "firebase/app";
+import "firebase/auth";
 
 import TabBarIcon from '../components/TabBarIcon';
 import HomeScreen from '../screens/HomeScreen';
 import LinksScreen from '../screens/LinksScreen';
 import UserScreen from '../screens/UserScreen';
 import TestScreen from '../screens/TestScreen';
+import NewsScreen from '../screens/NewsScreen';
 import SettingsScreen from '../screens/SettingsScreen';
+
+
+
 
 const config = Platform.select({
   web: { headerMode: 'screen' },
@@ -53,6 +61,7 @@ LinksStack.navigationOptions = {
 };
 
 LinksStack.path = '';
+//////////////////////////////////////////////////////////
 const TestStack = createStackNavigator(
   {
     Test: TestScreen,
@@ -68,7 +77,23 @@ TestStack.navigationOptions = {
 };
 
 TestStack.path = '';
+////////////////////////////////////////////////////////////////
+const NewsStack = createStackNavigator(
+  {
+    Test: NewsScreen,
+  },
+  config
+);
 
+NewsStack.navigationOptions = {
+  tabBarLabel: 'News',
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-link' : 'md-link'} />
+  ),
+};
+
+NewsStack.path = '';
+//////////////////////////////////////////////////////////////
 const SettingsStack = createStackNavigator(
   {
     Settings: SettingsScreen,
@@ -103,16 +128,45 @@ UserScreenStack.navigationOptions = {
 
 UserScreenStack.path = '';
 
-
 const tabNavigator = createBottomTabNavigator({
   HomeStack,
-  LinksStack,
   TestStack,
   SettingsStack,
   UserScreenStack,
+  LinksStack,
+  NewsStack
 });
 
+// work in progress...
 
+// if(firebase.auth().currentUser === null){
+//  console.log("still did not log in")
+// }else{
+  
+//   let role;
+//   console.log(firebase.auth().currentUser.uid)
+//   db.collection("users").doc(firebase.auth().currentUser.uid).onSnapshot(snapShot => {
+//     role = snapShot.data().role;
+    
+//   }
+//   )
+//   console.log("sssss",role)
+//   if(role === "student"){
+//     tabNavigator = createBottomTabNavigator({
+//       HomeStack,
+//       SettingsStack,
+//       UserScreenStack,
+//       NewsStack
+//     });
+//   } else{
+//     tabNavigator = createBottomTabNavigator({
+//       HomeStack,
+//       LinksStack,
+//       TestStack,
+//       SettingsStack,
+//     });
+//   }
+// }
 
 
 tabNavigator.path = '';
