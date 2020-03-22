@@ -60,7 +60,6 @@ export default function App(props) {
   const handleLogin = async () => {
     await firebase.auth().signInWithEmailAndPassword(email, password);
     updateUserLogin();
-    console.log("yoohoo")
   };
 
   const handleView = async () => {
@@ -81,6 +80,7 @@ export default function App(props) {
         email,
         phone,
         department,
+        role:"student"
       });
   };
 
