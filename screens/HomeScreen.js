@@ -81,21 +81,20 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
-    <MapView
-    style={{width:"100%",height:500,flex:1}}
-      region={{
-        latitude: 25.360646,
-        longitude: 51.479599,
-      }}
-      
+      <MapView
+        style={{width:"100%",height:500,flex:1}}
+        showsUserLocation={true}
+        followsUserLocation={true}
+        
       >
       {markers.map(marker => (
-      <Marker
-      image={require('../assets/images/carIcon.png')}
-      coordinate={marker.latlng}
-      title={marker.title}
-      description={marker.description}
-      />
+        <Marker
+          image={require('../assets/images/carIcon.png')}
+          
+          coordinate={() => onUserLocationChange()}
+          title={marker.title}
+          description={marker.description}
+        />
       ))}
     </MapView>
         
