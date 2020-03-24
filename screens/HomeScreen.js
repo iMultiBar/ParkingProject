@@ -1,4 +1,7 @@
 import * as WebBrowser from "expo-web-browser";
+import * as Location from 'expo-location';
+import * as Permissions from 'expo-permissions';
+
 import React, { useState, useEffect } from "react";
 import {
   Image,
@@ -23,63 +26,49 @@ import db from "../db.js";
 import Message from "./Message.js";
 
 export default function HomeScreen() {
-  const [messages, setMessages] = useState([]);
-  const [to, setTo] = React.useState("");
-  const [text, setText] = React.useState("");
-  const [id, setId] = React.useState("");
 
-  useEffect(() => {
-    db.collection("messages").onSnapshot(querySnapshot => {
-      const messages = [];
-      querySnapshot.forEach(doc => {
-        messages.push({ id: doc.id, ...doc.data() });
+  const [location, setLocation] = useState({coords:{latitude:0,longitude:0}});
+
+
+  // useEffect(() => {
+  //   db.collection("messages").onSnapshot(querySnapshot => {
+  //     const messages = [];
+  //     querySnapshot.forEach(doc => {
+  //       messages.push({ id: doc.id, ...doc.data() });
+  //     });
+  //     console.log(" Current messages: ", messages);
+  //     setMessages([...messages]);
+  //   });
+  // }, []);
+
+    useEffect(() => {
+    _getLocationAsync();
+  });
+
+  // useEffect(() => {
+  //   _getLocationAsync();
+  // }, [location]);
+
+ const _getLocationAsync = async () => {
+    let { status } = await Permissions.askAsync(Permissions.LOCATION);
+    if (status !== 'granted') {
+      this.setState({
+        errorMessage: 'Permission to access location was denied',
       });
-      console.log(" Current messages: ", messages);
-      setMessages([...messages]);
-    });
-  }, []);
-
-  const handleSend = async () => {
-    const from = firebase.auth().currentUser.uid;
-    if (id) {
-
-      db.collection("messages")
-        .doc(id)
-        .update({ from, to, text });
-    } else {
-
-      // call serverless function instead
-      const sendMessage = firebase.functions().httpsCallable("sendMessage");
-      const response2 = await sendMessage({ from, to, text });
-      console.log("sendMessage response", response2);
-
-      // db.collection("messages").add({ from, to, text });
     }
-    setTo("");
-    setText("");
-    setId("");
-  };
 
-  const handleEdit = message => {
-    setTo(message.to);
-    setText(message.text);
-    setId(message.id);
+    let loca = await Location.getCurrentPositionAsync({});
+    setLocation(loca)
+    console.log(location)
   };
 
   const handleLogout = () => {
     firebase.auth().signOut();
   };
 
-  const markers = 
-  [
-    {
-      latlng:{latitude: 25.360646,longitude: 51.479599},
-      title:"My Car",
-      description:"this is your car's current location"
-    },
-  ]
 
   return (
+    location && 
     <View style={styles.container}>
       <MapView
         style={{width:"100%",height:500,flex:1}}
@@ -87,15 +76,15 @@ export default function HomeScreen() {
         followsUserLocation={true}
         
       >
-      {markers.map(marker => (
+    
         <Marker
           image={require('../assets/images/carIcon.png')}
           
-          coordinate={() => onUserLocationChange()}
-          title={marker.title}
-          description={marker.description}
+          coordinate={{latitude:location.coords.latitude,longitude:location.coords.longitude}}
+          title={"My Car"}
+          description={"this is your car's current location"}
         />
-      ))}
+    
     </MapView>
         
     <Button title="Logout" onPress={handleLogout} />  
