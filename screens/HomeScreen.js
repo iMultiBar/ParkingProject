@@ -59,7 +59,7 @@ export default function HomeScreen() {
 
     let loca = await Location.getCurrentPositionAsync({});
     setLocation(loca)
-    console.log(location)
+    //console.log(location)
   };
 
   const handleLogout = () => {

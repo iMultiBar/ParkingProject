@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View, Image, Text, TextInput, Button } from "react-native";
+import { StyleSheet, View, Image, Text, TextInput, Button, Picker } from "react-native";
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/storage";
@@ -13,6 +13,9 @@ export default function SettingsScreen() {
   const [displayName, setDisplayName] = useState("");
   const [uri, setUri] = useState("");
   const [photoURL, setPhotoURL] = useState("");
+  const [subscription, setSubscription] = useState("")
+  const [flag, setFlag] = useState(false);
+  const [userSub, setUserSub] = useState([])
 
   const askPermission = async () => {
     const { status } = await ImagePicker.requestCameraRollPermissionsAsync();
@@ -23,15 +26,23 @@ export default function SettingsScreen() {
     askPermission();
   }, []);
 
-  const handleSet = () => {
+  const handleSet = async() => {
     const user = firebase.auth().currentUser;
     setDisplayName(user.displayName);
     setPhotoURL(user.photoURL);
+
+    let check = await db.collection("users").doc(firebase.auth().currentUser.uid).collection("subscription").doc("sub").get()
+    if(check.data() !== undefined){
+      setFlag(true)
+      setUserSub(check.data())
+    }
   };
 
   useEffect(() => {
     handleSet();
   }, []);
+
+
 
   const handleSave = async () => {
     const response = await fetch(uri);
@@ -72,6 +83,31 @@ export default function SettingsScreen() {
     }
   };
 
+
+  const handleSubscription = () => {
+    if(subscription === "bronze"){
+      db.collection("users").doc(firebase.auth().currentUser.uid).collection("subscription").doc("sub").set({
+        type: "bronze",
+        carWashPoints: 1,
+        valetPoints: 2,
+      })
+    }else if(subscription === "silver"){
+      db.collection("users").doc(firebase.auth().currentUser.uid).collection("subscription").doc("sub").set({
+        type: "silver",
+        carWashPoints: 2,
+        valetPoints: 4,
+      })
+    }else if(subscription === "gold"){
+      db.collection("users").doc(firebase.auth().currentUser.uid).collection("subscription").doc("sub").set({
+        type: "gold",
+        carWashPoints: 3,
+        valetPoints: 6,
+      })
+    }
+    
+  };
+  
+
   return (
     <ScrollView style={styles.container} keyboardShouldPersistTaps="always">
       <TextInput
@@ -90,6 +126,34 @@ export default function SettingsScreen() {
       )}
       <Button title="Pick Image" onPress={handlePickImage} />
       <Button title="Save" onPress={handleSave} />
+      <View>
+      {flag == false ? <View>
+        <Text>
+        Subscription 
+        </Text>
+        <View>
+        <Picker
+          selectedValue={"Pick a Department"}
+          style={{height: 50, width: "100%"}}
+          onValueChange={(itemValue, itemIndex) =>
+            setSubscription(itemValue)
+          }>
+          <Picker.Item label="Select a Department" value="" />
+          <Picker.Item label="Bronze Price:15" value="bronze" />
+          <Picker.Item label="Silver Price:30" value="silver" />
+          <Picker.Item label="Gold Price:50" value="gold" />
+        </Picker>
+        </View>
+        <Button title="subscribe and pay" onPress={handleSubscription}/>
+        </View>
+        : <View>
+          <Text>Car Wash Point: {userSub.carWashPoints}</Text>
+          <Text>Type: {userSub.type}</Text>
+          <Text>Valet Point: {userSub.valetPoints}</Text>
+          </View>
+          }
+      
+      </View>
     </ScrollView>
   );
 }
