@@ -30,6 +30,7 @@ export default function HomeScreen() {
 
   const [location, setLocation] = useState({coords:{latitude:0,longitude:0}});
   const [parkings, setParkings] = useState([]);
+  let ppp = [];
   const DELAY = 10;
 
   //   useEffect(() => {
@@ -42,6 +43,7 @@ export default function HomeScreen() {
 
   useEffect(() => {
     init();
+    simulate();
   }, []);
 
   const init = async () => {
@@ -52,12 +54,11 @@ export default function HomeScreen() {
       temp.push({ id: doc.id, ...doc.data() });
     });
     console.log("donnnnnnnnnnnnnnnnnne init: ", parkings);
+    ppp = temp;
     setParkings(temp);
 };
 
-// useEffect(() => {
-//   init();
-// }, []);
+
 
   const simulate = async () => {
 
@@ -66,9 +67,9 @@ export default function HomeScreen() {
 
     // simulate something (e.g. db update) every DELAY seconds
     setInterval(async () => {
-        
+      
         // select a random item
-        const i = Math.floor(Math.random() * parkings.length)
+        const i = Math.floor(Math.random() * ppp.length)
 
         // change it somehow
         // - must modify local copy of db data
@@ -85,13 +86,14 @@ export default function HomeScreen() {
         } else {
             choice = "hold"
         }
-        parkings[i].status += choice
+        ppp[i].status = choice
         
         // update the db
-        const { id, ...parking } = parkings[i]
-        await db.collection("parking").doc("yq4MTqaC4xMaAf9HArZp").collection('c-2').doc(id).set(parking);
     
-        console.log('simulated with item[', i, ']: ', parking.status)
+        console.log('parking after simulation',ppp)
+        setParkings(ppp);
+        await db.collection("parking").doc("yq4MTqaC4xMaAf9HArZp").collection('c-2').doc(ppp[i].parkingNumber).set(ppp[i]);
+        console.log('simulated with item[', i, ']: ', ppp[i].status)
     }, DELAY * 1000)
 
 }
@@ -122,10 +124,11 @@ export default function HomeScreen() {
         followsUserLocation={false}
         mapType={"satellite"}
       >
-        {console.log(parkings)}
+        {"parking in render",console.log(parkings)}
         {parkings.map((p,i) =>(
-          <>
+          
           <Marker
+          key={i}
           image={p.status === "free"? require('../assets/images/green.jpg')
           : p.status === "taken"?require('../assets/images/red.jpg')
           :require('../assets/images/yellow.jpg')}
@@ -133,8 +136,7 @@ export default function HomeScreen() {
           title={`parking No.${p.parkingNumber}`}
           description={`this is parking No.${p.parkingNumber} and it is ${p.status}`}
         />
-        
-        </>
+
         ))}
         <Marker
           image={require('../assets/images/carIcon.png')}
