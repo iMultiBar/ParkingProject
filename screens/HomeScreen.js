@@ -29,7 +29,7 @@ import Message from "./Message.js";
 export default function HomeScreen() {
 
   const [location, setLocation] = useState({coords:{latitude:0,longitude:0}});
-  const parkings = [];
+  const [parkings, setParkings] = useState([]);
   const DELAY = 10;
 
   //   useEffect(() => {
@@ -45,15 +45,19 @@ export default function HomeScreen() {
   }, []);
 
   const init = async () => {
-
+    const temp = [];
     // do once only, not a listener
     const querySnapshot = await db.collection("parking").doc("yq4MTqaC4xMaAf9HArZp").collection('c-2').get()
     querySnapshot.forEach(doc => {
-        parkings.push({ id: doc.id, ...doc.data() });
+      temp.push({ id: doc.id, ...doc.data() });
     });
     console.log("donnnnnnnnnnnnnnnnnne init: ", parkings);
-
+    setParkings(temp);
 };
+
+// useEffect(() => {
+//   init();
+// }, []);
 
   const simulate = async () => {
 
@@ -75,17 +79,17 @@ export default function HomeScreen() {
         // - use percentages to decide what to do
         // - change to suit your own needs
         if(rnd < 0.3333) {
-            choice = "Free"
+            choice = "free"
         } else if (rnd < .6666) {
-            choice = "Taken"
+            choice = "taken"
         } else {
-            choice = "OnHold"
+            choice = "hold"
         }
         parkings[i].status += choice
         
         // update the db
         const { id, ...parking } = parkings[i]
-        await db.collection("parking").doc(id).set(parking);
+        await db.collection("parking").doc("yq4MTqaC4xMaAf9HArZp").collection('c-2').doc(id).set(parking);
     
         console.log('simulated with item[', i, ']: ', parking.status)
     }, DELAY * 1000)
@@ -109,20 +113,31 @@ export default function HomeScreen() {
     firebase.auth().signOut();
   };
 
-
   return (
     location && 
     <View style={styles.container}>
       <MapView
         style={{width:"100%",height:500,flex:1}}
         showsUserLocation={true}
-        followsUserLocation={true}
-        
+        followsUserLocation={false}
+        mapType={"satellite"}
       >
-    
+        {console.log(parkings)}
+        {parkings.map((p,i) =>(
+          <>
+          <Marker
+          image={p.status === "free"? require('../assets/images/green.jpg')
+          : p.status === "taken"?require('../assets/images/red.jpg')
+          :require('../assets/images/yellow.jpg')}
+          coordinate={{latitude:parseFloat(p.latitude),longitude:parseFloat(p.longitude)}}
+          title={`parking No.${p.parkingNumber}`}
+          description={`this is parking No.${p.parkingNumber} and it is ${p.status}`}
+        />
+        
+        </>
+        ))}
         <Marker
           image={require('../assets/images/carIcon.png')}
-          
           coordinate={{latitude:location.coords.latitude,longitude:location.coords.longitude}}
           title={"My Car"}
           description={"this is your car's current location"}
