@@ -32,7 +32,7 @@ export default function SettingsScreen() {
     setPhotoURL(user.photoURL);
 
     let check = await db.collection("users").doc(firebase.auth().currentUser.uid).collection("subscription").doc("sub").get()
-    if(check.data() !== undefined){
+    if(check.data()){
       setFlag(true)
       setUserSub(check.data())
     }
