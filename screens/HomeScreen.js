@@ -22,32 +22,75 @@ import { MonoText } from "../components/StyledText";
 import firebase from "firebase/app";
 import "firebase/auth";
 import db from "../db.js";
+require("firebase/firestore");
 
 import Message from "./Message.js";
 
 export default function HomeScreen() {
 
   const [location, setLocation] = useState({coords:{latitude:0,longitude:0}});
+  const parkings = [];
+  const DELAY = 10;
 
-
-  // useEffect(() => {
-  //   db.collection("messages").onSnapshot(querySnapshot => {
-  //     const messages = [];
-  //     querySnapshot.forEach(doc => {
-  //       messages.push({ id: doc.id, ...doc.data() });
-  //     });
-  //     console.log(" Current messages: ", messages);
-  //     setMessages([...messages]);
-  //   });
-  // }, []);
-
-    useEffect(() => {
-    _getLocationAsync();
-  });
+  //   useEffect(() => {
+  //   _getLocationAsync();
+  // });
 
   // useEffect(() => {
   //   _getLocationAsync();
   // }, [location]);
+
+  useEffect(() => {
+    init();
+  }, []);
+
+  const init = async () => {
+
+    // do once only, not a listener
+    const querySnapshot = await db.collection("parking").doc("yq4MTqaC4xMaAf9HArZp").collection('c-2').get()
+    querySnapshot.forEach(doc => {
+        parkings.push({ id: doc.id, ...doc.data() });
+    });
+    console.log("donnnnnnnnnnnnnnnnnne init: ", parkings);
+
+};
+
+  const simulate = async () => {
+
+    // get necessary data from db for simulation to start
+    await init()
+
+    // simulate something (e.g. db update) every DELAY seconds
+    setInterval(async () => {
+        
+        // select a random item
+        const i = Math.floor(Math.random() * parkings.length)
+
+        // change it somehow
+        // - must modify local copy of db data
+        //   to avoid reloading from db
+        const rnd = Math.random()
+        let choice = ""
+
+        // - use percentages to decide what to do
+        // - change to suit your own needs
+        if(rnd < 0.3333) {
+            choice = "Free"
+        } else if (rnd < .6666) {
+            choice = "Taken"
+        } else {
+            choice = "OnHold"
+        }
+        parkings[i].status += choice
+        
+        // update the db
+        const { id, ...parking } = parkings[i]
+        await db.collection("parking").doc(id).set(parking);
+    
+        console.log('simulated with item[', i, ']: ', parking.status)
+    }, DELAY * 1000)
+
+}
 
  const _getLocationAsync = async () => {
     let { status } = await Permissions.askAsync(Permissions.LOCATION);
