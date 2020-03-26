@@ -66,7 +66,6 @@ export default function HomeScreen() {
     firebase.auth().signOut();
   };
 
-
   return (
     location && 
     <View style={styles.container}>

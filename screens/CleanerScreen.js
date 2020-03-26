@@ -22,9 +22,11 @@ export default function CleanerScreen() {
       console.log(" Current jobs: ", jobs);
       setJobs([...jobs]);
     });
-  },[])
+  },[]);
 
-  const takeCLeanRequest = (n) =>{
+  
+
+  const takeCleanRequest = (n) =>{
     db.collection("requests").doc("clean").collection("cleanRequest").doc(n.id).update({
       cleanerUid: firebase.auth().currentUser.uid,
       date: n.date,
@@ -42,7 +44,7 @@ export default function CleanerScreen() {
           <Text><Text style={{ fontWeight: 'bold' }}>parking location</Text>: {n.parkingLocation}</Text>
           <Text><Text style={{ fontWeight: 'bold' }}>plat number</Text>: {n.platNumber}</Text>
           <Text><Text style={{ fontWeight: 'bold' }}>Status</Text>: {n.status? "true": "false"}</Text>
-          <Button title="Take the request" onPress={() =>takeCLeanRequest(n)} />
+          <Button title="Take the request" onPress={() =>takeCleanRequest(n)} />
         </View>
       ))}
       </View>

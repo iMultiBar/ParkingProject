@@ -18,11 +18,15 @@ import firebase from "firebase/app";
 import "firebase/auth";
 
 export default ({ message, handleEdit }) => {
+
+
   const handleDelete = message => {
     db.collection("messages")
       .doc(message.id)
       .delete();
-  };
+  }
+
+
 
   const user = firebase.auth().currentUser;
   return (
