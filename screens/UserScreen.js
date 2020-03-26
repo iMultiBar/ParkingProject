@@ -36,6 +36,11 @@ export default function UserScreen() {
     const GetUser = async () => {
         const User =await db.collection("users").doc(firebase.auth().currentUser.uid).get()
         setUser(User.data())
+        const Sub = await db.collection("users").doc(firebase.auth().currentUser.uid).collection("subscription").doc("sub").get()
+        console.log(Sub.data())
+        if(Sub.data()){
+            setSubscription(Sub.data());
+        }
     }
     const getServices = () => {
         let temp = []
@@ -113,8 +118,11 @@ export default function UserScreen() {
                         {
                             subscription ?
                                 <View>
-                                    <Text>subscription End Date: {subscription.endDate}</Text>
-                                    <Text>subscription Level: {subscription.level} </Text>
+                                    {/* <Text>subscription End Date: {subscription.endDate}</Text>
+                                   <Text>subscription Level: {subscription.level} </Text> */}
+                                   <Text>subscription Level: {subscription.type} </Text>
+                                   <Text>Car wash Points: {subscription.carWashPoints} </Text>
+                                   <Text>Valet Points: {subscription.valetPoints} </Text>
                                     <Button title="Extend"/>  
                                 </View>
                             :
