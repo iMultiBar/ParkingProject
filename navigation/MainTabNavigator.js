@@ -16,6 +16,7 @@ import CleanerScreen from '../screens/CleanerScreen';
 import NewsScreen from '../screens/NewsScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import SuggestionsScreen from '../screens/SuggestionsScreen';
+import carriersScreen from '../screens/carriersScreen';
 
 
 
@@ -162,6 +163,22 @@ UserScreenStack.navigationOptions = {
 };
 
 UserScreenStack.path = '';
+////////////////////////////////////////////////////////////////
+const CarriersStack = createStackNavigator(
+  {
+    Carriers: carriersScreen,
+  },
+  config
+);
+
+CarriersStack.navigationOptions = {
+  tabBarLabel: 'CarriersScreen',
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-link' : 'md-link'} />
+  ),
+};
+
+CarriersStack.path = '';
 
 const tabNavigator = createBottomTabNavigator({
   HomeStack,
@@ -171,7 +188,8 @@ const tabNavigator = createBottomTabNavigator({
   LinksStack,
   NewsStack,
   SuggestionsStack,
-  CleanerStack
+  CleanerStack,
+  CarriersStack
 });
 
 // work in progress...

@@ -80,6 +80,18 @@ exports.requestCarClean = functions.https.onCall(async (data, context) => {
     status: false,
     cleanerUid: null
   })
+
+  
   // check for things not allowed
   // only if ok then add message
 });
+
+exports.requestCarriers = functions.https.onCall(async (data, context) => {
+  db.collection("requests").doc("carrier").collection("carrierRequest").add({
+    parkingLocation: data.parkingLocation,
+    platNumber: data.plat,
+    date: data.dateSubmit,
+    status: false,
+    carrierUid: null
+  })
+})
