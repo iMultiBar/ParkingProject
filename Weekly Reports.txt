@@ -86,3 +86,6 @@ which navigates the user to the NewsScreen.js. Furthermore the second button "My
 provided. The main focus was to prepare the screen as a react navigator acceptor to find the relevant props and navigate to the right page. 
 
 Overall, these are the following tasks which I have worked on today. 
+
+- Avalability for timed assessment instead of final exam on Thu, Apr 9 at 9:30 AM - 11:30 AM = 
+- list the names of the front-end file or files you choose to use for the upcoming assessment:
