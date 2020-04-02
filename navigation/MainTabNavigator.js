@@ -48,22 +48,25 @@ HomeStack.navigationOptions = {
 
 HomeStack.path = '';
 
-const LinksStack = createStackNavigator(
-  {
-    Links: LinksScreen,
-  },
-  config
-);
 
-LinksStack.navigationOptions = {
-  tabBarLabel: 'Links',
-  tabBarIcon: ({ focused }) => (
-    <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-link' : 'md-link'} />
-  ),
-};
+// const LinksStack = createStackNavigator(
+//   {
+//     Links: LinksScreen,
+//   },
+//   config
+// );
 
-LinksStack.path = '';
-//////////////////////////////////////////////////////////
+// LinksStack.navigationOptions = {
+//   tabBarLabel: 'Links',
+//   tabBarIcon: ({ focused }) => (
+//     <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-link' : 'md-link'} />
+//   ),
+// };
+
+// LinksStack.path = '';
+// //////////////////////////////////////////////////////////
+
+
 const SuggestionsStack = createStackNavigator(
   {
     Suggestions: SuggestionsScreen,
@@ -112,6 +115,7 @@ NewsStack.navigationOptions = {
 
 NewsStack.path = '';
 //////////////////////////////////////////////////////////////
+
 const SettingsStack = createStackNavigator(
   {
     Settings: SettingsScreen,
@@ -168,7 +172,7 @@ const tabNavigator = createBottomTabNavigator({
   TestStack,
   SettingsStack,
   UserScreenStack,
-  LinksStack,
+  // LinksStack,
   NewsStack,
   SuggestionsStack,
   CleanerStack

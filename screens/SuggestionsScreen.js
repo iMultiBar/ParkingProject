@@ -21,7 +21,7 @@ import db from "../db.js";
 
 import moment from 'moment';
 
-export default function SuggestionsScreen() {
+const SuggestionsScreen = props => {
   const [suggestions, setSuggestions] = useState([]);
 
   const [email, setEmail] = useState("");  
@@ -223,3 +223,5 @@ const styles = StyleSheet.create({
     color: "#2e78b7"
   }
 });
+
+export default SuggestionsScreen;

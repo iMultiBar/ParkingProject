@@ -8,7 +8,7 @@ import db from "../db";
 import * as ImagePicker from "expo-image-picker";
 import { ScrollView } from "react-native-gesture-handler";
 
-export default function SettingsScreen() {
+const SettingsScreen = props => {
   const [hasCameraRollPermission, setHasCameraRollPermission] = useState(false);
   const [displayName, setDisplayName] = useState("");
   const [uri, setUri] = useState("");
@@ -145,6 +145,8 @@ export default function SettingsScreen() {
         </Picker>
         </View>
         <Button title="subscribe and pay" onPress={handleSubscription}/>
+        <Button title="visit to parking news" onPress = {() => props.navigation.navigate("NewsStack")}/>
+        <Button title="My suggestions screen" onPress = {() => props.navigation.navigate("SuggestionsStack")}/>
         </View>
         : <View>
           <Text>Car Wash Point: {userSub.carWashPoints}</Text>
@@ -250,3 +252,5 @@ const styles = StyleSheet.create({
     color: "#2e78b7"
   }
 });
+
+export default SettingsScreen;

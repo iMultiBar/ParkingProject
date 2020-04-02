@@ -1,0 +1,88 @@
+Weekly Report Parking: System Development II
+Group Name: Group 4
+GitHub URL: https://github.com/iMultiBar/ParkingProject/tree/HaniaNadeem
+Folder Name: HaniaNadeem (name of the new branch associated under the repository “ParkingProject” and it is part of iMultiBar account.) 
+
+I removed my previous branch “Hania-Nadeem-60090931” as it was creating some technical defects in my GitHub account. 
+
+Sunday - 22/3/2020:	
+I didn’t work on the project today due to an extreme sick health condition and viral infection. 
+
+Monday - 23/3/2020:	
+I didn’t work on the project today due to an extreme sick health condition and viral infection. 
+
+Tuesday - 24/3/2020:	
+
+Firstly, I created a new branch “HaniaNadeem” under the repository “ParkingProject” which is part of iMultiBar account: 
+https://github.com/iMultiBar/ParkingProject/tree/HaniaNadeem. This is because the previous was having some errors and 
+it was creating some technical issues. So, I have switched my project work to a new branch. 
+
+Overall, these are the following tasks which I have worked on today. 
+
+Wednesday - 25/3/2020: 
+Today, I had a meeting discussion with my group members which was related to the further distribution of the tasks. Previously I 
+was working on maps and react navigation. Now, one of my group members has taken the responsibility to work on maps since my 
+system was not working properly with map functions. I have decided to continue working on the react navigation along with some 
+other parking features which are associated with our firebase database in our Parking app. It was a meeting discussion day and 
+overall, these were the following tasks which we discussed and worked on today. 
+
+Thursday - 26/3/2020:	
+
+Firstly, I worked over some of the updates for firebase connections, which were associated with the cleaning request 
+when we park our car in CleanerScreen.js file. I updated the method name "takeCLeanRequest" and changed the capital "L" to small "l" to make 
+the method name look proper. Secondly, I worked upon the react navigation for our parking app. According to my plan, 
+when the user registers and logs into the parking app, they shall see their car as an icon which is marked on the map. 
+From their some navigation links should be created which takes them directly to their UserScreen. 
+Also, I discussed with my group members to comment out the “Links” tab which is associated with the “LinkScreen.js” file. 
+This is because we are not working on it for now and it is overcrowding the line of tabs in our Parking app. 
+
+The react navigation is still in progress and shall continue as we keep on adding more pages to 
+our parking app along with more functionality. Overall, these are the following tasks which I have worked on today.
+
+During this week, the files which I have worked on are associated under the screens folder in my branch (HaniaNadeem) 
+on GitHub account: HomeScreen.js, LinkScreen.js, CleanRequest.js, NewsScreen.js
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Weekly Report Parking: System Development II
+Group Name: Group 4
+GitHub URL: https://github.com/iMultiBar/ParkingProject/tree/HaniaNadeem
+Folder Name: HaniaNadeem (name of the new branch associated under the repository “ParkingProject” and it is part of iMultiBar account.) 
+Files which I have worked on: MainTabNavigation.js, useLinking.js, NewsScreen.js, SettingsScreen.js, SuggestionsScreen.js
+
+Sunday - 29/3/2020:
+
+Throughout this week, my main focus has been on centralizing and concising the bottom navigation tabs. As a group, we had decided earlier that we need to have less tabs
+on our app so that it doesn't look crowded or congested. The user is able to deal with our parking app with a user-friendly mechanism. 
+
+Today, I visited the MainTabNavigation.js file and explored the tabs and links which are developed by my group member. I commented out the "LinkScreen" tab section from tabNavigator ("LinksStack") and 
+navigationOptions stack. This is because we are not currently using it and for later purposes we shall modify it for other features. Furthemore, I scanned through all the navigation option stacks and made a plan
+about which tabs shall be placed as links on the bottom navigator and which pages shall separate navigation button to navigate to the pages. 
+
+Overall, these are the following tasks which I have worked on today. 
+
+Monday - 30/3/2020:	
+
+I worked on useLinking.js file today. This is because I have been receiving multiple errors related to navigation errors and stack roots while commenting out "LinkScreen" from MainTabNavigator.js. 
+The problem which fixed everything was removing the "Links: 'links'". Today, I spent time fixing the errors to improve the navigation problems. 
+
+Tuesday - 31/3/2020:	
+
+I worked on NewScreen.js file where I modified the component definition line "export default function NewsScreen" to "const NewsScreen = props =>". This is because I have declared a navigation button in one of the 
+pages that allows a user to navigate to the News Page and view the news about any parking areas or incidents. I added a "export default NewsScreen" to identify the page as a component. The main focus was to prepare the screen
+as a react navigator acceptor to find the relevant props and navigate to the right page. 
+
+Wednesday - 1/2/2020: 
+
+I worked on SuggestionsScreen.js file where I modified the component definition line "export default function SuggestionsScreen" to "const SuggestionsScreen = props =>". This is because I have declared a navigation button in one of the 
+pages that allows a user to navigate to the Suggestions Page and type their suggestions about the parking + submit them. I added a "export default SuggestionsScreen" to identify the page as a component. The main focus was to prepare the screen
+as a react navigator acceptor to find the relevant props and navigate to the right page. 
+
+Thursday - 2/2/2020:	
+
+I worked on SettingsScreen.js file where I modified the component definition line "export default function SettingsScreen" to "const SettingsScreen = props =>". This is because I have declared two new navigation buttons "Visit to parking news" 
+which navigates the user to the NewsScreen.js. Furthermore the second button "My suggestions screen" navigates the user to the Suggestions Screen. The react navigation works based on props and the location of the file which the user has 
+provided. The main focus was to prepare the screen as a react navigator acceptor to find the relevant props and navigate to the right page. 
+
+Overall, these are the following tasks which I have worked on today. 

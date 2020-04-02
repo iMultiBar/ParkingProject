@@ -18,7 +18,7 @@ import "firebase/auth";
 import db from "../db.js";
 
 
-export default function NewsScreen() {
+const NewsScreen = props => {
   const [news, setNews] = useState([]);
   // const [pDate, setPDate] = React.useState("");
   // const [eDate, setEDate] = React.useState("");
@@ -214,3 +214,5 @@ const styles = StyleSheet.create({
     color: "#2e78b7"
   }
 });
+
+export default NewsScreen;
