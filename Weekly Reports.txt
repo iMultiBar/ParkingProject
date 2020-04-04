@@ -87,5 +87,7 @@ provided. The main focus was to prepare the screen as a react navigator acceptor
 
 Overall, these are the following tasks which I have worked on today. 
 
-- Avalability for timed assessment instead of final exam on Thu, Apr 9 at 9:30 AM - 11:30 AM = 
-- list the names of the front-end file or files you choose to use for the upcoming assessment:
+Specially for App.js and UserScreen.js, I took the responsibility for managing all the navigation. 
+
+- Avalability for timed assessment instead of final exam on Thu, Apr 9 at 9:30 AM - 11:30 AM = YES
+- list the names of the front-end file or files you choose to use for the upcoming assessment: App.js, UserScreen.js, MainTabNavigator.js 
