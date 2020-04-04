@@ -1,7 +1,7 @@
- // bugfix for firebase 7.11.0
- import { decode, encode } from 'base-64'
- global.btoa = global.btoa || encode;
- global.atob = global.atob || decode;
+// bugfix for firebase 7.11.0
+import { decode, encode } from 'base-64'
+global.btoa = global.btoa || encode;
+global.atob = global.atob || decode;
 import { AppLoading } from "expo";
 import { Asset } from "expo-asset";
 import * as Font from "expo-font";
@@ -12,16 +12,20 @@ import {
   StyleSheet,
   View,
   TextInput,
-  Button,
   Picker,
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, AntDesign } from "@expo/vector-icons";
+
+import { Button, Text} from 'react-native-elements';
+import { SocialIcon } from 'react-native-elements';
+import * as Animatable from "react-native-animatable";
+
 
 // import {
 //   Select,
 //   Option,
 // } from 'react-native-option-select';
- 
+
 
 import AppNavigator from "./navigation/AppNavigator";
 
@@ -34,7 +38,7 @@ export default function App(props) {
   const [user, setUser] = useState(null);
   const [view, setView] = useState("register");
 
-  const [email, setEmail] = useState("");  
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [phone, setPhone] = useState("");
   const [department, setDepartment] = useState("");
@@ -64,11 +68,11 @@ export default function App(props) {
 
   const handleView = async () => {
     if (view === "login") {
-      setView( "register" )
+      setView("register")
     }
     else {
       console.log("sup")
-      setView("login" )
+      setView("login")
     }
   };
 
@@ -80,7 +84,7 @@ export default function App(props) {
         email,
         phone,
         department,
-        role:"student"
+        role: "student"
       });
   };
 
@@ -95,6 +99,19 @@ export default function App(props) {
   } else if (!user && view === "login") {
     return (
       <View style={styles.contentContainer}>
+          <View style={{ flexDirection: "row", marginLeft: 50 }}>
+            <View>
+              <SocialIcon
+                type='foursquare'
+              />
+            </View>
+
+            <View>
+              <Text style={{ fontSize: 30, fontFamily: "serif", textAlign: "center", marginBottom: 15, color: "blue", fontWeight: "bold", marginTop: 10 }}>LOGIN FORM</Text>
+            </View>
+          </View>
+
+
         <TextInput
           style={{ height: 40, borderColor: "gray", borderWidth: 1 }}
           onChangeText={setEmail}
@@ -108,9 +125,41 @@ export default function App(props) {
           secureTextEntry={true}
           value={password}
         />
-    
-        <Button title="submit" onPress={handleLogin} />
-        <Button title="go to register" onPress={handleView} />
+
+        <View style={{ marginTop: 10 }}></View>
+
+        <Animatable.View animation="pulse" iterationCount="infinite" direction="alternate">
+          <Button
+            icon={
+              <AntDesign
+                name="rightcircle"
+                color="white"
+                size={15}
+              />
+            }
+            title=" SUBMIT"
+            onPress={handleLogin}
+          />
+        </Animatable.View>
+
+
+        <View style={{ marginTop: 10 }}></View>
+
+        <Animatable.View animation="pulse" iterationCount="infinite" direction="alternate">
+          <Button
+            icon={
+              <AntDesign
+                name="rightcircle"
+                color="white"
+                size={15}
+              />
+            }
+            title=" GO TO REGISTER"
+            onPress={handleView}
+          />
+        </Animatable.View>
+
+
       </View>
     );
   }
@@ -118,6 +167,18 @@ export default function App(props) {
   else if (!user && view === "register") {
     return (
       <View style={styles.contentContainer}>
+        <View style={{ flexDirection: "row", marginLeft: 30 }}>
+          <View>
+            <SocialIcon
+              type='foursquare'
+            />
+          </View>
+
+          <View>
+            <Text style={{ fontSize: 30, fontFamily: "serif", textAlign: "center", marginBottom: 15, color: "blue", fontWeight: "bold", marginTop: 10 }}>REGISTER FORM</Text>
+          </View>
+        </View>
+
         <TextInput
           style={{ height: 40, borderColor: "gray", borderWidth: 1 }}
           onChangeText={setDisplayName}
@@ -149,7 +210,7 @@ export default function App(props) {
 
         <Picker
           selectedValue={"Pick a Department"}
-          style={{height: 50, width: "100%"}}
+          style={{ height: 50, width: "100%" }}
           onValueChange={(itemValue, itemIndex) =>
             setDepartment(itemValue)
           }>
@@ -161,15 +222,47 @@ export default function App(props) {
           <Picker.Item label="faculty" value="faculty" />
         </Picker>
 
+        <View style={{ marginTop: 10 }}></View>
 
-        <Button title="submit" onPress={handleRegister} />
-        <Button title="have and account? go to login" onPress={handleView} />
+        <Animatable.View animation="jello" iterationCount="infinite" direction="alternate">
+          <Button
+            icon={
+              <AntDesign
+                name="rightcircle"
+                color="white"
+                size={15}
+              />
+            }
+            title=" SUBMIT"
+            onPress={handleRegister}
+          />
+        </Animatable.View>
+
+
+        <View style={{ marginTop: 10 }}></View>
+
+        <Animatable.View animation="jello" iterationCount="infinite" direction="alternate">
+          <Button
+            icon={
+              <AntDesign
+                name="rightcircle"
+                color="white"
+                size={15}
+              />
+            }
+            title=" HAVE AN ACCOUNT? GO TO LOGIN"
+            onPress={handleView}
+          />
+        </Animatable.View>
+
+
+
       </View>
     );
   } else {
     return (
       <View style={styles.container}>
-        {console.log(user,view)}
+        {console.log(user, view)}
         {Platform.OS === "ios" && <StatusBar barStyle="default" />}
         <AppNavigator />
       </View>

@@ -4,10 +4,8 @@ import {
   Image,
   Platform,
   TextInput,
-  Button,
   ScrollView,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
   Picker,
@@ -21,25 +19,31 @@ import db from "../db.js";
 
 import moment from 'moment';
 
+import { MaterialIcons, Entypo } from "@expo/vector-icons";
+
+import { Button, Text } from 'react-native-elements';
+import { SocialIcon } from 'react-native-elements';
+import * as Animatable from "react-native-animatable";
+
 const SuggestionsScreen = props => {
   const [suggestions, setSuggestions] = useState([]);
 
-  const [email, setEmail] = useState("");  
+  const [email, setEmail] = useState("");
   const [description, setDescription] = useState("");
   const [dateTime, setDateTime] = useState("");
   const [type, setType] = useState("");
   const [status, setStatus] = useState("");
 
-//   useEffect(() => {
-//     db.collection("messages").onSnapshot(querySnapshot => {
-//       const messages = [];
-//       querySnapshot.forEach(doc => {
-//         messages.push({ id: doc.id, ...doc.data() });
-//       });
-//       console.log(" Current messages: ", messages);
-//       setMessages([...messages]);
-//     });
-//   }, []);
+  //   useEffect(() => {
+  //     db.collection("messages").onSnapshot(querySnapshot => {
+  //       const messages = [];
+  //       querySnapshot.forEach(doc => {
+  //         messages.push({ id: doc.id, ...doc.data() });
+  //       });
+  //       console.log(" Current messages: ", messages);
+  //       setMessages([...messages]);
+  //     });
+  //   }, []);
 
   const handleSubmit = async () => {
     const uid = firebase.auth().currentUser.uid;
@@ -50,15 +54,15 @@ const SuggestionsScreen = props => {
         description,
         dateTime: moment().format('DD/MM/YYYY, h:mm:ss a'),
         type,
-        status:'unapproved'
+        status: 'unapproved'
       });
   };
 
-//   const handleEdit = message => {
-//     setTo(message.to);
-//     setText(message.text);
-//     setId(message.id);
-//   };
+  //   const handleEdit = message => {
+  //     setTo(message.to);
+  //     setText(message.text);
+  //     setId(message.id);
+  //   };
 
   const handleLogout = () => {
     firebase.auth().signOut();
@@ -66,18 +70,33 @@ const SuggestionsScreen = props => {
 
   return (
     <View style={styles.container}>
-        <Text style={{textAlign:"center",fontSize:40, flex:1,marginTop:15}}>submit your suggestion below</Text>
-        <View style={{flex:1}}>
+      <View style={{ flexDirection: "row" }}>
+        <View>
+          <SocialIcon
+            type='foursquare'
+          />
+        </View>
+
+        <View>
+          <Text style={{ fontSize: 25, fontFamily: "serif", textAlign: "center", marginBottom: 15, color: "blue", fontWeight: "bold", marginTop: 10 }}>
+            SUBMIT SUGGESTIONS</Text>
+        </View>
+      </View>
+
+      <View style={{ marginTop: 10 }}></View>
+
+
+      <View style={{ flex: 1 }}>
         <TextInput
-            style={{ height: 40, borderColor: "gray", borderWidth: 1 }}
-            onChangeText={setDescription}
-            placeholder="What is your suggestion"
-            value={description}
+          style={{ height: 40, borderColor: "gray", borderWidth: 1 }}
+          onChangeText={setDescription}
+          placeholder="What is your suggestion"
+          value={description}
         />
         <Picker
-        mode="dialog"
+          mode="dialog"
           selectedValue={type}
-          style={{height: 50, width: "100%"}}
+          style={{ height: 50, width: "100%" }}
           onValueChange={(itemValue, itemIndex) =>
             setType(itemValue)
           }>
@@ -89,15 +108,63 @@ const SuggestionsScreen = props => {
           <Picker.Item label="IT Department" value="IT Department" />
         </Picker>
 
-        </View>
-        <Button title="submit" onPress={handleSubmit} />
-        <Button title="Logout" onPress={handleLogout} />
+      </View>
+
+      <View style={{ marginTop: 10 }}></View>
+
+      <Animatable.View animation="flipInY" direction="alternate" duration={1000}>
+        <Button
+          icon={
+            <Entypo
+              name="news"
+              color="white"
+              size={15}
+            />
+          }
+          title=" SUBMIT"
+          onPress={handleSubmit}
+        />
+      </Animatable.View>
+
+      <View style={{ marginTop: 10 }}></View>
+
+      <Animatable.View animation="flipInY" direction="alternate" duration={1000}>
+        <Button
+          icon={
+            <Entypo
+              name="news"
+              color="white"
+              size={15}
+            />
+          }
+          title=" LOGOUT"
+          onPress={handleLogout}
+        />
+      </Animatable.View>
+
+      <View style={{ marginTop: 10 }}></View>
+
+      <Animatable.View animation="flipInY" direction="alternate" duration={1000}>
+        <Button
+          icon={
+            <Entypo
+              name="news"
+              color="white"
+              size={15}
+            />
+          }
+          title=" BACK TO SETTINGS"
+          onPress={() => props.navigation.navigate("SettingsStack")}
+        />
+      </Animatable.View>
+
+
     </View>
   );
 }
 
 SuggestionsScreen.navigationOptions = {
-    title:"suggestion",
+  header: null
 };
 
 function DevelopmentModeNotice() {

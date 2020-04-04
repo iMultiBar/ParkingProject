@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View, Image, Text, TextInput, Button, Picker } from "react-native";
+import { StyleSheet, View, Image, TextInput, Picker } from "react-native";
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/storage";
@@ -7,6 +7,13 @@ import "firebase/functions";
 import db from "../db";
 import * as ImagePicker from "expo-image-picker";
 import { ScrollView } from "react-native-gesture-handler";
+
+import { MaterialIcons, Entypo } from "@expo/vector-icons";
+
+import { Button, Text } from 'react-native-elements';
+import { SocialIcon } from 'react-native-elements';
+import * as Animatable from "react-native-animatable";
+
 
 const SettingsScreen = props => {
   const [hasCameraRollPermission, setHasCameraRollPermission] = useState(false);
@@ -26,13 +33,13 @@ const SettingsScreen = props => {
     askPermission();
   }, []);
 
-  const handleSet = async() => {
+  const handleSet = async () => {
     const user = firebase.auth().currentUser;
     setDisplayName(user.displayName);
     setPhotoURL(user.photoURL);
 
     let check = await db.collection("users").doc(firebase.auth().currentUser.uid).collection("subscription").doc("sub").get()
-    if(check.data()){
+    if (check.data()) {
       setFlag(true)
       setUserSub(check.data())
     }
@@ -85,31 +92,45 @@ const SettingsScreen = props => {
 
 
   const handleSubscription = () => {
-    if(subscription === "bronze"){
+    if (subscription === "bronze") {
       db.collection("users").doc(firebase.auth().currentUser.uid).collection("subscription").doc("sub").set({
         type: "bronze",
         carWashPoints: 1,
         valetPoints: 2,
       })
-    }else if(subscription === "silver"){
+    } else if (subscription === "silver") {
       db.collection("users").doc(firebase.auth().currentUser.uid).collection("subscription").doc("sub").set({
         type: "silver",
         carWashPoints: 2,
         valetPoints: 4,
       })
-    }else if(subscription === "gold"){
+    } else if (subscription === "gold") {
       db.collection("users").doc(firebase.auth().currentUser.uid).collection("subscription").doc("sub").set({
         type: "gold",
         carWashPoints: 3,
         valetPoints: 6,
       })
     }
-    
+
   };
-  
+
 
   return (
     <ScrollView style={styles.container} keyboardShouldPersistTaps="always">
+      <View style={{ flexDirection: "row", marginLeft: 100 }}>
+        <View>
+          <SocialIcon
+            type='foursquare'
+          />
+        </View>
+
+        <View>
+          <Text style={{ fontSize: 25, fontFamily: "serif", textAlign: "center", marginBottom: 15, color: "blue", fontWeight: "bold", marginTop: 10 }}>SETTINGS</Text>
+        </View>
+      </View>
+
+      <View style={{ marginTop: 10 }}></View>
+
       <TextInput
         style={{
           height: 40,
@@ -124,44 +145,127 @@ const SettingsScreen = props => {
       {photoURL !== "" && (
         <Image style={{ width: 100, height: 100 }} source={{ uri: photoURL }} />
       )}
-      <Button title="Pick Image" onPress={handlePickImage} />
-      <Button title="Save" onPress={handleSave} />
-      <View>
-      {flag == false ? <View>
-        <Text>
-        Subscription 
-        </Text>
-        <View>
-        <Picker
-          selectedValue={"Pick a Department"}
-          style={{height: 50, width: "100%"}}
-          onValueChange={(itemValue, itemIndex) =>
-            setSubscription(itemValue)
-          }>
-          <Picker.Item label="Select a Department" value="" />
-          <Picker.Item label="Bronze Price:15" value="bronze" />
-          <Picker.Item label="Silver Price:30" value="silver" />
-          <Picker.Item label="Gold Price:50" value="gold" />
-        </Picker>
-        </View>
-        <Button title="subscribe and pay" onPress={handleSubscription}/>
-        <Button title="visit to parking news" onPress = {() => props.navigation.navigate("NewsStack")}/>
-        <Button title="My suggestions screen" onPress = {() => props.navigation.navigate("SuggestionsStack")}/>
-        </View>
-        : <View>
-          <Text>Car Wash Point: {userSub.carWashPoints}</Text>
-          <Text>Type: {userSub.type}</Text>
-          <Text>Valet Point: {userSub.valetPoints}</Text>
-          </View>
+
+      <View style={{ marginTop: 10 }}></View>
+
+      <Animatable.View animation="flipInX" duration={1000} direction="alternate">
+        <Button
+          icon={
+            <MaterialIcons
+              name="image"
+              color="white"
+              size={15}
+            />
           }
-      
+          title=" PICK IMAGE"
+          onPress={handlePickImage}
+        />
+      </Animatable.View>
+
+      <View style={{ marginTop: 10 }}></View>
+
+      <Animatable.View animation="flipInX" duration={1000} direction="alternate">
+        <Button
+          icon={
+            <MaterialIcons
+              name="save"
+              color="white"
+              size={15}
+            />
+          }
+          title=" SAVE"
+          onPress={handleSave}
+        />
+      </Animatable.View>
+
+      <View style={{ marginTop: 10 }}></View>
+
+      <View>
+        {flag == false ? <View>
+          <Text>
+            Subscription
+        </Text>
+          <View>
+            <Picker
+              selectedValue={"Pick a Department"}
+              style={{ height: 50, width: "100%" }}
+              onValueChange={(itemValue, itemIndex) =>
+                setSubscription(itemValue)
+              }>
+              <Picker.Item label="Select a Department" value="" />
+              <Picker.Item label="Bronze Price:15" value="bronze" />
+              <Picker.Item label="Silver Price:30" value="silver" />
+              <Picker.Item label="Gold Price:50" value="gold" />
+            </Picker>
+          </View>
+
+          <View style={{ marginTop: 10 }}></View>
+
+          <Animatable.View animation="flipInX" duration={1000} direction="alternate">
+            <Button
+              icon={
+                <MaterialIcons
+                  name="subscriptions"
+                  color="white"
+                  size={15}
+                />
+              }
+              title=" SUBSCRIBE AND PAY"
+              onPress={handleSubscription}
+            />
+          </Animatable.View>
+
+          <View style={{ marginTop: 10 }}></View>
+
+          <Animatable.View animation="flipInX" duration={1000} direction="alternate">
+            <Button
+              icon={
+                <Entypo
+                  name="news"
+                  color="white"
+                  size={15}
+                />
+              }
+              title=" VISIT TO PARKING NEWS"
+              onPress={() => props.navigation.navigate("NewsStack")}
+            />
+          </Animatable.View>
+
+          <View style={{ marginTop: 10 }}></View>
+
+          <Animatable.View animation="flipInX" duration={1000} direction="alternate">
+            <Button
+              icon={
+                <MaterialIcons
+                  name="filter-list"
+                  color="white"
+                  size={15}
+                />
+              }
+              title=" MY SUGGESTIONS SCREEN"
+              onPress={() => props.navigation.navigate("SuggestionsStack")}
+            />
+          </Animatable.View>
+
+        </View>
+          : <View>
+            <Text>Car Wash Point: {userSub.carWashPoints}</Text>
+            <Text>Type: {userSub.type}</Text>
+            <Text>Valet Point: {userSub.valetPoints}</Text>
+          </View>
+        }
+
       </View>
     </ScrollView>
   );
 }
 
+// SettingsScreen.navigationOptions = {
+//   title: "Settings"
+// };
+
 SettingsScreen.navigationOptions = {
-  title: "Settings"
+  header: null
 };
 
 const styles = StyleSheet.create({

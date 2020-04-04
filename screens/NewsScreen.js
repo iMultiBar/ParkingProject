@@ -4,10 +4,8 @@ import {
   Image,
   Platform,
   TextInput,
-  Button,
   ScrollView,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View
 } from "react-native";
@@ -16,6 +14,13 @@ import { MonoText } from "../components/StyledText";
 import firebase from "firebase/app";
 import "firebase/auth";
 import db from "../db.js";
+
+import { MaterialIcons, Entypo } from "@expo/vector-icons";
+
+import { Button, Text } from 'react-native-elements';
+import { SocialIcon } from 'react-native-elements';
+import * as Animatable from "react-native-animatable";
+
 
 
 const NewsScreen = props => {
@@ -69,18 +74,62 @@ const NewsScreen = props => {
 
   return (
     <View style={styles.container}>
-      <Text style={{textAlign:"center",fontSize:50, flex:1,marginTop:15}}>News Feed</Text>
-      <View style={{flex:4}}>
-      {news.map((n,i) => (
-        <View key={i} style={{borderColor:"black",borderWidth:3,borderStyle:"solid", marginBottom:20,padding:5}}>
-          <Text><Text style={{ fontWeight: 'bold' }}>Subject</Text>: {n.subject}</Text>
-          <Text><Text style={{ fontWeight: 'bold' }}>Description</Text>: {n.description}</Text>
-          <Text><Text style={{ fontWeight: 'bold' }}>Publish Date</Text>: {n.datePublished}</Text>
-          <Text><Text style={{ fontWeight: 'bold' }}>End Date</Text>: {n.endDate}</Text>
+      <View style={{ flexDirection: "row", marginLeft: 100 }}>
+        <View>
+          <SocialIcon
+            type='foursquare'
+          />
         </View>
-      ))}
+
+        <View>
+          <Text style={{ fontSize: 25, fontFamily: "serif", textAlign: "center", marginBottom: 15, color: "blue", fontWeight: "bold", marginTop: 10 }}>NEWS FEED</Text>
+        </View>
       </View>
-      <Button title="Logout" onPress={handleLogout} /> 
+
+      <View style={{ marginTop: 10 }}></View>
+
+      <View style={{ flex: 4 }}>
+        {news.map((n, i) => (
+          <View key={i} style={{ borderColor: "black", borderWidth: 3, borderStyle: "solid", marginBottom: 20, padding: 5 }}>
+            <Text><Text style={{ fontWeight: 'bold' }}>Subject</Text>: {n.subject}</Text>
+            <Text><Text style={{ fontWeight: 'bold' }}>Description</Text>: {n.description}</Text>
+            <Text><Text style={{ fontWeight: 'bold' }}>Publish Date</Text>: {n.datePublished}</Text>
+            <Text><Text style={{ fontWeight: 'bold' }}>End Date</Text>: {n.endDate}</Text>
+          </View>
+        ))}
+      </View>
+
+      
+      <Animatable.View animation="lightSpeedIn" direction="alternate" duration={1000}>
+        <Button
+          icon={
+            <Entypo
+              name="news"
+              color="white"
+              size={15}
+            />
+          }
+          title=" BACK TO SETTINGS"
+          onPress={() => props.navigation.navigate("SettingsStack")}
+        />
+      </Animatable.View>
+
+      <View style={{ marginTop: 10 }}></View>
+
+      <Animatable.View animation="lightSpeedIn" direction="alternate" duration={1000}>
+        <Button
+          icon={
+            <Entypo
+              name="news"
+              color="white"
+              size={15}
+            />
+          }
+          title=" LOGOUT"
+          onPress={handleLogout}
+        />
+      </Animatable.View>
+
     </View>
   );
 }
@@ -128,8 +177,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    justifyContent:"center",
-    alignContent:"center"
+    justifyContent: "center",
+    alignContent: "center"
   },
   developmentModeText: {
     marginBottom: 20,
