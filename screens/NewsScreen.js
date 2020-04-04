@@ -11,7 +11,7 @@ import {
   TouchableOpacity,
   View
 } from "react-native";
-
+import * as Animatable from 'react-native-animatable';
 import { MonoText } from "../components/StyledText";
 import firebase from "firebase/app";
 import "firebase/auth";
@@ -67,17 +67,23 @@ export default function NewsScreen() {
     firebase.auth().signOut();
   };
 
+
   return (
     <View style={styles.container}>
-      <Text style={{textAlign:"center",fontSize:50, flex:1,marginTop:15}}>News Feed</Text>
+      <Animatable.Text animation='zoomIn'  direction="normal" iterationCount='5'>
+        <Text style={{textAlign:"center",fontSize:50, flex:1,marginTop:15}}>News Feed</Text>
+      </Animatable.Text>
       <View style={{flex:4}}>
       {news.map((n,i) => (
-        <View key={i} style={{borderColor:"black",borderWidth:3,borderStyle:"solid", marginBottom:20,padding:5}}>
+        <Animatable.View animation='pulse'  direction="normal" iterationCount='5'>
+          <View key={i} style={{borderColor:"black",borderWidth:3,borderStyle:"solid", marginBottom:15,padding:5,margin:5}}>
           <Text><Text style={{ fontWeight: 'bold' }}>Subject</Text>: {n.subject}</Text>
           <Text><Text style={{ fontWeight: 'bold' }}>Description</Text>: {n.description}</Text>
           <Text><Text style={{ fontWeight: 'bold' }}>Publish Date</Text>: {n.datePublished}</Text>
           <Text><Text style={{ fontWeight: 'bold' }}>End Date</Text>: {n.endDate}</Text>
         </View>
+      </Animatable.View>
+        
       ))}
       </View>
       <Button title="Logout" onPress={handleLogout} /> 
@@ -86,7 +92,7 @@ export default function NewsScreen() {
 }
 
 NewsScreen.navigationOptions = {
-  header: null
+  title:"News",
 };
 
 function DevelopmentModeNotice() {

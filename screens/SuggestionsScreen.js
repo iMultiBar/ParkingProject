@@ -13,6 +13,8 @@ import {
   Picker,
 
 } from "react-native";
+import * as Animatable from 'react-native-animatable';
+import { Ionicons,Entypo,AntDesign,FontAwesome } from '@expo/vector-icons';
 
 import { MonoText } from "../components/StyledText";
 import firebase from "firebase/app";
@@ -66,8 +68,15 @@ export default function SuggestionsScreen() {
 
   return (
     <View style={styles.container}>
-        <Text style={{textAlign:"center",fontSize:40, flex:1,marginTop:15}}>submit your suggestion below</Text>
+        <Text style={{textAlign:"center",fontSize:40, marginTop:15}}>
+          We Care About What </Text><Animatable.View  animation='tada' iterationCount='infinite' direction='normal'><Text style={{textAlign:"center",fontSize:40}}>You</Text></Animatable.View> 
+          <Text style={{textAlign:"center",fontSize:40}}>
+          Think
+          </Text>
         <View style={{flex:1}}>
+        <Animatable.View  marginTop={50}  animation='bounce' iterationCount='infinite' direction='normal'><Text style={{textAlign:"center",fontSize:20}}>Give us Your Suggestion Below</Text></Animatable.View>
+        <Animatable.View flex={1} marginTop={50}  animation='bounce' iterationCount='infinite' direction='normal'><FontAwesome style={{textAlign:"center",fontSize:20}} name={"arrow-down"} /></Animatable.View>
+
         <TextInput
             style={{ height: 40, borderColor: "gray", borderWidth: 1 }}
             onChangeText={setDescription}

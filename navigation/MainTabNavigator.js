@@ -2,6 +2,8 @@ import React, { useEffect } from 'react';
 import { Platform } from 'react-native';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
+import { Ionicons,Entypo,AntDesign,FontAwesome } from '@expo/vector-icons';
+
 
 import db from '../db';
 import firebase from "firebase/app";
@@ -36,13 +38,9 @@ const HomeStack = createStackNavigator(
 HomeStack.navigationOptions = {
   tabBarLabel: 'Home',
   tabBarIcon: ({ focused }) => (
-    <TabBarIcon
+    <Entypo
       focused={focused}
-      name={
-        Platform.OS === 'ios'
-          ? `ios-information-circle${focused ? '' : '-outline'}`
-          : 'md-information-circle'
-      }
+      name={'map'}
     />
   ),
 };
@@ -75,7 +73,7 @@ const SuggestionsStack = createStackNavigator(
 SuggestionsStack.navigationOptions = {
   tabBarLabel: 'Suggestions',
   tabBarIcon: ({ focused }) => (
-    <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-link' : 'md-link'} />
+    <FontAwesome focused={focused} name={'question'} />
   ),
 };
 
@@ -107,7 +105,7 @@ const NewsStack = createStackNavigator(
 NewsStack.navigationOptions = {
   tabBarLabel: 'News',
   tabBarIcon: ({ focused }) => (
-    <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-link' : 'md-link'} />
+    <Entypo focused={focused} name={'news'} />
   ),
 };
 

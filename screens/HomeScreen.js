@@ -32,7 +32,7 @@ export default function HomeScreen() {
   const [parkings, setParkings] = useState([]);
   let ppp = [];
   const DELAY = 10;
-
+  console.disableYellowBox = true;
   //   useEffect(() => {
   //   _getLocationAsync();
   // });
@@ -43,13 +43,14 @@ export default function HomeScreen() {
 
   useEffect(() => {
     init();
-    simulate();
+    // simulate();
   }, []);
 
   const init = async () => {
     const temp = [];
     // do once only, not a listener
-    const querySnapshot = await db.collection("parking").doc("yq4MTqaC4xMaAf9HArZp").collection('c-2').get()
+    const querySnapshot = await db.collection("parking").doc("yq4MTqaC4xMaAf9HArZp").
+    collection('c-2').get()
     querySnapshot.forEach(doc => {
       temp.push({ id: doc.id, ...doc.data() });
     });
