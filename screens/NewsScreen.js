@@ -87,7 +87,7 @@ const NewsScreen = props => {
       </View>
 
       <View style={{ marginTop: 10 }}></View>
-
+      
       <View style={{ flex: 4 }}>
         {news.map((n, i) => (
           <View key={i} style={{ borderColor: "black", borderWidth: 3, borderStyle: "solid", marginBottom: 20, padding: 5 }}>
