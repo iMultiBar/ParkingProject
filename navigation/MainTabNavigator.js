@@ -27,7 +27,13 @@ const config = Platform.select({
   web: { headerMode: 'screen' },
   default: {},
 });
-
+/*
+  This is the HomeStack object. It handles the bottom navigation for the HomeScreen
+  below there is also the navigationOptions for the HomeStack, and inside of that is the title
+  and icon of the Bottom Tab. the stack navigator is then added to the tabNavigator object.
+  this whole component is where me and my group put all the bottom tab navigation links.
+  so this file handles the navigation for the whole project.
+*/
 const HomeStack = createStackNavigator(
   {
     Home: HomeScreen,
@@ -46,7 +52,7 @@ HomeStack.navigationOptions = {
 };
 
 HomeStack.path = '';
-
+////////////////////////////////////////////////////////////////////////
 const LinksStack = createStackNavigator(
   {
     Links: LinksScreen,
@@ -63,6 +69,11 @@ LinksStack.navigationOptions = {
 
 LinksStack.path = '';
 //////////////////////////////////////////////////////////
+/*
+  This is the SuggestionsStack object. It handles the bottom navigation for the SuggestionsScreen
+  below there is also the navigationOptions for the SuggestionsStack, and inside of that is the title
+  and icon of the Bottom Tab. the stack navigator is then added to the tabNavigator object.
+*/
 const SuggestionsStack = createStackNavigator(
   {
     Suggestions: SuggestionsScreen,
@@ -95,6 +106,11 @@ TestStack.navigationOptions = {
 
 TestStack.path = '';
 ////////////////////////////////////////////////////////////////
+/*
+  This is the NewsStack object. It handles the bottom navigation for the NewsScreen
+  below there is also the navigationOptions for the NewsStack, and inside of that is the title
+  and icon of the Bottom Tab. the stack navigator is then added to the tabNavigator object.
+*/
 const NewsStack = createStackNavigator(
   {
     News: NewsScreen,

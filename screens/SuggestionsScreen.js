@@ -83,6 +83,13 @@ export default function SuggestionsScreen() {
             placeholder="What is your suggestion"
             value={description}
         />
+        {/*
+          this is the picker component. this components allows the user to pick on of many
+          predetermined data for the input. this will allow me to control the user's input
+          some of the props are mode, which will change depending on the OS being used.
+          onValueChange which will set the corresponding value above when the picks an option.
+          each of the options will be in a sub component, called Picker.Item
+        */}
         <Picker
         mode="dialog"
           selectedValue={type}

@@ -25,7 +25,10 @@ export default function NewsScreen() {
   // const [subjet, setSubjet] = React.useState("");
   // const [description, setDescription] = React.useState("");
 
-
+  /*
+    this useEffect will get the data from the database collection 'News'
+    to be shown later for the user. after the page renders
+  */
   useEffect(() => {
     db.collection("news").onSnapshot(querySnapshot => {
       const news = [];
@@ -70,6 +73,12 @@ export default function NewsScreen() {
 
   return (
     <View style={styles.container}>
+      {/*
+        this is the animatable component. it allows me to show animations for the user.
+        it takes a couple of essential props. animation prop will decide what animation
+        will be shown. direction will decide how this animation will play. 
+        the iteration count is not necessery but its good to be there.
+      */}
       <Animatable.Text animation='zoomIn'  direction="normal" iterationCount='5'>
         <Text style={{textAlign:"center",fontSize:50, flex:1,marginTop:15}}>News Feed</Text>
       </Animatable.Text>

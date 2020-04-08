@@ -27,9 +27,11 @@ require("firebase/firestore");
 import Message from "./Message.js";
 
 export default function HomeScreen() {
-
+  /* react native hook useState is being used to initialize data */
   const [location, setLocation] = useState({coords:{latitude:0,longitude:0}});
+  /* react native hook useState is being used to initialize data */
   const [parkings, setParkings] = useState([]);
+
   let ppp = [];
   const DELAY = 10;
   console.disableYellowBox = true;
@@ -41,6 +43,12 @@ export default function HomeScreen() {
   //   _getLocationAsync();
   // }, [location]);
 
+  /*
+    react native hook useEffect is going to be called after everything is rendered.
+    this useEffect here will call the init() method to initialize the parking lots
+    data, to be used in the map. then it will start the simulation by calling the
+    simulate method.
+  */
   useEffect(() => {
     init();
     // simulate();
@@ -119,6 +127,13 @@ export default function HomeScreen() {
   return (
     location && 
     <View style={styles.container}>
+      {/*
+        react native component MapView this component will show the map to the user
+        within this componenet there a are a bunch of properties. showUserLocation will
+        show the users current location. followUserLocation if it was true it will force
+        the map to always follow the user. finally the mapType will select the type of map view
+        to be shown.
+      */}
       <MapView
         style={{width:"100%",height:500,flex:1}}
         showsUserLocation={true}
@@ -127,7 +142,13 @@ export default function HomeScreen() {
       >
         {"parking in render",console.log(parkings)}
         {parkings.map((p,i) =>(
-          
+        /*
+          react native component Marker this component is used inside the MapView component
+          this components only job is to show markers on the map to the user. it has props 
+          the image which is the image that will be shown as the marker. cordinates which
+          are where this marker will show. title and describtion to show for the user when
+          they click on the marker.
+        */
           <Marker
           key={i}
           image={p.status === "free"? require('../assets/images/green.jpg')

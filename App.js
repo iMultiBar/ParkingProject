@@ -148,6 +148,7 @@ export default function App(props) {
         />
 
         <Picker
+          mode="dialog"
           selectedValue={"Select a Department"}
           style={{height: 50, width: "100%"}}
           onValueChange={(itemValue, itemIndex) =>
