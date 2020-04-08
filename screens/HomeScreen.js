@@ -168,7 +168,7 @@ export default function HomeScreen() {
         />
     
     </MapView>
-        
+
     <Button title="Logout" onPress={handleLogout} />  
     </View>
   );

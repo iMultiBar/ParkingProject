@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Platform } from 'react-native';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
-import { Ionicons,Entypo,AntDesign,FontAwesome } from '@expo/vector-icons';
+import { Ionicons,Entypo,AntDesign,FontAwesome,MaterialIcons } from '@expo/vector-icons';
 
 
 import db from '../db';
@@ -11,6 +11,7 @@ import "firebase/auth";
 
 import TabBarIcon from '../components/TabBarIcon';
 import HomeScreen from '../screens/HomeScreen';
+import ReportScreen from '../screens/ReportScreen';
 import LinksScreen from '../screens/LinksScreen';
 import UserScreen from '../screens/UserScreen';
 import TestScreen from '../screens/TestScreen';
@@ -69,6 +70,22 @@ LinksStack.navigationOptions = {
 
 LinksStack.path = '';
 //////////////////////////////////////////////////////////
+const ReportStack = createStackNavigator(
+  {
+    Report: ReportScreen,
+  },
+  config
+);
+
+ReportStack.navigationOptions = {
+  tabBarLabel: 'Report',
+  tabBarIcon: ({ focused }) => (
+    <MaterialIcons focused={focused} name={'report'} />
+  ),
+};
+
+ReportStack.path = '';
+//////////////////////////////////////////////////////////
 /*
   This is the SuggestionsStack object. It handles the bottom navigation for the SuggestionsScreen
   below there is also the navigationOptions for the SuggestionsStack, and inside of that is the title
@@ -89,6 +106,7 @@ SuggestionsStack.navigationOptions = {
 };
 
 SuggestionsStack.path = '';
+
 ////////////////////////////////////////////////////////////////
 const TestStack = createStackNavigator(
   {
@@ -203,7 +221,8 @@ const tabNavigator = createBottomTabNavigator({
   NewsStack,
   SuggestionsStack,
   CleanerStack,
-  CarriersStack
+  CarriersStack,
+  ReportStack
 });
 
 // work in progress...
