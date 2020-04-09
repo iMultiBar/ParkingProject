@@ -15,7 +15,7 @@ import {
   View
 } from "react-native";
 
-import {Marker} from 'react-native-maps';
+import { Marker } from 'react-native-maps';
 import MapView from 'react-native-maps';
 
 import { MonoText } from "../components/StyledText";
@@ -27,7 +27,7 @@ import Message from "./Message.js";
 
 export default function HomeScreen() {
 
-  const [location, setLocation] = useState({coords:{latitude:0,longitude:0}});
+  const [location, setLocation] = useState({ coords: { latitude: 0, longitude: 0 } });
 
 
   // useEffect(() => {
@@ -41,7 +41,7 @@ export default function HomeScreen() {
   //   });
   // }, []);
 
-    useEffect(() => {
+  useEffect(() => {
     _getLocationAsync();
   });
 
@@ -49,7 +49,7 @@ export default function HomeScreen() {
   //   _getLocationAsync();
   // }, [location]);
 
- const _getLocationAsync = async () => {
+  const _getLocationAsync = async () => {
     let { status } = await Permissions.askAsync(Permissions.LOCATION);
     if (status !== 'granted') {
       this.setState({
@@ -67,26 +67,26 @@ export default function HomeScreen() {
   };
 
   return (
-    location && 
+    location &&
     <View style={styles.container}>
       <MapView
-        style={{width:"100%",height:500,flex:1}}
+        style={{ width: "100%", height: 500, flex: 1 }}
         showsUserLocation={true}
         followsUserLocation={true}
-        
+
       >
-    
+
         <Marker
           image={require('../assets/images/carIcon.png')}
-          
-          coordinate={{latitude:location.coords.latitude,longitude:location.coords.longitude}}
+
+          coordinate={{ latitude: location.coords.latitude, longitude: location.coords.longitude }}
           title={"My Car"}
           description={"this is your car's current location"}
         />
-    
-    </MapView>
-        
-    <Button title="Logout" onPress={handleLogout} />  
+
+      </MapView>
+
+      <Button title="Logout" onPress={handleLogout} />
     </View>
   );
 }
