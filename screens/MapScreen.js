@@ -39,15 +39,15 @@ export default function MapScreen(props) {
   const DELAY = 10;
   console.disableYellowBox = true;
 
-    useEffect(() => {
-    _getLocationAsync();
-  });
+//     useEffect(() => {
+//     _getLocationAsync();
+//   });
 
-// this useEffect is just a listener that will make sure that
-// the current user location is always up to date
-  useEffect(() => {
-    _getLocationAsync();
-  }, [location]);
+// // this useEffect is just a listener that will make sure that
+// // the current user location is always up to date
+//   useEffect(() => {
+//     _getLocationAsync();
+//   }, [location]);
 
   /*
     react native hook useEffect is going to be called after everything is rendered.
@@ -75,47 +75,48 @@ export default function MapScreen(props) {
 
 
 
-  const simulate = async () => {
-    // get necessary data from db for simulation to start
-    // await init()
+//   const simulate = async () => {
+//     // get necessary data from db for simulation to start
+//     // await init()
 
-    // simulate something (e.g. db update) every DELAY seconds
-    setInterval(async () => {
+//     // simulate something (e.g. db update) every DELAY seconds
+//     setInterval(async () => {
       
-        // select a random item
-        const i = Math.floor(Math.random() * ppp.length)
+//         // select a random item
+//         const i = Math.floor(Math.random() * ppp.length)
 
-        // change it somehow
-        // - must modify local copy of db data
-        //   to avoid reloading from db
-        const rnd = Math.random()
-        let choice = ""
+//         // change it somehow
+//         // - must modify local copy of db data
+//         //   to avoid reloading from db
+//         const rnd = Math.random()
+//         let choice = ""
 
-        // - use percentages to decide what to do
-        // - change to suit your own needs
-        if(rnd < 0.3333) {
-            choice = "free"
-        } else if (rnd < .6666) {
-            choice = "taken"
-        } else {
-            choice = "hold"
-        }
-        ppp[i].status = choice
+//         // - use percentages to decide what to do
+//         // - change to suit your own needs
+//         if(rnd < 0.3333) {
+//             choice = "free"
+//         } else if (rnd < .6666) {
+//             choice = "taken"
+//         } else {
+//             choice = "hold"
+//         }
+//         ppp[i].status = choice
         
-        // update the db
+//         // update the db
     
-        console.log('parking after simulation',ppp)
-        setParkings(ppp);
-        /* this code in the simulate method was messing up my database
-           so i added some changes to it to make it work in my favor.
-           i made it work with subcollections. i removed the id that was 
-           being added inside my parkings because the database is not 
-           made that way.*/
-        await db.collection("parking").doc("yq4MTqaC4xMaAf9HArZp").collection('c-2').doc(ppp[i].parkingNumber).set(ppp[i]);
-        console.log('simulated with item[', i, ']: ', ppp[i].status)
-    }, DELAY * 1000)
+//         console.log('parking after simulation',ppp)
+//         setParkings(ppp);
+//         /* this code in the simulate method was messing up my database
+//            so i added some changes to it to make it work in my favor.
+//            i made it work with subcollections. i removed the id that was 
+//            being added inside my parkings because the database is not 
+//            made that way.*/
+//         await db.collection("parking").doc("yq4MTqaC4xMaAf9HArZp").collection('c-2').doc(ppp[i].parkingNumber).set(ppp[i]);
+//         console.log('simulated with item[', i, ']: ', ppp[i].status)
+//     }, DELAY * 1000)
 
-}
+// }
+
 /* this method will get the user's current location as an object
    so that it will be used later */
  const _getLocationAsync = async () => {
@@ -141,11 +142,29 @@ export default function MapScreen(props) {
   /* this method in progress but it will add the reserved parking 
   to an array so the user can reserve more than one parking 
   at once*/
-  const handleReserve = (i) => {
-    console.log(i);
+  const handleAdd = (i) => {
+    console.log('chosen parking',chosen);
     var temp = chosen;
-    temp.push(i);
-    // setChosen(temp);
+    console.log(i.status);
+    if(i.status === 'free'){
+      if(!temp.includes(i)){
+        temp.push(i);
+        setChosen(temp);
+      } else{
+        alert('you have already chosen this parking lot')
+      }
+    
+    } 
+    else if(i.status === 'hold'){
+      alert('please stand by this parking is on hold');
+    }
+    else{
+      alert('this parking is not available')
+    }
+  };
+
+  const handleReserve = (i) => {
+    props.navigation.navigate('Reservation')
   };
 
   return (
@@ -164,7 +183,6 @@ export default function MapScreen(props) {
         followsUserLocation={false}
         mapType={"satellite"}
       >
-        {"parking in render",console.log(parkings)}
         {/* here i'm mapping the parkings array to show them as squares on the map */}
         {parkings.map((p,i) =>(
         /*
@@ -173,26 +191,26 @@ export default function MapScreen(props) {
           to know which color the parking is going to be.
         */
         <Marker
-          onPress={() => handleReserve(p)}
+          onPress={() => handleAdd(p)}
           key={i}
           image={p.status === "free"? require('../assets/images/green.jpg')
           : p.status === "taken"?require('../assets/images/red.jpg')
           :require('../assets/images/yellow.jpg')}
           coordinate={{latitude:parseFloat(p.latitude),longitude:parseFloat(p.longitude)}}
           title={`parking No.${p.parkingNumber}`}
-          description={`this is parking No.${p.parkingNumber} and it is ${p.status}`}
+          description={`Press here to reserve parking number ${p.parkingNumber}`}
         />
 
         ))}
         {/* this marker is the users ca which is by default on their
             current location. this will be used later to show the user
             where they parked because it will stay on the square (parking) */}
-        <Marker
+        {/* <Marker
           image={require('../assets/images/carIcon.png')}
           coordinate={{latitude:location.coords.latitude,longitude:location.coords.longitude}}
           title={"My Car"}
           description={"this is your car's current location"}
-        />
+        /> */}
     
     </MapView>
     <Button title="Reserve" onPress={handleReserve} />  
