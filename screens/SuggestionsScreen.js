@@ -25,7 +25,6 @@ import moment from 'moment';
 
 export default function SuggestionsScreen() {
   const [suggestions, setSuggestions] = useState([]);
-
   const [email, setEmail] = useState("");  
   const [description, setDescription] = useState("");
   const [dateTime, setDateTime] = useState("");

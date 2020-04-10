@@ -1,6 +1,7 @@
 import * as WebBrowser from "expo-web-browser";
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
+import moment from 'moment';
 
 import React, { useState, useEffect } from "react";
 import {
@@ -28,33 +29,44 @@ require("firebase/firestore");
 
 import Message from "./Message.js";
 
-export default function HomeScreen() {
+/* this is the report screen. the user will see this screen when they
+    want to add a new report/complaint. */
+export default function ReportScreen() {
+    // normal useStates to be used later
     const [topic, setTopic] = useState();
     const [date, setDate] = useState();
     const [problem, setProblem] = useState();
     const [target, setTarget] = useState();
+    // this useState gets the current user's id
     const [from, setFrom] = useState(firebase.auth().currentUser.uid);
 
-
+  // this code is just to remove the annoying warnnings that accure
+  // when using timers with android and firebase
   console.disableYellowBox = true;
-  
-//   useEffect(() => {
-//     // simulate();
-//   }, []);
 
- 
-
+  /* this method adds the report or complain to the database collection.
+  most of the fields are coming from the user input. the date is coming from
+  moment.js it gives me the current date and time in a nice format */
   const handleReport = () => {
-    
+    db.collection("reports&complaints")
+    .doc()
+    .set({
+      topic,
+      date:moment().format('DD/MM/YYYY, h:mm:ss a'),
+      problem,
+      target,
+      from,
+      status:"unapproved",
+    });
   };
 
   return (
     <View style={styles.container}>
-
     <View style={{flex:1,justifyContent:"center"}}>
     <Text style={{fontSize:30}}>Choose a Topic to file a report or a complaint on</Text>
+    {/* this picker will allow the user to choose what is the topic of the 
+        report/complaint. */}
     <Picker
-    
           mode="dialog"
           selectedValue={"select a topic"}
           style={{height: 50, width: "100%"}}
@@ -73,6 +85,8 @@ export default function HomeScreen() {
           placeholder="Problem"
           value={problem}
         />
+        {/* depending on which topic the user chooses it will show them
+            the appropriate input option */}
         {topic === "Equepments"?
             <>
             <Text style={{fontSize:15}}>Please describe what and where is that equipment!</Text>
@@ -115,7 +129,7 @@ export default function HomeScreen() {
   );
 }
 
-HomeScreen.navigationOptions = {
+ReportScreen.navigationOptions = {
   header: null
 };
 

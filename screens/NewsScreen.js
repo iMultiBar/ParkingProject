@@ -17,7 +17,9 @@ import firebase from "firebase/app";
 import "firebase/auth";
 import db from "../db.js";
 
-
+/* right now this page is for the admin to access the news
+   with a couple of if statements the user will be able to view 
+   the News from this screen*/
 export default function NewsScreen() {
   const [news, setNews] = useState([]);
   // const [pDate, setPDate] = React.useState("");
@@ -27,7 +29,7 @@ export default function NewsScreen() {
 
   /*
     this useEffect will get the data from the database collection 'News'
-    to be shown later for the user. after the page renders
+    push it into the news variable
   */
   useEffect(() => {
     db.collection("news").onSnapshot(querySnapshot => {
@@ -40,31 +42,28 @@ export default function NewsScreen() {
     });
   }, []);
 
-  // const handleSend = async () => {
-  //   const from = firebase.auth().currentUser.uid;
-  //   if (id) {
-  //     db.collection("messages")
-  //       .doc(id)
-  //       .update({ from, to, text });
-  //   } else {
+  // this method will delete news from the database(by the admin)
+  const handleDelete = (i) => {
+    const d = news[i];
+    console.log(d);
+    db.collection("news").doc(d.id).delete()
+  };
 
-  //     // call serverless function instead
-  //     const sendMessage = firebase.functions().httpsCallable("sendMessage");
-  //     const response2 = await sendMessage({ from, to, text });
-  //     console.log("sendMessage response", response2);
 
-  //     // db.collection("messages").add({ from, to, text });
-  //   }
-  //   setTo("");
-  //   setText("");
-  //   setId("");
+  /* this method will be responsible of adding news to the database */
+  // const handleAdd = async () => {
+  //   const uid = firebase.auth().currentUser.uid;
+  //   db.collection("suggestions")
+  //     .doc()
+  //     .set({
+  //       uid,
+  //       description,
+  //       dateTime: moment().format('DD/MM/YYYY, h:mm:ss a'),
+  //       type,
+  //       status:'unapproved'
+  //     });
   // };
 
-  // const handleEdit = message => {
-  //   setTo(message.to);
-  //   setText(message.text);
-  //   setId(message.id);
-  // };
 
   const handleLogout = () => {
     firebase.auth().signOut();
@@ -73,16 +72,12 @@ export default function NewsScreen() {
 
   return (
     <View style={styles.container}>
-      {/*
-        this is the animatable component. it allows me to show animations for the user.
-        it takes a couple of essential props. animation prop will decide what animation
-        will be shown. direction will decide how this animation will play. 
-        the iteration count is not necessery but its good to be there.
-      */}
+     
       <Animatable.Text animation='zoomIn'  direction="normal" iterationCount='5'>
         <Text style={{textAlign:"center",fontSize:50, flex:1,marginTop:15}}>News Feed</Text>
       </Animatable.Text>
       <View style={{flex:4}}>
+      {/* this map will show the news that had been retrived from the database */}
       {news.map((n,i) => (
         <Animatable.View animation='pulse'  direction="normal" iterationCount='5'>
           <View key={i} style={{borderColor:"black",borderWidth:3,borderStyle:"solid", marginBottom:15,padding:5,margin:5}}>
@@ -90,6 +85,8 @@ export default function NewsScreen() {
           <Text><Text style={{ fontWeight: 'bold' }}>Description</Text>: {n.description}</Text>
           <Text><Text style={{ fontWeight: 'bold' }}>Publish Date</Text>: {n.datePublished}</Text>
           <Text><Text style={{ fontWeight: 'bold' }}>End Date</Text>: {n.endDate}</Text>
+          {/* this TouchableOpacity is used to call the delete method */}
+          <TouchableOpacity onPress={() => handleDelete(i)}><Text style={{color:"red"}}>Delete</Text></TouchableOpacity>
         </View>
       </Animatable.View>
         
