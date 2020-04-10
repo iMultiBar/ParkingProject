@@ -11,10 +11,12 @@ import {
   TouchableOpacity,
   View,
   Picker,
-
+  KeyboardAvoidingView,
+  
 } from "react-native";
 import * as Animatable from 'react-native-animatable';
 import { Ionicons,Entypo,AntDesign,FontAwesome } from '@expo/vector-icons';
+import ReactNativePickerModule from "react-native-picker-module"
 
 import { MonoText } from "../components/StyledText";
 import firebase from "firebase/app";
@@ -24,23 +26,43 @@ import db from "../db.js";
 import moment from 'moment';
 
 export default function SuggestionsScreen() {
+  let pickerRef = null;
+
   const [suggestions, setSuggestions] = useState([]);
   const [email, setEmail] = useState("");  
   const [description, setDescription] = useState("");
   const [dateTime, setDateTime] = useState("");
   const [type, setType] = useState("");
   const [status, setStatus] = useState("");
+  const [user, setUser] = useState("");
 
-//   useEffect(() => {
-//     db.collection("messages").onSnapshot(querySnapshot => {
-//       const messages = [];
-//       querySnapshot.forEach(doc => {
-//         messages.push({ id: doc.id, ...doc.data() });
-//       });
-//       console.log(" Current messages: ", messages);
-//       setMessages([...messages]);
-//     });
-//   }, []);
+
+  useEffect(() => {
+    getUser()
+  }, []);
+
+  useEffect(() => {
+    if(user.role === 'admin'){
+      getSuggestions()
+    }
+  }, [user]);
+
+  const getSuggestions = async () => {
+    await db.collection("suggestions").onSnapshot(querySnapshot => {
+      const sug = [];
+      querySnapshot.forEach(doc => {
+        sug.push({ id: doc.id, ...doc.data() });
+      });
+      console.log(" Current suggestion: ", sug);
+      setSuggestions([...sug]);
+    });
+}
+
+  const getUser = async () => {
+    const User = await db.collection("users").doc(firebase.auth().currentUser.uid).get()
+    console.log(User.data());
+    setUser(User.data());
+}
 
   const handleSubmit = async () => {
     const uid = firebase.auth().currentUser.uid;
@@ -55,6 +77,13 @@ export default function SuggestionsScreen() {
       });
   };
 
+  const approve = n => {
+    console.log(n.id);
+    db.collection("suggestions").doc(n.id).update({
+          status:'approved'
+        });
+  }
+
 //   const handleEdit = message => {
 //     setTo(message.to);
 //     setText(message.text);
@@ -66,7 +95,28 @@ export default function SuggestionsScreen() {
   };
 
   return (
+    user.role === 'admin'? 
     <View style={styles.container}>
+       {suggestions.map((n,i) => (
+     <Animatable.View key={i} animation='pulse'  direction="normal" iterationCount={5}>
+       <View  style={{borderColor:"black",borderWidth:3,borderStyle:"solid", marginBottom:15,padding:5,margin:5}}>
+       <Text><Text style={{ fontWeight: 'bold' }}>Type</Text>: {n.type}</Text>
+       <Text><Text style={{ fontWeight: 'bold' }}>description</Text>: {n.description}</Text>
+       <Text><Text style={{ fontWeight: 'bold' }}>date and time</Text>: {n.dateTime}</Text>
+       <Text><Text style={{ fontWeight: 'bold' }}>From</Text>: {n.uid}</Text>
+       <Text><Text style={{ fontWeight: 'bold' }}>status</Text>: {n.status}</Text>
+       {/* this TouchableOpacity is used to call the delete method */}
+       {n.status ==='unapproved'? <TouchableOpacity onPress={() => approve(n)}><Text style={{color:"green"}}>approve</Text></TouchableOpacity>:null}
+     </View>
+
+   </Animatable.View>
+     
+   ))}
+        <Button title="Logout" onPress={handleLogout} />
+    </View> 
+    : 
+    <ScrollView>
+      <View style={styles.container}>
         <Text style={{textAlign:"center",fontSize:40, marginTop:15}}>
           We Care About What </Text><Animatable.View  animation='tada' iterationCount='infinite' direction='normal'><Text style={{textAlign:"center",fontSize:40}}>You</Text></Animatable.View> 
           <Text style={{textAlign:"center",fontSize:40}}>
@@ -89,25 +139,31 @@ export default function SuggestionsScreen() {
           onValueChange which will set the corresponding value above when the picks an option.
           each of the options will be in a sub component, called Picker.Item
         */}
-        <Picker
-        mode="dialog"
+
+<TouchableOpacity
+          onPress={() => {pickerRef.show()}}
+        >
+    <Text>{type === ""? "Press here to choose the type of suggestion": type}</Text>
+        </TouchableOpacity>
+        <ReactNativePickerModule
+          pickerRef={e => (pickerRef = e)}
           selectedValue={type}
-          style={{height: 50, width: "100%"}}
+          title={'Select what the suggestion is about'}
+          items={['Cleaners','Porters','Parking Maintenance','Managment','IT Department']}
+           style={{height: 50, width: "100%",}}
+          onCancel={() => {console.log("cancelled")}}
           onValueChange={(itemValue, itemIndex) =>
             setType(itemValue)
-          }>
-          <Picker.Item label="who should see this suggestion" value="" />
-          <Picker.Item label="Cleaners" value="Cleaners" />
-          <Picker.Item label="Porters" value="Porters" />
-          <Picker.Item label="Parking Maintenance" value="Maintenance" />
-          <Picker.Item label="Managment" value="health and science" />
-          <Picker.Item label="IT Department" value="IT Department" />
-        </Picker>
+          } 
+          />
+
+        
 
         </View>
         <Button title="submit" onPress={handleSubmit} />
         <Button title="Logout" onPress={handleLogout} />
     </View>
+    </ScrollView>
   );
 }
 

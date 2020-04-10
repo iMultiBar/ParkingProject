@@ -6,15 +6,11 @@ import MapScreen from './MapScreen';
 import ReservationScreen from './Reservation';
 import { createAppContainer } from 'react-navigation';
 
-const AppNavigator = createStackNavigator({
-    Map: { screen: MapScreen }, Reservation: { screen: ReservationScreen }
-});
 
-const AppContainer = createAppContainer(AppNavigator)
 
 function HomeScreen() {
     return (
-        <AppContainer />
+       <Text>this is the home page</Text>
     )
 }
 

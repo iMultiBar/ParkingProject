@@ -14,7 +14,10 @@ import {
   TextInput,
   Button,
   Picker,
+  ProgressViewIOS,
+  Text
 } from "react-native";
+import ReactNativePickerModule from "react-native-picker-module"
 import { Ionicons } from "@expo/vector-icons";
 
 // import {
@@ -28,8 +31,10 @@ import AppNavigator from "./navigation/AppNavigator";
 import firebase from "firebase/app";
 import "firebase/auth";
 import db from "./db";
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 export default function App(props) {
+ let pickerRef = null;
   const [isLoadingComplete, setLoadingComplete] = useState(false);
   const [user, setUser] = useState(null);
   const [view, setView] = useState("register");
@@ -140,29 +145,28 @@ export default function App(props) {
         />
 
         <TextInput
-          style={{ height: 40, borderColor: "gray", borderWidth: 1 }}
+          style={{ height: 40, borderColor: "gray", borderWidth: 1,marginBottom:10 }}
           onChangeText={setPhone}
           placeholder="mobile number"
-          secureTextEntry={true}
           value={phone}
         />
-
-        <Picker
-          mode="dialog"
-          selectedValue={"Select a Department"}
-          style={{height: 50, width: "100%"}}
+        <TouchableOpacity
+          onPress={() => {pickerRef.show()}}
+        >
+    <Text>{department === ""? "select a Department": department}</Text>
+        </TouchableOpacity>
+        <ReactNativePickerModule
+          pickerRef={e => (pickerRef = e)}
+          selectedValue={department}
+          title={'Select a department'}
+          items={['IT','business','engineering','health and science','faculty']}
+           style={{height: 50, width: "100%",}}
+          onCancel={() => {console.log("cancelled")}}
           onValueChange={(itemValue, itemIndex) =>
             setDepartment(itemValue)
-          }>
-          <Picker.Item label="Select a Department" value="" />
-          <Picker.Item label="IT" value="IT" />
-          <Picker.Item label="business" value="business" />
-          <Picker.Item label="engineering" value="engineering" />
-          <Picker.Item label="health and science" value="health and science" />
-          <Picker.Item label="faculty" value="faculty" />
-        </Picker>
-
-
+          } 
+          />
+        
         <Button title="submit" onPress={handleRegister} />
         <Button title="have and account? go to login" onPress={handleView} />
       </View>
