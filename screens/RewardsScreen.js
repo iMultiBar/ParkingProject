@@ -21,6 +21,7 @@ require("firebase/firestore");
 
 import { Card } from 'react-native-elements';
 
+
 export default function ReportScreen() {
     console.disableYellowBox = true;
 
