@@ -17,6 +17,7 @@ import {
   Picker,
   
 } from "react-native";
+import ReactNativePickerModule from "react-native-picker-module"
 
 import {Marker} from 'react-native-maps';
 import MapView from 'react-native-maps';
@@ -33,8 +34,9 @@ import Message from "./Message.js";
 /* this is the report screen. the user will see this screen when they
     want to add a new report/complaint. */
 export default function ReportScreen() {
+  let pickerRef = null;
     // normal useStates to be used later
-    const [topic, setTopic] = useState();
+    const [topic, setTopic] = useState("");
     const [date, setDate] = useState();
     const [problem, setProblem] = useState();
     const [target, setTarget] = useState();
@@ -117,19 +119,26 @@ export default function ReportScreen() {
    <Text style={{fontSize:30}}>Choose a Topic to file a report or a complaint on</Text>
    {/* this picker will allow the user to choose what is the topic of the 
        report/complaint. */}
-   <Picker
-         mode="dialog"
-         selectedValue={"select a topic"}
-         style={{height: 50, width: "100%"}}
-         onValueChange={(itemValue, itemIndex) =>
-           setTopic(itemValue)
-         }>
-         <Picker.Item label="select a topic" value={null} />
-         <Picker.Item label="Equepments" value="Equepments" />
-         <Picker.Item label="Other Drivers" value="Other Drivers" />
-         <Picker.Item label="Cleaners/Porters" value="Cleaners/Porters" />
-       </Picker>
-       <Text style={{fontSize:15}}>What was the problem that you would like to report</Text>
+
+  <TouchableOpacity
+          onPress={() => {pickerRef.show()}}
+        >
+    <Text>{topic === ""? "press here to choose a topic": topic}</Text>
+        </TouchableOpacity>
+        <ReactNativePickerModule
+          pickerRef={e => (pickerRef = e)}
+          selectedValue={topic}
+          title={'Select a topic'}
+          items={['Equepments','Other Drivers','Cleaners/Porters']}
+           style={{height: 50, width: "100%",}}
+          onCancel={() => {console.log("cancelled")}}
+          onValueChange={(itemValue, itemIndex) =>
+            setTopic(itemValue)
+          } 
+          />
+
+   
+       <Text style={{fontSize:15, color:'red'}}>What was the problem that you would like to report</Text>
        <TextInput
          style={{ height: 40, borderColor: "gray", borderWidth: 1 }}
          onChangeText={setProblem}

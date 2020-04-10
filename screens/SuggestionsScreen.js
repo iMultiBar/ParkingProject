@@ -16,6 +16,7 @@ import {
 } from "react-native";
 import * as Animatable from 'react-native-animatable';
 import { Ionicons,Entypo,AntDesign,FontAwesome } from '@expo/vector-icons';
+import ReactNativePickerModule from "react-native-picker-module"
 
 import { MonoText } from "../components/StyledText";
 import firebase from "firebase/app";
@@ -25,6 +26,8 @@ import db from "../db.js";
 import moment from 'moment';
 
 export default function SuggestionsScreen() {
+  let pickerRef = null;
+
   const [suggestions, setSuggestions] = useState([]);
   const [email, setEmail] = useState("");  
   const [description, setDescription] = useState("");
@@ -136,20 +139,25 @@ export default function SuggestionsScreen() {
           onValueChange which will set the corresponding value above when the picks an option.
           each of the options will be in a sub component, called Picker.Item
         */}
-        <Picker
-        mode="dialog"
+
+<TouchableOpacity
+          onPress={() => {pickerRef.show()}}
+        >
+    <Text>{type === ""? "Press here to choose the type of suggestion": type}</Text>
+        </TouchableOpacity>
+        <ReactNativePickerModule
+          pickerRef={e => (pickerRef = e)}
           selectedValue={type}
-          style={{height: 50, width: "100%"}}
+          title={'Select what the suggestion is about'}
+          items={['Cleaners','Porters','Parking Maintenance','Managment','IT Department']}
+           style={{height: 50, width: "100%",}}
+          onCancel={() => {console.log("cancelled")}}
           onValueChange={(itemValue, itemIndex) =>
             setType(itemValue)
-          }>
-          <Picker.Item label="who should see this suggestion" value="" />
-          <Picker.Item label="Cleaners" value="Cleaners" />
-          <Picker.Item label="Porters" value="Porters" />
-          <Picker.Item label="Parking Maintenance" value="Maintenance" />
-          <Picker.Item label="Managment" value="health and science" />
-          <Picker.Item label="IT Department" value="IT Department" />
-        </Picker>
+          } 
+          />
+
+        
 
         </View>
         <Button title="submit" onPress={handleSubmit} />
