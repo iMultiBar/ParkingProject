@@ -163,8 +163,8 @@ export default function MapScreen(props) {
     }
   };
 
-  const handleReserve = (i) => {
-    props.navigation.navigate('Reservation')
+  const handleReserve = () => {
+    props.navigation.navigate('Reservation',{chosen:chosen})
   };
 
   return (

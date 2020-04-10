@@ -5,12 +5,17 @@ import db from '../db';
 import firebase from "firebase/app";
 import "firebase/auth";
 
-export default function reservation() {
+export default function reservation(props) {
     const [user , setUser] = useState(null)
     const [parking, setParking] = useState({Parking:"bla bla bla",code:5})
     const [carList , setCarList] = useState(null)
     const [selectedCar, setSelectedCar] = useState(null)
     const [netCar, setNetCar] = useState(null)
+
+    const parkings = props.navigation.getParam('chosen','did not find the param');
+    console.log('parkings in reservation page',parkings);
+    
+    console.log();
     
     useEffect(()=> {
         getInfo()
