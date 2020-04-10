@@ -31,17 +31,35 @@ export default function SuggestionsScreen() {
   const [dateTime, setDateTime] = useState("");
   const [type, setType] = useState("");
   const [status, setStatus] = useState("");
+  const [user, setUser] = useState("");
 
-//   useEffect(() => {
-//     db.collection("messages").onSnapshot(querySnapshot => {
-//       const messages = [];
-//       querySnapshot.forEach(doc => {
-//         messages.push({ id: doc.id, ...doc.data() });
-//       });
-//       console.log(" Current messages: ", messages);
-//       setMessages([...messages]);
-//     });
-//   }, []);
+
+  useEffect(() => {
+    getUser()
+  }, []);
+
+  useEffect(() => {
+    if(user.role === 'admin'){
+      getSuggestions()
+    }
+  }, [user]);
+
+  const getSuggestions = async () => {
+    await db.collection("suggestions").onSnapshot(querySnapshot => {
+      const sug = [];
+      querySnapshot.forEach(doc => {
+        sug.push({ id: doc.id, ...doc.data() });
+      });
+      console.log(" Current suggestion: ", sug);
+      setSuggestions([...sug]);
+    });
+}
+
+  const getUser = async () => {
+    const User = await db.collection("users").doc(firebase.auth().currentUser.uid).get()
+    console.log(User.data());
+    setUser(User.data());
+}
 
   const handleSubmit = async () => {
     const uid = firebase.auth().currentUser.uid;
@@ -56,6 +74,13 @@ export default function SuggestionsScreen() {
       });
   };
 
+  const approve = n => {
+    console.log(n.id);
+    db.collection("suggestions").doc(n.id).update({
+          status:'approved'
+        });
+  }
+
 //   const handleEdit = message => {
 //     setTo(message.to);
 //     setText(message.text);
@@ -67,8 +92,28 @@ export default function SuggestionsScreen() {
   };
 
   return (
-    
+    user.role === 'admin'? 
     <View style={styles.container}>
+       {suggestions.map((n,i) => (
+     <Animatable.View key={i} animation='pulse'  direction="normal" iterationCount={5}>
+       <View  style={{borderColor:"black",borderWidth:3,borderStyle:"solid", marginBottom:15,padding:5,margin:5}}>
+       <Text><Text style={{ fontWeight: 'bold' }}>Type</Text>: {n.type}</Text>
+       <Text><Text style={{ fontWeight: 'bold' }}>description</Text>: {n.description}</Text>
+       <Text><Text style={{ fontWeight: 'bold' }}>date and time</Text>: {n.dateTime}</Text>
+       <Text><Text style={{ fontWeight: 'bold' }}>From</Text>: {n.uid}</Text>
+       <Text><Text style={{ fontWeight: 'bold' }}>status</Text>: {n.status}</Text>
+       {/* this TouchableOpacity is used to call the delete method */}
+       {n.status ==='unapproved'? <TouchableOpacity onPress={() => approve(n)}><Text style={{color:"green"}}>approve</Text></TouchableOpacity>:null}
+     </View>
+
+   </Animatable.View>
+     
+   ))}
+        <Button title="Logout" onPress={handleLogout} />
+    </View> 
+    : 
+    <ScrollView>
+      <View style={styles.container}>
         <Text style={{textAlign:"center",fontSize:40, marginTop:15}}>
           We Care About What </Text><Animatable.View  animation='tada' iterationCount='infinite' direction='normal'><Text style={{textAlign:"center",fontSize:40}}>You</Text></Animatable.View> 
           <Text style={{textAlign:"center",fontSize:40}}>
@@ -110,6 +155,7 @@ export default function SuggestionsScreen() {
         <Button title="submit" onPress={handleSubmit} />
         <Button title="Logout" onPress={handleLogout} />
     </View>
+    </ScrollView>
   );
 }
 
