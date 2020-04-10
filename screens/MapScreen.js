@@ -77,7 +77,7 @@ export default function MapScreen(props) {
 
   const simulate = async () => {
     // get necessary data from db for simulation to start
-    await init()
+    // await init()
 
     // simulate something (e.g. db update) every DELAY seconds
     setInterval(async () => {
@@ -142,9 +142,10 @@ export default function MapScreen(props) {
   to an array so the user can reserve more than one parking 
   at once*/
   const handleReserve = (i) => {
+    console.log(i);
     var temp = chosen;
     temp.push(i);
-    setChosen(temp);
+    // setChosen(temp);
   };
 
   return (
