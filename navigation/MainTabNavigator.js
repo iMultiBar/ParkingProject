@@ -5,6 +5,8 @@ import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { Ionicons,Entypo,AntDesign,FontAwesome,MaterialIcons } from '@expo/vector-icons';
 
 
+//check lines number 19, 130, 137, and 184.
+
 import db from '../db';
 import firebase from "firebase/app";
 import "firebase/auth";
@@ -15,7 +17,7 @@ import ReportScreen from '../screens/ReportScreen';
 import LinksScreen from '../screens/LinksScreen';
 import UserScreen from '../screens/UserScreen';
 import TestScreen from '../screens/TestScreen';
-import CleanerScreen from '../screens/CleanerScreen';
+import CleanerScreen from '../screens/CleanerScreen'; // import the cleanerScreen.js to use it in the StackNavigator
 import NewsScreen from '../screens/NewsScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import SuggestionsScreen from '../screens/SuggestionsScreen';
@@ -159,13 +161,14 @@ SettingsStack.navigationOptions = {
   ),
 };
 ////////////////////////////////////////////////////////////////
+// this const creates stack navigator which uses the import apove to display when the user click on it.
 const CleanerStack = createStackNavigator(
   {
     Cleaner: CleanerScreen,
   },
   config
 );
-
+// this naigationoptions allows to edit the tab it self for here. i added a tabBarLable which give a name to the tab
 CleanerStack.navigationOptions = {
   tabBarLabel: 'CleanerScreen',
   tabBarIcon: ({ focused }) => (
@@ -212,6 +215,7 @@ CarriersStack.navigationOptions = {
 
 CarriersStack.path = '';
 
+// here the const get all the const names apove and put the them in tabnaigator to show them in the bottom on the screen because we used (createBottomTabNavigator)
 const tabNavigator = createBottomTabNavigator({
   HomeStack,
   TestStack,

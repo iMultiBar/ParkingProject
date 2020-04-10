@@ -71,7 +71,8 @@ exports.initUser = functions.https.onRequest(async (request, response) => {
 
   response.send("All done ");
 });
-
+// this function will be called by the name of the exports property which
+// will create https secure line that will add the cleaner request.
 exports.requestCarClean = functions.https.onCall(async (data, context) => {
   db.collection("requests").doc("clean").collection("cleanRequest").add({
     parkingLocation: data.parkingLocation,
