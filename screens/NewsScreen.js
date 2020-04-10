@@ -16,7 +16,7 @@ import { MonoText } from "../components/StyledText";
 import firebase from "firebase/app";
 import "firebase/auth";
 import db from "../db.js";
-import DatePicker from 'react-native-datepicker'
+// import DatePicker from 'react-native-datepicker'; 
 import moment from 'moment';
 
 
