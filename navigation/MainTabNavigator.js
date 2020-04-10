@@ -11,7 +11,6 @@ import db from '../db';
 import firebase from "firebase/app";
 import "firebase/auth";
 
-import MapScreen from '../screens/MapScreen';
 import TabBarIcon from '../components/TabBarIcon';
 import HomeScreen from '../screens/HomeScreen';
 import ReportScreen from '../screens/ReportScreen';
@@ -23,9 +22,7 @@ import NewsScreen from '../screens/NewsScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import SuggestionsScreen from '../screens/SuggestionsScreen';
 import carriersScreen from '../screens/carriersScreen';
-import RewardsScreen from '../screens/RewardsScreen.js';
-import ReservationScreen from '../screens/Reservation';
-
+import ValetScreen from '../screens/ValetScreen'
 
 
 
@@ -59,25 +56,6 @@ HomeStack.navigationOptions = {
 };
 
 HomeStack.path = '';
-////////////////////////////////////////////////////////////////////////
-const MapStack = createStackNavigator(
-  {
-    Map: { screen: MapScreen }, Reservation: { screen: ReservationScreen }
-  },
-  config
-);
-
-MapStack.navigationOptions = {
-  tabBarLabel: 'Map',
-  tabBarIcon: ({ focused }) => (
-    <Entypo
-      focused={focused}
-      name={'map'}
-    />
-  ),
-};
-
-MapStack.path = '';
 ////////////////////////////////////////////////////////////////////////
 const LinksStack = createStackNavigator(
   {
@@ -200,6 +178,22 @@ CleanerStack.navigationOptions = {
 };
 
 CleanerStack.path = '';
+////////////////////////////////////////////////////////////////
+const ValetStack = createStackNavigator(
+  {
+    Valet: ValetScreen,
+  },
+  config
+);
+// this naigationoptions allows to edit the tab it self for here. i added a tabBarLable which give a name to the tab
+ValetStack.navigationOptions = {
+  tabBarLabel: 'ValetScreen',
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-link' : 'md-link'} />
+  ),
+};
+
+ValetStack.path = '';
 //////////////////////////////////////////////////////////////
 
 SettingsStack.path = '';
@@ -237,29 +231,11 @@ CarriersStack.navigationOptions = {
 };
 
 CarriersStack.path = '';
-//////////////////////////////////////////////////////////////////////
-
-const RewardsStack = createStackNavigator(
-  {
-    Reward: RewardsScreen,
-  },
-  config
-);
-
-RewardsStack.navigationOptions = {
-  tabBarLabel: 'Rewards',
-  tabBarIcon: ({ focused }) => (
-    <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-link' : 'md-link'} />
-  ),
-};
-
-RewardsStack.path = '';
 
 // here the const get all the const names apove and put the them in tabnaigator to show them in the bottom on the screen because we used (createBottomTabNavigator)
 const tabNavigator = createBottomTabNavigator({
   HomeStack,
   TestStack,
-  MapStack,
   SettingsStack,
   UserScreenStack,
   LinksStack,
@@ -268,46 +244,40 @@ const tabNavigator = createBottomTabNavigator({
   CleanerStack,
   CarriersStack,
   ReportStack,
-  RewardsStack
+  ValetStack
 });
 
 // work in progress...
 
-
-// const handleTabs = async () => {
-//   tabNavigator = tabNavigator = createBottomTabNavigator({
-//     HomeStack,
-//   });
-
-//   if(firebase.auth().currentUser === null){
-//     console.log("still did not log in")
-//    }else{
-//      let role;
-//      console.log(firebase.auth().currentUser.uid)
-//      const querySnapshot = await db.collection("users").doc(firebase.auth().currentUser.uid).get()
-//       role = querySnapshot.data().role;
-       
-//      console.log("sssss",role)
-//      if(role === "student"){
-//        tabNavigator = createBottomTabNavigator({
-//          HomeStack,
-//          SettingsStack,
-//          UserScreenStack,
-//          NewsStack
-//        });
-//      } else{
-//        tabNavigator = createBottomTabNavigator({
-//          HomeStack,
-//          LinksStack,
-//          TestStack,
-//          SettingsStack,
-//        });
-//      }
-//    }
-//    return tabNavigator;
+// if(firebase.auth().currentUser === null){
+//  console.log("still did not log in")
+// }else{..
+  
+//   let role;
+//   console.log(firebase.auth().currentUser.uid)
+//   db.collection("users").doc(firebase.auth().currentUser.uid).onSnapshot(snapShot => {
+//     role = snapShot.data().role;
+    
+//   }
+//   )
+//   console.log("sssss",role)
+//   if(role === "student"){
+//     tabNavigator = createBottomTabNavigator({
+//       HomeStack,
+//       SettingsStack,
+//       UserScreenStack,
+//       NewsStack
+//     });
+//   } else{
+//     tabNavigator = createBottomTabNavigator({
+//       HomeStack,
+//       LinksStack,
+//       TestStack,
+//       SettingsStack,
+//     });
+//   }
 // }
 
-// const tabNavigator = handleTabs()
 
 tabNavigator.path = '';
 
