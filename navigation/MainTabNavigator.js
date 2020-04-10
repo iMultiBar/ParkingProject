@@ -22,6 +22,7 @@ import NewsScreen from '../screens/NewsScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import SuggestionsScreen from '../screens/SuggestionsScreen';
 import carriersScreen from '../screens/carriersScreen';
+import ValetScreen from '../screens/ValetScreen'
 
 
 
@@ -177,6 +178,22 @@ CleanerStack.navigationOptions = {
 };
 
 CleanerStack.path = '';
+////////////////////////////////////////////////////////////////
+const ValetStack = createStackNavigator(
+  {
+    Valet: ValetScreen,
+  },
+  config
+);
+// this naigationoptions allows to edit the tab it self for here. i added a tabBarLable which give a name to the tab
+ValetStack.navigationOptions = {
+  tabBarLabel: 'ValetScreen',
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-link' : 'md-link'} />
+  ),
+};
+
+ValetStack.path = '';
 //////////////////////////////////////////////////////////////
 
 SettingsStack.path = '';
@@ -226,7 +243,8 @@ const tabNavigator = createBottomTabNavigator({
   SuggestionsStack,
   CleanerStack,
   CarriersStack,
-  ReportStack
+  ReportStack,
+  ValetStack
 });
 
 // work in progress...
