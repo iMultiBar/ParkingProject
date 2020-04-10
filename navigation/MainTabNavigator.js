@@ -250,35 +250,41 @@ const tabNavigator = createBottomTabNavigator({
 
 // work in progress...
 
-// if(firebase.auth().currentUser === null){
-//  console.log("still did not log in")
-// }else{..
-  
-//   let role;
-//   console.log(firebase.auth().currentUser.uid)
-//   db.collection("users").doc(firebase.auth().currentUser.uid).onSnapshot(snapShot => {
-//     role = snapShot.data().role;
-    
-//   }
-//   )
-//   console.log("sssss",role)
-//   if(role === "student"){
-//     tabNavigator = createBottomTabNavigator({
-//       HomeStack,
-//       SettingsStack,
-//       UserScreenStack,
-//       NewsStack
-//     });
-//   } else{
-//     tabNavigator = createBottomTabNavigator({
-//       HomeStack,
-//       LinksStack,
-//       TestStack,
-//       SettingsStack,
-//     });
-//   }
+
+// const handleTabs = async () => {
+//   tabNavigator = tabNavigator = createBottomTabNavigator({
+//     HomeStack,
+//   });
+
+//   if(firebase.auth().currentUser === null){
+//     console.log("still did not log in")
+//    }else{
+//      let role;
+//      console.log(firebase.auth().currentUser.uid)
+//      const querySnapshot = await db.collection("users").doc(firebase.auth().currentUser.uid).get()
+//       role = querySnapshot.data().role;
+       
+//      console.log("sssss",role)
+//      if(role === "student"){
+//        tabNavigator = createBottomTabNavigator({
+//          HomeStack,
+//          SettingsStack,
+//          UserScreenStack,
+//          NewsStack
+//        });
+//      } else{
+//        tabNavigator = createBottomTabNavigator({
+//          HomeStack,
+//          LinksStack,
+//          TestStack,
+//          SettingsStack,
+//        });
+//      }
+//    }
+//    return tabNavigator;
 // }
 
+// const tabNavigator = handleTabs()
 
 tabNavigator.path = '';
 

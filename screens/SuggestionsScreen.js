@@ -11,7 +11,8 @@ import {
   TouchableOpacity,
   View,
   Picker,
-
+  KeyboardAvoidingView,
+  
 } from "react-native";
 import * as Animatable from 'react-native-animatable';
 import { Ionicons,Entypo,AntDesign,FontAwesome } from '@expo/vector-icons';
@@ -66,6 +67,7 @@ export default function SuggestionsScreen() {
   };
 
   return (
+    
     <View style={styles.container}>
         <Text style={{textAlign:"center",fontSize:40, marginTop:15}}>
           We Care About What </Text><Animatable.View  animation='tada' iterationCount='infinite' direction='normal'><Text style={{textAlign:"center",fontSize:40}}>You</Text></Animatable.View> 
