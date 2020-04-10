@@ -22,6 +22,7 @@ import NewsScreen from '../screens/NewsScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import SuggestionsScreen from '../screens/SuggestionsScreen';
 import carriersScreen from '../screens/carriersScreen';
+import RewardsScreen from '../screens/RewardsScreen.js';
 
 
 
@@ -214,6 +215,23 @@ CarriersStack.navigationOptions = {
 };
 
 CarriersStack.path = '';
+//////////////////////////////////////////////////////////////////////
+
+const RewardsStack = createStackNavigator(
+  {
+    Reward: RewardsScreen,
+  },
+  config
+);
+
+RewardsStack.navigationOptions = {
+  tabBarLabel: 'Rewards',
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-link' : 'md-link'} />
+  ),
+};
+
+RewardsStack.path = '';
 
 // here the const get all the const names apove and put the them in tabnaigator to show them in the bottom on the screen because we used (createBottomTabNavigator)
 const tabNavigator = createBottomTabNavigator({
@@ -226,7 +244,8 @@ const tabNavigator = createBottomTabNavigator({
   SuggestionsStack,
   CleanerStack,
   CarriersStack,
-  ReportStack
+  ReportStack,
+  RewardsStack
 });
 
 // work in progress...
