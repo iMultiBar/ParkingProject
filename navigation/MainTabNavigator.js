@@ -11,6 +11,7 @@ import db from '../db';
 import firebase from "firebase/app";
 import "firebase/auth";
 
+import MapScreen from '../screens/MapScreen';
 import TabBarIcon from '../components/TabBarIcon';
 import HomeScreen from '../screens/HomeScreen';
 import ReportScreen from '../screens/ReportScreen';
@@ -23,6 +24,8 @@ import SettingsScreen from '../screens/SettingsScreen';
 import SuggestionsScreen from '../screens/SuggestionsScreen';
 import carriersScreen from '../screens/carriersScreen';
 import RewardsScreen from '../screens/RewardsScreen.js';
+import ReservationScreen from '../screens/Reservation';
+
 
 
 
@@ -56,6 +59,25 @@ HomeStack.navigationOptions = {
 };
 
 HomeStack.path = '';
+////////////////////////////////////////////////////////////////////////
+const MapStack = createStackNavigator(
+  {
+    Map: { screen: MapScreen }, Reservation: { screen: ReservationScreen }
+  },
+  config
+);
+
+MapStack.navigationOptions = {
+  tabBarLabel: 'Map',
+  tabBarIcon: ({ focused }) => (
+    <Entypo
+      focused={focused}
+      name={'map'}
+    />
+  ),
+};
+
+MapStack.path = '';
 ////////////////////////////////////////////////////////////////////////
 const LinksStack = createStackNavigator(
   {
@@ -237,6 +259,7 @@ RewardsStack.path = '';
 const tabNavigator = createBottomTabNavigator({
   HomeStack,
   TestStack,
+  MapStack,
   SettingsStack,
   UserScreenStack,
   LinksStack,

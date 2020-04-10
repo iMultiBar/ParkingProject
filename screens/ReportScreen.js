@@ -26,6 +26,7 @@ import firebase from "firebase/app";
 import "firebase/auth";
 import db from "../db.js";
 require("firebase/firestore");
+import * as Animatable from 'react-native-animatable';
 
 import Message from "./Message.js";
 
@@ -39,10 +40,40 @@ export default function ReportScreen() {
     const [target, setTarget] = useState();
     // this useState gets the current user's id
     const [from, setFrom] = useState(firebase.auth().currentUser.uid);
+    const [user, setUser] = useState("");
+    const [reports, setReports] = useState([]);
 
   // this code is just to remove the annoying warnnings that accure
   // when using timers with android and firebase
-  console.disableYellowBox = true;
+    console.disableYellowBox = true;
+
+    useEffect(() => {
+      getUser()
+    }, []);
+  
+    useEffect(() => {
+      if(user.role === 'admin'){
+        getReports()
+      }
+    }, [user]);
+  
+    const getReports = async () => {
+      await db.collection("reports&complaints").onSnapshot(querySnapshot => {
+        const r = [];
+        querySnapshot.forEach(doc => {
+          r.push({ id: doc.id, ...doc.data() });
+        });
+        console.log(" Current report: ", r);
+        setReports([...r]);
+      });
+  }
+  
+    const getUser = async () => {
+      const User = await db.collection("users").doc(firebase.auth().currentUser.uid).get()
+      console.log(User.data());
+      setUser(User.data());
+  }
+  
 
   /* this method adds the report or complain to the database collection.
   most of the fields are coming from the user input. the date is coming from
@@ -124,8 +155,8 @@ export default function ReportScreen() {
         }
     </View>
 
-    <Button title="Submit Report/Complaint" onPress={handleReport} />  
-    </View>
+   <Button title="Submit Report/Complaint" onPress={handleReport} />  
+   </View>
   );
 }
 
