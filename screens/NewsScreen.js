@@ -16,16 +16,20 @@ import { MonoText } from "../components/StyledText";
 import firebase from "firebase/app";
 import "firebase/auth";
 import db from "../db.js";
+import DatePicker from 'react-native-datepicker'
+import moment from 'moment';
+
 
 /* right now this page is for the admin to access the news
    with a couple of if statements the user will be able to view 
    the News from this screen*/
 export default function NewsScreen() {
   const [news, setNews] = useState([]);
-  // const [pDate, setPDate] = React.useState("");
-  // const [eDate, setEDate] = React.useState("");
-  // const [subjet, setSubjet] = React.useState("");
-  // const [description, setDescription] = React.useState("");
+  // const [pDate, setPDate] = useState("");
+  const [eDate, setEDate] = useState("");
+  const [subject, setSubject] = useState("");
+  const [description, setDescription] = useState("");
+  const [user, setUser] = useState("");
 
   /*
     this useEffect will get the data from the database collection 'News'
@@ -42,11 +46,34 @@ export default function NewsScreen() {
     });
   }, []);
 
+  useEffect(() => {
+    getUser()
+  }, []);
+
+  const getUser = async () => {
+    const User = await db.collection("users").doc(firebase.auth().currentUser.uid).get()
+    console.log(User.data());
+    setUser(User.data());
+    
+}
+
   // this method will delete news from the database(by the admin)
   const handleDelete = (i) => {
     const d = news[i];
     console.log(d);
     db.collection("news").doc(d.id).delete()
+  };
+
+  const handleAdd = async () => {
+    
+    db.collection("news")
+      .doc()
+      .set({
+        subject,
+        description,
+        datePublished: moment().format('DD/MM/YYYY'),
+        endDate:eDate,
+      });
   };
 
 
@@ -71,29 +98,76 @@ export default function NewsScreen() {
 
 
   return (
-    <View style={styles.container}>
+    <ScrollView >
+      <View style={styles.container}>
      
-      <Animatable.Text animation='zoomIn'  direction="normal" iterationCount='5'>
-        <Text style={{textAlign:"center",fontSize:50, flex:1,marginTop:15}}>News Feed</Text>
-      </Animatable.Text>
-      <View style={{flex:4}}>
-      {/* this map will show the news that had been retrived from the database */}
-      {news.map((n,i) => (
-        <Animatable.View animation='pulse'  direction="normal" iterationCount='5'>
-          <View key={i} style={{borderColor:"black",borderWidth:3,borderStyle:"solid", marginBottom:15,padding:5,margin:5}}>
-          <Text><Text style={{ fontWeight: 'bold' }}>Subject</Text>: {n.subject}</Text>
-          <Text><Text style={{ fontWeight: 'bold' }}>Description</Text>: {n.description}</Text>
-          <Text><Text style={{ fontWeight: 'bold' }}>Publish Date</Text>: {n.datePublished}</Text>
-          <Text><Text style={{ fontWeight: 'bold' }}>End Date</Text>: {n.endDate}</Text>
-          {/* this TouchableOpacity is used to call the delete method */}
-          <TouchableOpacity onPress={() => handleDelete(i)}><Text style={{color:"red"}}>Delete</Text></TouchableOpacity>
-        </View>
-      </Animatable.View>
-        
-      ))}
-      </View>
-      <Button title="Logout" onPress={handleLogout} /> 
-    </View>
+     <Text style={{textAlign:"center",fontSize:50, flex:1,marginTop:15}}>News Feed</Text>
+   <View style={{flex:4}}>
+   {/* this map will show the news that had been retrived from the database */}
+   {news.map((n,i) => (
+     <Animatable.View key={i} animation='pulse'  direction="normal" iterationCount={5}>
+       <View  style={{borderColor:"black",borderWidth:3,borderStyle:"solid", marginBottom:15,padding:5,margin:5}}>
+       <Text><Text style={{ fontWeight: 'bold' }}>Subject</Text>: {n.subject}</Text>
+       <Text><Text style={{ fontWeight: 'bold' }}>Description</Text>: {n.description}</Text>
+       <Text><Text style={{ fontWeight: 'bold' }}>Publish Date</Text>: {n.datePublished}</Text>
+       <Text><Text style={{ fontWeight: 'bold' }}>End Date</Text>: {n.endDate}</Text>
+       {/* this TouchableOpacity is used to call the delete method */}
+       {user.role ==='admin'? <TouchableOpacity onPress={() => handleDelete(i)}><Text style={{color:"red"}}>Delete</Text></TouchableOpacity>:null}
+     </View>
+
+   </Animatable.View>
+     
+   ))}
+  {user.role ==='admin'? 
+ <View  style={{borderColor:"black",borderWidth:3,borderStyle:"solid", marginBottom:15,padding:5,margin:5,flex:1}}>
+     <TextInput
+         style={{ height: 40, borderColor: "gray", borderWidth: 1,margin:5 }}
+         onChangeText={setSubject}
+         placeholder="enter the subject for the news"
+         value={subject}
+     />
+     <TextInput
+         style={{ height: 40, borderColor: "gray", borderWidth: 1,margin:5 }}
+         onChangeText={setDescription}
+         placeholder="enter the subject for the news"
+         value={description}
+     />
+       <DatePicker
+     style={{width: 200}}
+     date={eDate}
+     mode="date"
+     placeholder="select date"
+     format="DD/MM/YYYY"
+     minDate={moment().format('DD/MM/YYYY')}
+     maxDate="01/01/2022"
+     confirmBtnText="Confirm"
+     cancelBtnText="Cancel"
+     customStyles={{
+       dateIcon: {
+         position: 'absolute',
+         left: 0,
+         top: 4,
+         marginLeft: 0
+       },
+       dateInput: {
+         marginLeft: 36
+       }
+       // ... You can check the source to find the other keys.
+     }}
+     onDateChange={(date) => setEDate(date) }
+   />
+       <TouchableOpacity style={{margin:5}} onPress={() => handleAdd()}><Text style={{color:"green"}}>Add</Text></TouchableOpacity>
+     </View>
+
+    :
+    null}
+
+   </View>
+   
+   
+ </View>
+ <Button title="Logout" onPress={handleLogout} /> 
+    </ScrollView>
   );
 }
 

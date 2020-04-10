@@ -143,13 +143,12 @@ export default function App(props) {
           style={{ height: 40, borderColor: "gray", borderWidth: 1 }}
           onChangeText={setPhone}
           placeholder="mobile number"
-          secureTextEntry={true}
           value={phone}
         />
 
         <Picker
           mode="dialog"
-          selectedValue={"Select a Department"}
+          selectedValue={department}
           style={{height: 50, width: "100%"}}
           onValueChange={(itemValue, itemIndex) =>
             setDepartment(itemValue)
