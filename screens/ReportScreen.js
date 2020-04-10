@@ -137,7 +137,7 @@ export default function ReportScreen() {
           } 
           />
 
-   
+  
        <Text style={{fontSize:15, color:'red'}}>What was the problem that you would like to report</Text>
        <TextInput
          style={{ height: 40, borderColor: "gray", borderWidth: 1 }}
