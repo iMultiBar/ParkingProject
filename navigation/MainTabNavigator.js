@@ -23,6 +23,8 @@ import SettingsScreen from '../screens/SettingsScreen';
 import SuggestionsScreen from '../screens/SuggestionsScreen';
 import carriersScreen from '../screens/carriersScreen';
 import ValetScreen from '../screens/ValetScreen'
+import ReservationScreen from '../screens/Reservation';
+import MapScreen from '../screens/MapScreen';
 
 
 
@@ -56,6 +58,25 @@ HomeStack.navigationOptions = {
 };
 
 HomeStack.path = '';
+////////////////////////////////////////////////////////////////////////
+const MapStack = createStackNavigator(
+  {
+    Map: { screen: MapScreen }, Reservation: { screen: ReservationScreen }
+  },
+  config
+);
+
+MapStack.navigationOptions = {
+  tabBarLabel: 'Map',
+  tabBarIcon: ({ focused }) => (
+    <Entypo
+      focused={focused}
+      name={'map'}
+    />
+  ),
+};
+
+MapStack.path = '';
 ////////////////////////////////////////////////////////////////////////
 const LinksStack = createStackNavigator(
   {
@@ -235,6 +256,7 @@ CarriersStack.path = '';
 // here the const get all the const names apove and put the them in tabnaigator to show them in the bottom on the screen because we used (createBottomTabNavigator)
 const tabNavigator = createBottomTabNavigator({
   HomeStack,
+  MapStack,
   TestStack,
   SettingsStack,
   UserScreenStack,
