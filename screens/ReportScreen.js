@@ -68,13 +68,13 @@ export default function ReportScreen() {
         report/complaint. */}
     <Picker
           mode="dialog"
-          selectedValue={"select a topic"}
+          selectedValue={"Select a Topic"}
           style={{height: 50, width: "100%"}}
           onValueChange={(itemValue, itemIndex) =>
             setTopic(itemValue)
           }>
-          <Picker.Item label="select a topic" value={null} />
-          <Picker.Item label="Equepments" value="Equepments" />
+          <Picker.Item label="Select a Topic" value={null} />
+          <Picker.Item label="Equipments" value="Equipments" />
           <Picker.Item label="Other Drivers" value="Other Drivers" />
           <Picker.Item label="Cleaners/Porters" value="Cleaners/Porters" />
         </Picker>
