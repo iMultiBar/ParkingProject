@@ -140,10 +140,10 @@ export default function SuggestionsScreen() {
           each of the options will be in a sub component, called Picker.Item
         */}
 
-<TouchableOpacity
+        <TouchableOpacity
           onPress={() => {pickerRef.show()}}
         >
-    <Text>{type === ""? "Press here to choose the type of suggestion": type}</Text>
+        <Text>{type === ""? "Press here to choose the type of suggestion": type}</Text>
         </TouchableOpacity>
         <ReactNativePickerModule
           pickerRef={e => (pickerRef = e)}
@@ -155,7 +155,7 @@ export default function SuggestionsScreen() {
           onValueChange={(itemValue, itemIndex) =>
             setType(itemValue)
           } 
-          />
+        />
 
         
 

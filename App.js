@@ -150,7 +150,9 @@ export default function App(props) {
           placeholder="mobile number"
           value={phone}
         />
-        <TouchableOpacity
+        {Platform.OS === "ios"? 
+          <>
+          <TouchableOpacity
           onPress={() => {pickerRef.show()}}
         >
     <Text>{department === ""? "select a Department": department}</Text>
@@ -166,6 +168,20 @@ export default function App(props) {
             setDepartment(itemValue)
           } 
           />
+          </>
+        : 
+        <Picker
+        selectedValue={department}
+        style={{ height: 50, width: 150 }}
+        onValueChange={(itemValue, itemIndex) => setDepartment(itemValue)}
+      >
+        <Picker.Item label="IT" value="IT" />
+        <Picker.Item label="business" value="business" />
+        <Picker.Item label="health and science" value="health and science" />
+        <Picker.Item label="faculty" value="faculty" />
+      </Picker>
+        }
+        
         
         <Button title="submit" onPress={handleRegister} />
         <Button title="have and account? go to login" onPress={handleView} />
