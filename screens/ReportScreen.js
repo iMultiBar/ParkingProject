@@ -145,6 +145,7 @@ export default function ReportScreen() {
          placeholder="Problem"
          value={problem}
        />
+       
        {/* depending on which topic the user chooses it will show them
            the appropriate input option */}
        {topic === "Equepments"?
