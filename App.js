@@ -38,7 +38,7 @@ export default function App(props) {
   const [isLoadingComplete, setLoadingComplete] = useState(false);
   const [user, setUser] = useState(null);
   const [view, setView] = useState("register");
-
+  console.disableYellowBox = true;
   const [email, setEmail] = useState("");  
   const [password, setPassword] = useState("");
   const [phone, setPhone] = useState("");
@@ -172,7 +172,7 @@ export default function App(props) {
         : 
         <Picker
         selectedValue={department}
-        style={{ height: 50, width: 150 }}
+        style={{ height: 50, width: '100%' }}
         onValueChange={(itemValue, itemIndex) => setDepartment(itemValue)}
       >
         <Picker.Item label="IT" value="IT" />

@@ -27,7 +27,7 @@ import moment from 'moment';
 
 export default function SuggestionsScreen() {
   let pickerRef = null;
-
+  console.disableYellowBox = true;
   const [suggestions, setSuggestions] = useState([]);
   const [email, setEmail] = useState("");  
   const [description, setDescription] = useState("");
@@ -140,6 +140,8 @@ export default function SuggestionsScreen() {
           each of the options will be in a sub component, called Picker.Item
         */}
 
+{Platform.OS === "ios"? 
+<>
         <TouchableOpacity
           onPress={() => {pickerRef.show()}}
         >
@@ -156,6 +158,20 @@ export default function SuggestionsScreen() {
             setType(itemValue)
           } 
         />
+        </>
+        : 
+        <Picker
+        selectedValue={type}
+        style={{ height: 50, width: '100%' }}
+        onValueChange={(itemValue, itemIndex) => setType(itemValue)}
+      >
+        <Picker.Item label="Cleaners" value="Cleaners" />
+        <Picker.Item label="Porters" value="Porters" />
+        <Picker.Item label="Parking Maintenance" value="Parking Maintenance" />
+        <Picker.Item label="Managment" value="Managment" />
+        <Picker.Item label="IT Department" value="IT Department" />
+      </Picker>
+        }
 
         
 

@@ -119,7 +119,8 @@ export default function ReportScreen() {
    <Text style={{fontSize:30}}>Choose a Topic to file a report or a complaint on</Text>
    {/* this picker will allow the user to choose what is the topic of the 
        report/complaint. */}
-
+  {Platform.OS === "ios"? 
+          <>
   <TouchableOpacity
           onPress={() => {pickerRef.show()}}
         >
@@ -136,7 +137,18 @@ export default function ReportScreen() {
             setTopic(itemValue)
           } 
           />
-
+</>
+       :
+       <Picker
+        selectedValue={topic}
+        style={{ height: 50, width: '100%' }}
+        onValueChange={(itemValue, itemIndex) => setTopic(itemValue)}
+      >
+        <Picker.Item label="Equepments" value="Equepments" />
+        <Picker.Item label="Other Drivers" value="Other Drivers" />
+        <Picker.Item label="Cleaners/Porters" value="Cleaners/Porters" />
+      </Picker>
+        }
   
        <Text style={{fontSize:15, color:'red'}}>What was the problem that you would like to report</Text>
        <TextInput
@@ -146,6 +158,7 @@ export default function ReportScreen() {
          value={problem}
        />
        
+
        {/* depending on which topic the user chooses it will show them
            the appropriate input option */}
        {topic === "Equepments"?
