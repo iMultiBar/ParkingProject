@@ -71,7 +71,22 @@ export default function MapScreen(props) {
     // console.log("donnnnnnnnnnnnnnnnnne init: ", parkings);
     ppp = temp;
     setParkings(temp);
+    // free();
 };
+
+
+// this code will turn all the parkings back to free
+// const free = async () => {
+//   var p = ppp;
+//   for (let i = 0; i < p.length; i++) {
+//      p[i].status = 'free';
+//      console.log('heeereee')
+//      setParkings(p);
+//      await db.collection("parking").doc("yq4MTqaC4xMaAf9HArZp").collection('c-2').doc(p[i].parkingNumber).set(p[i]);
+//   }
+//   console.log(p);
+  
+// }
 
 
 
@@ -142,22 +157,30 @@ export default function MapScreen(props) {
   /* this method in progress but it will add the reserved parking 
   to an array so the user can reserve more than one parking 
   at once*/
-  const handleAdd = (i) => {
-    console.log('chosen parking',chosen);
+  const handleAdd = async (i,index) => {
+    //console.log('chosen parking',chosen);
     var temp = chosen;
-    console.log(i.status);
-    if(i.status === 'free'){
+    var parks = parkings;
+    //console.log(i.status);
+    if(i.status === 'free' || i.status === 'hold'){
       if(!temp.includes(i)){
         temp.push(i);
+        parks[index].status = 'hold';
+        console.log('parks',parks[index].status);
         setChosen(temp);
-      } else{
-        alert('you have already chosen this parking lot')
+        setParkings(parks);
+        await db.collection("parking").doc("yq4MTqaC4xMaAf9HArZp").collection('c-2').doc(parks[index].parkingNumber).set(parks[index]);
+
+      }
+      else if(temp.includes(i)){
+         alert('you have already chosen this parking lot')
+      } 
+       else{
+        alert('please stand by this parking is on hold');
       }
     
     } 
-    else if(i.status === 'hold'){
-      alert('please stand by this parking is on hold');
-    }
+    
     else{
       alert('this parking is not available')
     }
@@ -191,7 +214,7 @@ export default function MapScreen(props) {
           to know which color the parking is going to be.
         */
         <Marker
-          onPress={() => handleAdd(p)}
+          onPress={() => handleAdd(p,i)}
           key={i}
           image={p.status === "free"? require('../assets/images/green.jpg')
           : p.status === "taken"?require('../assets/images/red.jpg')

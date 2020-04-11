@@ -124,10 +124,14 @@ export default function reservation(props) {
             for(let num = 0; num < parkings.length;num++){
                 tempParking.push({
                     carPlate : carList[selectedCar[num]],
-                    id : parkings[num].id,
+                    parking_id : parkings[num].id,
                     latitude:  parkings[num].latitude,
                     longitude:  parkings[num].longitude
                 })
+                parkings[num].status = 'taken';
+                console.log('turned to taken',parkings);
+                db.collection("parking").doc("yq4MTqaC4xMaAf9HArZp").collection('c-2').doc(parkings[num].parkingNumber).set(parkings[num]);
+
             }
     
             // for(let num = 0; num<parking.length;num++){
