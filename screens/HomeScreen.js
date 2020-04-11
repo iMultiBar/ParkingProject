@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, } from 'react-native';
+import { StyleSheet, Text, View,KeyboardAvoidingView } from 'react-native';
 import { Ionicons, FontAwesome, AntDesign, MaterialCommunityIcons } from "@expo/vector-icons"
 import { createStackNavigator } from 'react-navigation-stack';
 import MapScreen from './MapScreen';
@@ -27,19 +27,19 @@ function HomeScreen(props) {
 
 
     return (
-        <View>
+        <KeyboardAvoidingView behavior="padding" >
             <SliderBox images={images.images} 
             onCurrentImagePressed={index => console.warn(`image ${index} pressed`)}
             autoplay={true}
             circleLoop
         />
-            <ScrollView>
+            <ScrollView style={{height:"62%"}}>
                 <News />
             </ScrollView>
             <TouchableOpacity style={{padding:5, paddingRight:20,alignSelf:"flex-end"}} onPress={() => props.navigation.push("News")}>
                 <Text>Read More</Text>
             </TouchableOpacity>
-        </View>
+        </KeyboardAvoidingView>
 
     )
 }

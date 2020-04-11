@@ -5,21 +5,23 @@ import {
   Platform,
   TextInput,
   Button,
-  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
-  View
+  View,
+  KeyboardAvoidingView
 } from "react-native";
+
+import { ScrollView } from 'react-native-gesture-handler';
 import * as Animatable from 'react-native-animatable';
 import { MonoText } from "../components/StyledText";
 import firebase from "firebase/app";
 import "firebase/auth";
 import db from "../db.js";
-// import DatePicker from 'react-native-datepicker'; 
+import DatePicker from 'react-native-datepicker'; 
 import moment from 'moment';
 
-import { Card } from "react-native-elements"
+import { Card } from "react-native-elements";
 
 /* right now this page is for the admin to access the news
    with a couple of if statements the user will be able to view 
@@ -99,10 +101,11 @@ export default function NewsScreen() {
 
 
   return (
+    <KeyboardAvoidingView behavior="padding">
     <ScrollView >
       <View style={styles.container}>
      
-     <Text style={{ paddingLeft:15 ,fontSize:30, flex:1,marginTop:15}}>News Feed</Text>
+     <Text style={{paddingLeft:15 ,fontSize:30, flex:1,marginTop:15}}>News Feed</Text>
    <View style={{flex:4}}>
    {/* this map will show the news that had been retrived from the database */}
    {news.map((n,i) => (
@@ -170,6 +173,7 @@ export default function NewsScreen() {
  </View>
       {/* <Button title="Logout" onPress={handleLogout} />  */}
     </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 
