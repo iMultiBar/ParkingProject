@@ -19,6 +19,7 @@ import db from "../db.js";
 // import DatePicker from 'react-native-datepicker'; 
 import moment from 'moment';
 
+import { Card } from "react-native-elements"
 
 /* right now this page is for the admin to access the news
    with a couple of if statements the user will be able to view 
@@ -101,25 +102,26 @@ export default function NewsScreen() {
     <ScrollView >
       <View style={styles.container}>
      
-     <Text style={{textAlign:"center",fontSize:50, flex:1,marginTop:15}}>News Feed</Text>
+     <Text style={{ paddingLeft:15,fontVariant:"TimesNewRomanPSMT" ,fontSize:30, flex:1,marginTop:15}}>News Feed</Text>
    <View style={{flex:4}}>
    {/* this map will show the news that had been retrived from the database */}
    {news.map((n,i) => (
      <Animatable.View key={i} animation='pulse'  direction="normal" iterationCount={5}>
-       <View  style={{borderColor:"black",borderWidth:3,borderStyle:"solid", marginBottom:15,padding:5,margin:5}}>
-       <Text><Text style={{ fontWeight: 'bold' }}>Subject</Text>: {n.subject}</Text>
-       <Text><Text style={{ fontWeight: 'bold' }}>Description</Text>: {n.description}</Text>
-       <Text><Text style={{ fontWeight: 'bold' }}>Publish Date</Text>: {n.datePublished}</Text>
+       <Card  style={{borderColor:"black",borderWidth:3,borderStyle:"solid", marginBottom:15,padding:5,margin:5}}>
+        <Text><Text style={{ fontWeight: 'bold' }}>Subject</Text>: {n.subject}</Text>
+        <Text><Text style={{ fontWeight: 'bold' }}>Publish Date</Text>: {n.datePublished}</Text>
+       <Text ><Text style={{ fontWeight: 'bold' }}>Description</Text>: {n.description}</Text>
        <Text><Text style={{ fontWeight: 'bold' }}>End Date</Text>: {n.endDate}</Text>
        {/* this TouchableOpacity is used to call the delete method */}
        {user.role ==='admin'? <TouchableOpacity onPress={() => handleDelete(i)}><Text style={{color:"red"}}>Delete</Text></TouchableOpacity>:null}
-     </View>
+     </Card>
 
    </Animatable.View>
      
    ))}
   {user.role ==='admin'? 
- <View  style={{borderColor:"black",borderWidth:3,borderStyle:"solid", marginBottom:15,padding:5,margin:5,flex:1}}>
+ <Card  style={{marginBottom:15,padding:5,margin:5,flex:1}}>
+   
      <TextInput
          style={{ height: 40, borderColor: "gray", borderWidth: 1,margin:5 }}
          onChangeText={setSubject}
@@ -157,7 +159,7 @@ export default function NewsScreen() {
      onDateChange={(date) => setEDate(date) }
    />
        <TouchableOpacity style={{margin:5}} onPress={() => handleAdd()}><Text style={{color:"green"}}>Add</Text></TouchableOpacity>
-     </View>
+     </Card>
 
     :
     null}
@@ -166,7 +168,7 @@ export default function NewsScreen() {
    
    
  </View>
- <Button title="Logout" onPress={handleLogout} /> 
+      {/* <Button title="Logout" onPress={handleLogout} />  */}
     </ScrollView>
   );
 }
