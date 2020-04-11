@@ -21,7 +21,7 @@ export default function UserScreen({ navigation }) {
     const [serviceList , setServiceList] = useState([])
     const [service , setService] = useState(false)
     const [selectedService , setSelectedService] = useState(null)
-    const [reservation, setReservation] = useState([])
+    const [reservation, setReservation] = useState(false)
     const [subscription, setSubscription] = useState(false)
 
 
@@ -32,31 +32,28 @@ export default function UserScreen({ navigation }) {
     //...............
 
     useEffect(() => {
-        let temp = []
-            console.log("fetching data for res")
-            db.collection("reservation").doc(firebase.auth().currentUser.uid).onSnapshot(snapShot => {
-                    temp.push(snapShot.data())
-                    console.log("fetching reservation data", snapShot.data())
-                }
-            )
-            console.log("Done", temp)
-            if(temp && temp != []){
-                setReservation(temp)
-                console.log("reservation:", temp)
-            }
+       getResList()
     },[])
+
+    const getResList = async () => {
+        console.log("god save the queen")
+        let temp = []
+        temp = await db.collection("reservation").doc(firebase.auth().currentUser.uid).get()
+        if(temp && temp != []){
+            setReservation(temp.data())
+            console.log("Fetching Reservation: ", temp.data())
+        }
+
+    }
 
     const EndRes = () => {
          db.collection("reservation").doc(firebase.auth().currentUser.uid).delete()
     }
 
     const GetUser = async () => {
-        console.log("Getting user")
         const User = await db.collection("users").doc(firebase.auth().currentUser.uid).get()
         setUser(User.data())
-        console.log("User Found:",User.data())
         const Sub = await db.collection("users").doc(firebase.auth().currentUser.uid).collection("subscription").doc("sub").get()
-        console.log(Sub.data())
         if(Sub.data()){
             setSubscription(Sub.data());
         }
@@ -64,18 +61,14 @@ export default function UserScreen({ navigation }) {
 
     const getServices = async ()  => {
         let temp = []
-        console.log("Getting Services")
         await db.collection('requests').get()
         .then((snapshot) => {
           snapshot.forEach((doc) => {
-            console.log(doc.id, '=>', doc.data());
             temp.push(doc.id)
           });
         })
         .catch((err) => {
-          console.log('Error getting documents', err);
         });
-        console.log("Services found:",temp) 
         setServiceList(temp)
     }
 
@@ -100,7 +93,7 @@ export default function UserScreen({ navigation }) {
                 <View style={{ alignSelf:"flex-start",flexDirection:"row",marginRight:"60%"}}>
                     <Avatar
                         rounded
-                        source={{ uri: user.photoURL }}
+                        source={{ uri: firebase.auth().currentUser.photoURL  }}
                     />
                     <Text style={{padding:8}}>{user.displayName}</Text>
                 </View>
@@ -112,17 +105,12 @@ export default function UserScreen({ navigation }) {
                         color='#517fa4'
                     />
                 }
+                onPress={() => navigation.navigate('Settings')}
                 type="clear"
                 />
 
        
             </View>
-
- 
-            <Button
-                title="News"
-                onPress={() => navigation.navigate('Settings')}
-            />
             {/*
                 
             */}
@@ -157,18 +145,16 @@ export default function UserScreen({ navigation }) {
                 <Card title="Reservation List">
                     <ScrollView>
                         { 
-                        //  reservation && reservation != undefined ?
-                         
+                        //  reservation ?
                         //     <View>
-                        //         {
-                        //         reservation.map((item, index) => 
+                        //         { reservation.map((item, index) => 
                         //                 <View key={index}>
-                        //                     <Text> Parking Location: { 
-                        //                         item.parking.location 
+                        //                     <Text> Parking Count: { 
+                        //                         item.ParkingInfo.length
                         //                     } Start Time: {
                         //                         item.startTime 
                         //                     } End Time: { 
-                        //                       item.endTime 
+                        //                         item.endTime 
                         //                     }</Text>
                         //                     <Button onPress={() => ExtendRes(item)}/>
                         //                     <Button title="Cancel Reservation" onPress={() => EndRes()} />
@@ -183,13 +169,6 @@ export default function UserScreen({ navigation }) {
                                     <Button title="Reserve" onPress={() => navigation.navigate('Map')} />
                                 </>
                         }
-                    </ScrollView>
-                </Card>
-
-                {/* User Parking History List Tap */}
-                <Card title="Reservation History">
-                    <ScrollView>
-                        <Button title="Show History" onPress={() => navigation.navigate('History')} />
                     </ScrollView>
                 </Card>
 
@@ -214,8 +193,6 @@ export default function UserScreen({ navigation }) {
                                 </>
                         }
                 </Card>
-
-                
 
             </ScrollView>
         </View> 
