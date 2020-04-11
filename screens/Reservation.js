@@ -28,6 +28,7 @@ export default function reservation(props) {
     const [carList , setCarList] = useState([])
     const [newCar, setNewCar] = useState(null)
     const [selectedCar, setSelectedCar] = useState([])
+    const [reButton, setReButton] = useState(true);
 
 
     useEffect(()=>{},[selectedCar])
@@ -47,6 +48,7 @@ export default function reservation(props) {
     }, [date]);
     
     useEffect(()=> {
+        console.log("PARKINGGGGGG", parkings)
         getInfo()
     },[])
     useEffect(()=> {
@@ -145,10 +147,7 @@ export default function reservation(props) {
     }
 
     const onSelectedItemsChange = async (selectedItems) => {
-        console.log("hello",selectedCar)
         await setSelectedCar( selectedItems );
-        console.log("hello2",selectedCar)
-        
       };
     return(
         
@@ -207,12 +206,14 @@ export default function reservation(props) {
                             selectedItems={selectedCar}
                         />
                         :null} 
-                        
-                                { parkings && carList && parkings.length == selectedCar.length ?
-                                    <Button title="Reserve" buttonStyle={{backgroundColor:"darkred"}} onPress={()=> handleRes()} />
-                                    :
-                                    null
-                                }
+                        {   carList && carList[0] != null ?
+                                parkings && parkings[0] != null ?
+                                    parkings.length == selectedCar.length ?
+                                        <Button title="Reserve"  buttonStyle={{backgroundColor:"darkred"}} onPress={()=> handleRes()} />
+                                    : <Button title="Reserve" disabled buttonStyle={{backgroundColor:"darkred"}}  />
+                                : <Button title="Reserve" disabled buttonStyle={{backgroundColor:"darkred"}}  />
+                            : <Button title="Reserve" disabled buttonStyle={{backgroundColor:"darkred"}}  />
+                        }       
 
                     </Card>
                 
