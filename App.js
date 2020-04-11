@@ -253,7 +253,7 @@ export default function App(props) {
     
     icon={<Icon name='code' color='#ffffff' />}
     buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0}}
-    title="Register" onPress={handleLogin} type="outline" />
+    title="Register" onPress={handleRegister} type="outline" />
 
 
     <View style={{flexDirection:"row",justifyContent:"space-between",paddingTop:10}}>
