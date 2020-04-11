@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { ScrollView, StyleSheet, Text, TextInput, Button, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, TextInput, Button, View, TouchableOpacity } from 'react-native';
 import moment from "moment";
 import DateTimePicker from '@react-native-community/datetimepicker';
+import ReactNativePickerModule from "react-native-picker-module"
 
 import firebase from "firebase/app";
 import "firebase/auth";
@@ -9,9 +10,11 @@ import db from "../db.js";
 
 
 export default function carriersScreen() {
+  let pickerRef = null;
   const [parkingLocation, setParkingLocation] = useState();
   const [plat, setPlat] = useState();
   const [dateSubmit, setDateSubmit] = useState(null)
+  const [userCars, setUSerCars] = useState([])
 
   const [currentDayLimit, setCurrentDayLimit] = useState(new Date());
 
@@ -24,6 +27,10 @@ export default function carriersScreen() {
     setDateSubmit(moment(date).format('MM/DD/YY, hh:mm a'))
   }, [date]);
 
+  useEffect(() =>{
+    loadCarNumbers()
+  },[])
+
   const [date, setDate] = useState(new Date());
   const [mode, setMode] = useState('date');
   const [show, setShow] = useState(false);
@@ -33,6 +40,13 @@ export default function carriersScreen() {
     setShow(Platform.OS === 'ios');
     setDate(currentDate);
   };
+
+  const loadCarNumbers = async() =>{
+    let load = await db.collection("cars").doc(firebase.auth().currentUser.uid).get()
+    let cars = load.data()
+    let plates = cars.registerdCars
+    setUSerCars(plates)
+  }
 
   const showMode = currentMode => {
     setShow(true);
@@ -67,12 +81,38 @@ export default function carriersScreen() {
           value={parkingLocation}
         />
         <Text>Car Plat</Text>
-      <TextInput
-          style={{ height: 40, borderColor: "gray", borderWidth: 1 }}
-          onChangeText={setPlat}
-          placeholder="Car Plate"
-          value={plat}
-        />
+        {Platform.OS === "ios"? 
+          <>
+          <TouchableOpacity
+                  onPress={() => {pickerRef.show()}}
+                  style={{height: 100, justifyContent: "center"}}
+                >
+            <Text>add you car number</Text>
+                </TouchableOpacity>
+                <ReactNativePickerModule
+                  pickerRef={e => (pickerRef = e)}
+                  selectedValue={plat}
+                  title={'Select a plat'}
+                  items={userCars}
+                  style={{height: 50, width: "100%",}}
+                  onCancel={() => {console.log("cancelled")}}
+                  onValueChange={(itemValue, itemIndex) =>
+                    setPlat(itemValue)
+                  } 
+                  />
+        </>
+              :
+              <Picker
+                selectedValue={plat}
+                style={{ height: 50, width: '100%' }}
+                onValueChange={(itemValue, itemIndex) => setPlat(itemValue)}
+              >
+                {userCars.map((n,i) =>{
+                  <Picker.Item key={i} label={n[i]} value={n[i]} />
+                })}
+                
+              </Picker>
+        }
         <Text>Date and Time: {moment(date).format('MM/DD/YY, hh:mm a')}</Text>
         <View>
         <Button onPress={() =>showDatepicker()} title="Show date picker!" />

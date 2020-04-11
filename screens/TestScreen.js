@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { ScrollView, StyleSheet, Text, TextInput, Button, View, Alert } from 'react-native';
+import { ScrollView, StyleSheet, Text, TextInput, Button, View, Alert, TouchableOpacity } from 'react-native';
 import moment from "moment";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import firebase from "firebase/app";
 import "firebase/auth";
 import db from "../db.js";
-
+import ReactNativePickerModule from "react-native-picker-module"
 
 export default function TestScreen() {
+  let pickerRef = null;
   const [parkingLocation, setParkingLocation] = useState(); // this react hook useState created so the user can input the car location
   const [plat, setPlat] = useState();// this react hook useState created so the user can input the car plate number
   const [dateSubmit, setDateSubmit] = useState(null)// this react hook useState used to submit the date and time of the user current time.
@@ -15,18 +16,27 @@ export default function TestScreen() {
 
   const [currentDayLimit, setCurrentDayLimit] = useState(new Date());// this react hook useState get the current date and time to set a limt of 5 days to request cleaner.
 
+  const [userCars, setUSerCars] = useState([])
   // this this react hook useEffect loads after everything loaded which is going to set the (currentDayLimit) to 5 days ahead. so no user can request in a period of a week.
   // and it will call the check function which is explained in line 43.
   useEffect(() => {
     let currentDate = new Date()
     setCurrentDayLimit(currentDate.setDate(currentDate.getDate() + 5))
     check()
+    loadCarNumbers()
   }, []);
 
   // this this react hook useEffect loads after everything loaded which get the user date and time input and store it in (DateSubmit) this useEffect loads every time that (date) useState get new data.
   useEffect(() => {
     setDateSubmit(moment(date).format('MM/DD/YY, hh:mm a'))
   }, [date]);
+
+  const loadCarNumbers = async() =>{
+    let load = await db.collection("cars").doc(firebase.auth().currentUser.uid).get()
+    let cars = load.data()
+    let plates = cars.registerdCars
+    setUSerCars(plates)
+  }
 
 
   const [date, setDate] = useState(new Date()); // this react hook useState store the current date
@@ -43,9 +53,17 @@ export default function TestScreen() {
   //this function will set CurrentFreePoints from the database value called carWashPoints. which it will be used to pay with it later.
   // i wrote an await so the code dose not go all the way though the fucntion and setCurrentFreePoints to null or give a crash
   const check = async () =>{
-    let c = await db.collection("users").doc(firebase.auth().currentUser.uid).collection("subscription").doc("sub").get()
-    let k = c.data().carWashPoints;
-    setCurrentFreePoints(k)
+    db.collection("users").doc(firebase.auth().currentUser.uid).collection("subscription").onSnapshot(querySnapshot =>{
+      let temp = 0
+      querySnapshot.forEach(doc =>{
+        if(doc.id === "sub"){
+          let info = doc.data()
+          temp = info.carWashPoints
+        }
+      })
+      setCurrentFreePoints(temp)
+    })
+    
   }
   
 
@@ -118,6 +136,10 @@ export default function TestScreen() {
     );
   }
 
+  const kill = () =>{
+    setPlat("")
+  }
+
   return (
     <ScrollView style={styles.container}>
       <Text>Parking location</Text>
@@ -128,24 +150,52 @@ export default function TestScreen() {
           placeholder="Parking Location"
           value={parkingLocation}
         />
-        <Text>Car Plat</Text>
-        {/* this reacte native component let the user input the information and store in (plat)  */}
-      <TextInput
-          style={{ height: 40, borderColor: "gray", borderWidth: 1 }}
-          onChangeText={setPlat}
-          placeholder="Car Plate"
-          value={plat}
-        />
-        {/* this reacte native component display the user the current formated by moment  */}
+        {Platform.OS === "ios"? 
+          <>
+          <TouchableOpacity
+                  onPress={() => {pickerRef.show()}}
+                  style={{height: 100, justifyContent: "center"}}
+                >
+            <Text>add you car number</Text>
+                </TouchableOpacity>
+                <ReactNativePickerModule
+                  pickerRef={e => (pickerRef = e)}
+                  selectedValue={plat}
+                  title={'Select a plat'}
+                  items={userCars}
+                  style={{height: 50, width: "100%",}}
+                  onCancel={() => {console.log("cancelled")}}
+                  onValueChange={(itemValue, itemIndex) =>
+                    setPlat(itemValue)
+                  } 
+                  />
+        </>
+              :
+              <Picker
+                selectedValue={plat}
+                style={{ height: 50, width: '100%' }}
+                onValueChange={(itemValue, itemIndex) => setPlat(itemValue)}
+              >
+                {userCars.map((n,i) =>{
+                  <Picker.Item key={i} label={n[i]} value={n[i]} />
+                })}
+                
+              </Picker>
+        }
+        {plat ? <View>
+          <Text>You choosed: {plat}</Text>
+          <Button onPress={() =>kill()} title="delete" />
+        </View> : null}
+        
         <Text>Date and Time: {moment(date).format('MM/DD/YY, hh:mm a')}</Text>
         {currentFreePoints > 0 ? <Text>You have: {currentFreePoints} free points</Text> : <Text>Sadly you have no points</Text>}
         
         <View>
-          {/* this reacte native component button. when the user click on it. it will trigger the functions that explained apove  */}
+
         <Button onPress={() =>showDatepicker()} title="Show date picker!" />
       </View>
       <View>
-        {/* this reacte native component button. when the user click on it. it will trigger the functions that explained apove  */}
+
         <Button onPress={() =>showTimepicker()} title="Show time picker!" />
       </View>
         <View>
