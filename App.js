@@ -67,7 +67,6 @@ export default function App(props) {
   const handleLogin = async () => {
     console.log(email,password)
     await firebase.auth().signInWithEmailAndPassword(email, password);
-    
   };
 
   const handleView = async () => {

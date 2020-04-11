@@ -124,18 +124,25 @@ export default function reservation(props) {
             for(let num = 0; num < parkings.length;num++){
                 tempParking.push({
                     carPlate : carList[selectedCar[num]],
-                    id : parkings[num].id,
+                    parking_id : parkings[num].id,
                     latitude:  parkings[num].latitude,
                     longitude:  parkings[num].longitude
                 })
+                parkings[num].status = 'taken';
+                console.log('turned to taken',parkings);
+                db.collection("parking").doc("yq4MTqaC4xMaAf9HArZp").collection('c-2').doc(parkings[num].parkingNumber).set(parkings[num]);
+
+                db.collection("users").doc(firebase.auth().currentUser.uid).collection("history").doc().set({
+                    startDate: startTime,
+                    endDate: endTime,
+                    parkingNumber: parkings[num].parkingNumber
+                })
             }
     
-            // for(let num = 0; num<parking.length;num++){
-            //     db.collection("parking").doc("yq4MTqaC4xMaAf9HArZp").collection("c-2").doc(tempParking[num].id).update({
-            //         carPlate : carList[selectedCar[num]],
-            //         status : "taken"
-            //     })
-            // }
+            
+
+            
+
             db.collection("reservation").doc(firebase.auth().currentUser.uid).set({
                     ParkingInfo: tempParking,
                     startTime,
