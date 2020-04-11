@@ -23,7 +23,7 @@ import moment from 'moment';
 /* right now this page is for the admin to access the news
    with a couple of if statements the user will be able to view 
    the News from this screen*/
-export default function HistoryScreen() {
+export default function HistoryScreen(props) {
   const [sDate, setSDate] = useState("");
   const [eDate, setEDate] = useState("");
   const [user, setUser] = useState("");
@@ -66,6 +66,21 @@ export default function HistoryScreen() {
     db.collection("user").doc(firebase.auth().currentUser.uid).collection('history').doc(d.id).delete()
   };
 
+  const handleReserve = async (i) => {
+    console.log('history');
+    const Parking = await db.collection("parking").doc('yq4MTqaC4xMaAf9HArZp').collection('c-2')
+    .doc(history[i].parkingNumber).get();
+    console.log(Parking.data().status);
+    if(Parking.data().status === 'free'){
+      let chosen = [];
+      chosen.push(Parking.data());
+      props.navigation.navigate('Reservation',{chosen:chosen})
+    } else {
+      alert('sorry but this spot is currently taken or on hold');
+    }
+    
+  };
+
 
 
   const handleLogout = () => {
@@ -88,6 +103,8 @@ export default function HistoryScreen() {
        <Text><Text style={{ fontWeight: 'bold' }}>Parking Number</Text>: {n.parkingNumber}</Text>
        {/* this TouchableOpacity is used to call the delete method */}
        <TouchableOpacity onPress={() => handleDelete(i)}><Text style={{color:"red"}}>Delete</Text></TouchableOpacity>
+       <TouchableOpacity onPress={() => handleReserve(i)}><Text style={{color:"green"}}>Rserve Again</Text></TouchableOpacity>
+
      </View>
 
    </Animatable.View>
