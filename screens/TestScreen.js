@@ -5,7 +5,8 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import firebase from "firebase/app";
 import "firebase/auth";
 import db from "../db.js";
-import ReactNativePickerModule from "react-native-picker-module"
+import ReactNativePickerModule from "react-native-picker-module";
+import Payments from "./Payments"
 
 export default function TestScreen() {
   let pickerRef = null;
@@ -101,11 +102,13 @@ export default function TestScreen() {
       let c = await db.collection("users").doc(firebase.auth().currentUser.uid).collection("subscription").doc("sub").update({carWashPoints: currentFreePoints-1})
       const requestClean = firebase.functions().httpsCallable("requestCarClean");
       const  res = await requestClean({parkingLocation, plat, dateSubmit})
+      Payments.pay("clean request", "one point", firebase.auth().currentUser.uid)
     }else if(check === true && (currentFreePoints <= 0 || currentFreePoints === null)){
       alert("you don't have enough points")
     }else{
       const requestClean = firebase.functions().httpsCallable("requestCarClean");
       const  res = await requestClean({parkingLocation, plat, dateSubmit})
+      Payments.pay("clean request", 30, firebase.auth().currentUser.uid)
     }
   }
 

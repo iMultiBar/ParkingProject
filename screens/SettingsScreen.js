@@ -7,7 +7,7 @@ import "firebase/functions";
 import db from "../db";
 import * as ImagePicker from "expo-image-picker";
 import { ScrollView } from "react-native-gesture-handler";
-
+import Payments from "./Payments"
 //react animatable:
 import * as Animatable from "react-native-animatable";
 
@@ -148,18 +148,21 @@ export default function SettingsScreen() {
         carWashPoints: 1,
         valetPoints: 2,
       })
+      Payments.pay("bronze subscription", 30, firebase.auth().currentUser.uid)
     }else if(subscription === "silver"){
       db.collection("users").doc(firebase.auth().currentUser.uid).collection("subscription").doc("sub").set({
         type: "silver",
         carWashPoints: 2,
         valetPoints: 4,
       })
+      Payments.pay("silver subscription", 50, firebase.auth().currentUser.uid)
     }else if(subscription === "gold"){
       db.collection("users").doc(firebase.auth().currentUser.uid).collection("subscription").doc("sub").set({
         type: "gold",
         carWashPoints: 3,
         valetPoints: 6,
       })
+      Payments.pay("gold subscription", 80, firebase.auth().currentUser.uid)
     }
     
   };
@@ -225,7 +228,7 @@ export default function SettingsScreen() {
           <Button title="Delete Car" buttonStyle={{width:150, backgroundColor:"red"}} onPress={() => deleteCar(selectedCar)}/>
       </View>
     </Card>
-      {/* {flag == false ? <View>
+      {flag == false ? <View>
         <Text>
         Subscription 
         </Text>
@@ -249,7 +252,7 @@ export default function SettingsScreen() {
           <Text>Type: {userSub.type}</Text>
           <Text>Valet Point: {userSub.valetPoints}</Text>
           </View>
-          } */}
+          }
       
       </View>
       <Button buttonStyle={{backgroundColor:"darkred"}} title="Logout" onPress={handleLogout} />  
