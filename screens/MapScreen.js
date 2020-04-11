@@ -59,6 +59,7 @@ export default function MapScreen(props) {
   useEffect(() => {
     init();
     // simulate();
+    
   }, []);
 
   // this code will turn all the parkings back to free
@@ -66,11 +67,9 @@ export default function MapScreen(props) {
   //   var p = ppp;
   //   for (let i = 0; i < p.length; i++) {
   //      p[i].status = 'free';
-  //      console.log('heeereee')
   //      setParkings(p);
   //      await db.collection("parking").doc("yq4MTqaC4xMaAf9HArZp").collection('c-2').doc(p[i].parkingNumber).set(p[i]);
   //   }
-  //   console.log(p);
     
   // }
 

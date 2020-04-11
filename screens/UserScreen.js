@@ -141,6 +141,13 @@ export default function UserScreen({ navigation }) {
                     </Picker>
                 </Card>
 
+                {/* User Parking Reservation History List Tap */}
+                <Card title="Reservation List">
+                    <ScrollView>
+                        <Button title="View History" onPress={() => navigation.navigate('History')} />
+                    </ScrollView>
+                </Card>
+
                 {/* User Parking Reservation List Tap */}
                 <Card title="Reservation List">
                     <ScrollView>
