@@ -30,6 +30,7 @@ export default function MapScreen(props) {
   const [location, setLocation] = useState({coords:{latitude:0,longitude:0}});
   /* react native hook useState is being used to initialize data */
   const [parkings, setParkings] = useState([]);
+  const [flag, setFlag] = useState(true);
   const [chosen, setChosen] = useState([]);
   // i used this variable because i was having a problem with the parkings
   // not loading in time therefore giving me errors. i used a second 
@@ -138,27 +139,42 @@ export default function MapScreen(props) {
   /* this method in progress but it will add the reserved parking 
   to an array so the user can reserve more than one parking 
   at once*/
-  const handleAdd = (i) => {
-    console.log('chosen parking',chosen);
+  const handleAdd = async (i,index) => {
+    //console.log('chosen parking',chosen);
     var temp = chosen;
-    console.log(i.status);
     if(i.status === 'free'){
-      if(!temp.includes(i)){
-        temp.push(i);
-        setChosen(temp);
-      } else{
-        alert('you have already chosen this parking lot')
+      var parks = parkings;
+      //console.log(i.status);
+      if(i.status === 'free' || i.status === 'hold'){
+        if(!temp.includes(i)){
+          temp.push(i);
+          parks[index].status = 'hold';
+          console.log('parks',parks[index].status);
+          setChosen(temp);
+          setParkings(parks);
+          await db.collection("parking").doc("yq4MTqaC4xMaAf9HArZp").collection('c-2').doc(parks[index].parkingNumber).set(parks[index]);
+          setFlag(!flag);
+        }
+        else if(temp.includes(i)){
+          temp.push(i);
+          parks[index].status = 'free';
+          console.log('parks',parks[index].status);
+          setChosen(temp);
+          setParkings(parks);
+          await db.collection("parking").doc("yq4MTqaC4xMaAf9HArZp").collection('c-2').doc(parks[index].parkingNumber).set(parks[index]);
+          setFlag(!flag);
+        } 
+         else{
+          alert('please stand by this parking is on hold');
+        }
+    
+      } 
+      else{
+        alert('this parking is not available')
       }
     
     } 
-    else if(i.status === 'hold'){
-      alert('please stand by this parking is on hold');
-    }
-    else{
-      alert('this parking is not available')
-    }
-  };
-
+  }
   const handleReserve = () => {
     props.navigation.navigate('Reservation',{chosen:chosen})
   };
@@ -187,7 +203,7 @@ export default function MapScreen(props) {
           to know which color the parking is going to be.
         */
         <Marker
-          onPress={() => handleAdd(p)}
+          onPress={() => handleAdd(p,i)}
           key={i}
           image={p.status === "free"? require('../assets/images/green.jpg')
           : p.status === "taken"?require('../assets/images/red.jpg')
