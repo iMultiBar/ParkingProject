@@ -36,6 +36,7 @@
     "react-native-datepicker": "^1.7.2",
     "react-native-elements": "^1.2.7",
     "react-native-gesture-handler": "~1.5.0",
+    "react-native-image-slider-box": "^1.0.12",
     "react-native-maps": "^0.27.1",
     "react-native-option-select": "^1.0.4",
     "react-native-picker-module": "^1.3.1",
