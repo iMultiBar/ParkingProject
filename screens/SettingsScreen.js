@@ -67,6 +67,9 @@ export default function SettingsScreen() {
     console.log("new displayName", firebase.auth().currentUser.displayName);
     setPhotoURL(url);
   };
+  const handleLogout = () => {
+    firebase.auth().signOut();
+  };
 
   const handlePickImage = async () => {
     // show camera roll, allow user to select
@@ -154,6 +157,7 @@ export default function SettingsScreen() {
           }
       
       </View>
+      <Button title="Logout" onPress={handleLogout} />  
     </ScrollView>
   );
 }

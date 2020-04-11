@@ -1,13 +1,12 @@
 import * as WebBrowser from "expo-web-browser";
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
-
+import {Button} from "react-native-elements"
 import React, { useState, useEffect } from "react";
 import {
   Image,
   Platform,
   TextInput,
-  Button,
   ScrollView,
   StyleSheet,
   Text,
@@ -135,10 +134,7 @@ export default function MapScreen(props) {
     //console.log(location)
   };
 
-  const handleLogout = () => {
-    firebase.auth().signOut();
-  };
-
+ 
   /* this method in progress but it will add the reserved parking 
   to an array so the user can reserve more than one parking 
   at once*/
@@ -213,8 +209,8 @@ export default function MapScreen(props) {
         /> */}
     
     </MapView>
-    <Button title="Reserve" onPress={handleReserve} />  
-    <Button title="Logout" onPress={handleLogout} />  
+    <Button title="Reserve" type="outline" onPress={handleReserve} />  
+    
     </View>
   );
 }
