@@ -189,7 +189,6 @@ export default function UserScreen({ navigation }) {
                 {/* User Parking History List Tap */}
                 <Card title="Reservation History">
                     <ScrollView>
-                        <Text> Empty</Text>
                         <Button title="Show History" onPress={() => navigation.navigate('History')} />
                     </ScrollView>
                 </Card>

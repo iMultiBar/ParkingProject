@@ -34,57 +34,38 @@ export default function HistoryScreen() {
     this useEffect will get the data from the database collection 'News'
     push it into the news variable
   */
-  useEffect(() => {
-    db.collection("users").doc(firebase.auth().currentUser.uid)
-    .collection("history").onSnapshot(doc => {
-      history.push({ id: doc.id, ...doc.data()});
+  // useEffect(() => {
+  //   getHistory();
+  //  }, [user]);
+
+  const getHistory = async () =>{
+    var temp = [];
+    const querySnapshot = await db.collection("users").doc(firebase.auth().currentUser.uid).
+    collection("history").get()
+    querySnapshot.forEach(doc => {
+      temp.push({ id: doc.id, ...doc.data() });
     });
-  }, []);
+    setHistory(temp);
+  }
 
   useEffect(() => {
-    getUser()
+    getUser();
+    getHistory();
   }, []);
 
   const getUser = async () => {
     const User = await db.collection("users").doc(firebase.auth().currentUser.uid).get()
-    console.log(User.data());
     setUser(User.data());
     
 }
 
   // this method will delete news from the database(by the admin)
   const handleDelete = (i) => {
-    const d = news[i];
+    const d = history[i];
     console.log(d);
-    db.collection("news").doc(d.id).delete()
+    db.collection("user").doc(firebase.auth().currentUser.uid).collection('history').doc(d.id).delete()
   };
 
-  const handleAdd = async () => {
-    
-    db.collection("news")
-      .doc()
-      .set({
-        subject,
-        description,
-        datePublished: moment().format('DD/MM/YYYY'),
-        endDate:eDate,
-      });
-  };
-
-
-  /* this method will be responsible of adding news to the database */
-  // const handleAdd = async () => {
-  //   const uid = firebase.auth().currentUser.uid;
-  //   db.collection("suggestions")
-  //     .doc()
-  //     .set({
-  //       uid,
-  //       description,
-  //       dateTime: moment().format('DD/MM/YYYY, h:mm:ss a'),
-  //       type,
-  //       status:'unapproved'
-  //     });
-  // };
 
 
   const handleLogout = () => {
@@ -96,66 +77,23 @@ export default function HistoryScreen() {
     <ScrollView >
       <View style={styles.container}>
      
-     <Text style={{textAlign:"center",fontSize:50, flex:1,marginTop:15}}>News Feed</Text>
+     <Text style={{textAlign:"center",fontSize:50, flex:1,marginTop:15}}>Parking History</Text>
    <View style={{flex:4}}>
    {/* this map will show the news that had been retrived from the database */}
-   {news.map((n,i) => (
+   {history.map((n,i) => (
      <Animatable.View key={i} animation='pulse'  direction="normal" iterationCount={5}>
        <View  style={{borderColor:"black",borderWidth:3,borderStyle:"solid", marginBottom:15,padding:5,margin:5}}>
-       <Text><Text style={{ fontWeight: 'bold' }}>Subject</Text>: {n.subject}</Text>
-       <Text><Text style={{ fontWeight: 'bold' }}>Description</Text>: {n.description}</Text>
-       <Text><Text style={{ fontWeight: 'bold' }}>Publish Date</Text>: {n.datePublished}</Text>
+       <Text><Text style={{ fontWeight: 'bold' }}>Start Date</Text>: {n.startDate}</Text>
        <Text><Text style={{ fontWeight: 'bold' }}>End Date</Text>: {n.endDate}</Text>
+       <Text><Text style={{ fontWeight: 'bold' }}>Parking Number</Text>: {n.parkingNumber}</Text>
        {/* this TouchableOpacity is used to call the delete method */}
-       {user.role ==='admin'? <TouchableOpacity onPress={() => handleDelete(i)}><Text style={{color:"red"}}>Delete</Text></TouchableOpacity>:null}
+       <TouchableOpacity onPress={() => handleDelete(i)}><Text style={{color:"red"}}>Delete</Text></TouchableOpacity>
      </View>
 
    </Animatable.View>
      
    ))}
-  {user.role ==='admin'? 
- <View  style={{borderColor:"black",borderWidth:3,borderStyle:"solid", marginBottom:15,padding:5,margin:5,flex:1}}>
-     <TextInput
-         style={{ height: 40, borderColor: "gray", borderWidth: 1,margin:5 }}
-         onChangeText={setSubject}
-         placeholder="enter the subject for the news"
-         value={subject}
-     />
-     <TextInput
-         style={{ height: 40, borderColor: "gray", borderWidth: 1,margin:5 }}
-         onChangeText={setDescription}
-         placeholder="enter the subject for the news"
-         value={description}
-     />
-       <DatePicker
-     style={{width: 200}}
-     date={eDate}
-     mode="date"
-     placeholder="select date"
-     format="DD/MM/YYYY"
-     minDate={moment().format('DD/MM/YYYY')}
-     maxDate="01/01/2022"
-     confirmBtnText="Confirm"
-     cancelBtnText="Cancel"
-     customStyles={{
-       dateIcon: {
-         position: 'absolute',
-         left: 0,
-         top: 4,
-         marginLeft: 0
-       },
-       dateInput: {
-         marginLeft: 36
-       }
-       // ... You can check the source to find the other keys.
-     }}
-     onDateChange={(date) => setEDate(date) }
-   />
-       <TouchableOpacity style={{margin:5}} onPress={() => handleAdd()}><Text style={{color:"green"}}>Add</Text></TouchableOpacity>
-     </View>
 
-    :
-    null}
 
    </View>
    
