@@ -25,6 +25,7 @@ import carriersScreen from '../screens/carriersScreen';
 // import ValetScreen from '../screens/ValetScreen';
 import ReservationScreen from '../screens/Reservation';
 import MapScreen from '../screens/MapScreen';
+import ValetScreen from '../screens/ValetScreen';
 
 
 
@@ -200,21 +201,21 @@ CleanerStack.navigationOptions = {
 
 CleanerStack.path = '';
 ////////////////////////////////////////////////////////////////
-// const ValetStack = createStackNavigator(
-//   {
-//     Valet: ValetScreen,
-//   },
-//   config
-// );
-// // this naigationoptions allows to edit the tab it self for here. i added a tabBarLable which give a name to the tab
-// ValetStack.navigationOptions = {
-//   tabBarLabel: 'ValetScreen',
-//   tabBarIcon: ({ focused }) => (
-//     <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-link' : 'md-link'} />
-//   ),
-// };
+const ValetStack = createStackNavigator(
+  {
+    Valet: ValetScreen,
+  },
+  config
+);
+// this naigationoptions allows to edit the tab it self for here. i added a tabBarLable which give a name to the tab
+ValetStack.navigationOptions = {
+  tabBarLabel: 'ValetScreen',
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-link' : 'md-link'} />
+  ),
+};
 
-// ValetStack.path = '';
+ValetStack.path = '';
 //////////////////////////////////////////////////////////////
 
 SettingsStack.path = '';
@@ -266,7 +267,7 @@ const tabNavigator = createBottomTabNavigator({
   CleanerStack,
   CarriersStack,
   ReportStack,
-  // ValetStack
+  ValetStack
 });
 
 // work in progress...
