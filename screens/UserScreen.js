@@ -186,6 +186,14 @@ export default function UserScreen({ navigation }) {
                     </ScrollView>
                 </Card>
 
+                {/* User Parking History List Tap */}
+                <Card title="Reservation History">
+                    <ScrollView>
+                        <Text> Empty</Text>
+                        <Button title="Show History" onPress={() => navigation.navigate('History')} />
+                    </ScrollView>
+                </Card>
+
 
                 {/* // Your subscription Tap */}
                 <Card title="Your subscription">
@@ -207,6 +215,8 @@ export default function UserScreen({ navigation }) {
                                 </>
                         }
                 </Card>
+
+                
 
             </ScrollView>
         </View> 

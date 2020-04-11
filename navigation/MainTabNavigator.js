@@ -24,6 +24,7 @@ import CarriersScreen from '../screens/carriersScreen';
 import ValetScreen from '../screens/ValetScreen'
 import ReservationScreen from '../screens/Reservation';
 import MapScreen from '../screens/MapScreen';
+import HistoryScreen from '../screens/HistoryScreen';
 
 
 
@@ -61,14 +62,16 @@ HomeStack.path = '';
 
 const UserScreenStack = createStackNavigator(
   {
-    UserScreen: UserScreen, Map: { screen: MapScreen }, 
+    UserScreen: UserScreen, 
+    Map: { screen: MapScreen }, 
     Settings: { screen: SettingsScreen  }, 
     Reservation: { screen: ReservationScreen }, 
     Suggestions: { screen:  SuggestionsScreen},
     Cleaner: { screen: CleanerScreen },
     Carriers: { screen: CarriersScreen },
     Valet: { screen: ValetScreen },
-    RequestCleaner: {screen: RequestCleaner}
+    RequestCleaner: {screen: RequestCleaner},
+    History: {screen: HistoryScreen}
   },
   config
 );
