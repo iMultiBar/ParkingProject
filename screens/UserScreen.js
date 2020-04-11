@@ -6,7 +6,6 @@ import db from '../db';
 import firebase from "firebase/app";
 import "firebase/auth";
 
-import SettingPage from "./SettingsScreen"
 import moment from "moment"
 
 //react elements:
@@ -16,14 +15,14 @@ import { Card , Icon, Divider , Button, Avatar   } from 'react-native-elements';
 import * as Animatable from "react-native-animatable";
 
 
-export default function UserScreen() {
+export default function UserScreen({ navigation }) {
 
     const [user , setUser] = useState(false)
     const [serviceList , setServiceList] = useState([])
     const [service , setService] = useState(false)
+    const [selectedService , setSelectedService] = useState(null)
     const [reservation, setReservation] = useState([])
     const [subscription, setSubscription] = useState(false)
-    const [updateResVar ,setUpdateResVar] = useState(null)
 
 
     useEffect(()=>{
@@ -66,7 +65,7 @@ export default function UserScreen() {
     const getServices = async ()  => {
         let temp = []
         console.log("Getting Services")
-        await db.collection('services').get()
+        await db.collection('requests').get()
         .then((snapshot) => {
           snapshot.forEach((doc) => {
             console.log(doc.id, '=>', doc.data());
@@ -120,7 +119,10 @@ export default function UserScreen() {
             </View>
 
  
-
+            <Button
+                title="News"
+                onPress={() => navigation.navigate('Settings')}
+            />
             {/*
                 
             */}
@@ -133,11 +135,11 @@ export default function UserScreen() {
 
                 {/* Request Service */}
                 <Card title="Request Service">
-                        <Picker
-                        selectedValue={service}
-                        style={{height: 50, width: 350}}
-                        onValueChange={(itemValue) => setService({itemValue})}
-                        >
+                <Picker
+                    selectedValue={selectedService}
+                    style={{height: 50, width: "100%"}}
+                    onValueChange={(itemValue, itemIndex) => setSelectedService({itemValue})}
+                >
                             {
 
                                 
@@ -155,24 +157,30 @@ export default function UserScreen() {
                 <Card title="Reservation List">
                     <ScrollView>
                         { 
-                         reservation && reservation != undefined ?
+                        //  reservation && reservation != undefined ?
                          
-                            <View>
-                                {
-                                reservation.map((item, index) => 
-                                        <View key={index}>
-                                            <Text> Parking Location: { item.parking.location } Start Time: {item.startTime } End Time: { item.endTime }</Text>
-                                            <Button onPress={() => ExtendRes(item)}/>
-                                            <Button title="Cancel Reservation" onPress={() => EndRes()} />
-                                        </View>
-                                )}
-                                <Button title="Reserve"/>
-                            </View>
+                        //     <View>
+                        //         {
+                        //         reservation.map((item, index) => 
+                        //                 <View key={index}>
+                        //                     <Text> Parking Location: { 
+                        //                         item.parking.location 
+                        //                     } Start Time: {
+                        //                         item.startTime 
+                        //                     } End Time: { 
+                        //                       item.endTime 
+                        //                     }</Text>
+                        //                     <Button onPress={() => ExtendRes(item)}/>
+                        //                     <Button title="Cancel Reservation" onPress={() => EndRes()} />
+                        //                 </View>
+                        //         )}
+                        //         <Button title="Reserve"/>
+                        //     </View>
                            
-                            :
+                        //     :
                                 <>
                                     <Text> Empty</Text>
-                                    <Button title="Reserve" />
+                                    <Button title="Reserve" onPress={() => navigation.navigate('Map')} />
                                 </>
                         }
                     </ScrollView>
@@ -195,7 +203,7 @@ export default function UserScreen() {
                             :
                                 <>
                                     <Text>You are not Subscriped</Text>
-                                    <Button title="Subscribe" onPress={<SettingPage />} />
+                                    <Button title="Subscribe" />
                                 </>
                         }
                 </Card>
