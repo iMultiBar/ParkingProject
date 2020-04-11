@@ -102,7 +102,7 @@ export default function NewsScreen() {
     <ScrollView >
       <View style={styles.container}>
      
-     <Text style={{ paddingLeft:15,fontVariant:"TimesNewRomanPSMT" ,fontSize:30, flex:1,marginTop:15}}>News Feed</Text>
+     <Text style={{ paddingLeft:15 ,fontSize:30, flex:1,marginTop:15}}>News Feed</Text>
    <View style={{flex:4}}>
    {/* this map will show the news that had been retrived from the database */}
    {news.map((n,i) => (
