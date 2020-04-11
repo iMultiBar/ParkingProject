@@ -1,3 +1,4 @@
+//@refresh reset
 import * as WebBrowser from "expo-web-browser";
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
@@ -59,6 +60,19 @@ export default function MapScreen(props) {
     init();
     // simulate();
   }, []);
+
+  // this code will turn all the parkings back to free
+  // const free = async () => {
+  //   var p = ppp;
+  //   for (let i = 0; i < p.length; i++) {
+  //      p[i].status = 'free';
+  //      console.log('heeereee')
+  //      setParkings(p);
+  //      await db.collection("parking").doc("yq4MTqaC4xMaAf9HArZp").collection('c-2').doc(p[i].parkingNumber).set(p[i]);
+  //   }
+  //   console.log(p);
+    
+  // }
 
   const init = async () => {
     const temp = [];
@@ -142,38 +156,37 @@ export default function MapScreen(props) {
   const handleAdd = async (i,index) => {
     //console.log('chosen parking',chosen);
     var temp = chosen;
-    if(i.status === 'free'){
-      var parks = parkings;
-      //console.log(i.status);
-      if(i.status === 'free' || i.status === 'hold'){
-        if(!temp.includes(i)){
-          temp.push(i);
-          parks[index].status = 'hold';
-          console.log('parks',parks[index].status);
-          setChosen(temp);
-          setParkings(parks);
-          await db.collection("parking").doc("yq4MTqaC4xMaAf9HArZp").collection('c-2').doc(parks[index].parkingNumber).set(parks[index]);
-          setFlag(!flag);
-        }
-        else if(temp.includes(i)){
-          temp.push(i);
-          parks[index].status = 'free';
-          console.log('parks',parks[index].status);
-          setChosen(temp);
-          setParkings(parks);
-          await db.collection("parking").doc("yq4MTqaC4xMaAf9HArZp").collection('c-2').doc(parks[index].parkingNumber).set(parks[index]);
-          setFlag(!flag);
-        } 
-         else{
-          alert('please stand by this parking is on hold');
-        }
-    
-      } 
-      else{
-        alert('this parking is not available')
+    console.log('this is chosen parks',temp);
+    var parks = parkings;
+    //console.log(i.status);
+    if(i.status === 'free' || i.status === 'hold'){
+      if(!temp.includes(i) && i.status === 'free'){
+        temp.push(i);
+        parks[index].status = 'hold';
+        console.log('parks',parks[index].status);
+        setChosen(temp);
+        setParkings(parks);
+        await db.collection("parking").doc("yq4MTqaC4xMaAf9HArZp").collection('c-2').doc(parks[index].parkingNumber).set(parks[index]);
+        setFlag(!flag);
       }
-    
+      else if(temp.includes(i) && i.status === 'hold'){
+        temp.push(i);
+        parks[index].status = 'free';
+        console.log('parks',parks[index].status);
+        setChosen(temp);
+        setParkings(parks);
+        await db.collection("parking").doc("yq4MTqaC4xMaAf9HArZp").collection('c-2').doc(parks[index].parkingNumber).set(parks[index]);
+        setFlag(!flag);
+      } 
+        else{
+        alert('please stand by this parking is on hold');
+      }
+  
     } 
+    else{
+      alert('this parking is taken')
+    }
+ 
   }
   const handleReserve = () => {
     props.navigation.navigate('Reservation',{chosen:chosen})
