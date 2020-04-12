@@ -75,7 +75,7 @@ export default function SettingsScreen() {
         let temp = carList
         if(carPlate){
             temp.push(carPlate)
-            console.log(carPlate, "=>", temp)
+            // console.log(carPlate, "=>", temp)
             await db.collection("cars").doc(firebase.auth().currentUser.uid).set({
                 registeredCars:temp
             })
@@ -117,8 +117,8 @@ export default function SettingsScreen() {
       displayName,
       photoURL: url
     });
-    console.log("updateUser response", response2);
-    console.log("new displayName", firebase.auth().currentUser.displayName);
+    // console.log("updateUser response", response2);
+    // console.log("new displayName", firebase.auth().currentUser.displayName);
     setPhotoURL(url);
   };
   const handleLogout = () => {
@@ -135,7 +135,7 @@ export default function SettingsScreen() {
     });
 
     if (!result.cancelled) {
-      console.log("not cancelled", result.uri);
+      // console.log("not cancelled", result.uri);
       setUri(result.uri);
     }
   };

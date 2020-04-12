@@ -31,7 +31,7 @@ export default function CleanerScreen() {
           cleanerJobs.push({id: doc.id, ...doc.data()})
         }
       });
-      console.log(" Current jobs: ", jobs);
+      // console.log(" Current jobs: ", jobs);
       setJobs([...jobs]);
       setCleanerJobs([...cleanerJobs])
     });

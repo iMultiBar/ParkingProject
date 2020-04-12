@@ -35,7 +35,7 @@ export default function reservation(props) {
 
 
     const parkings = props.navigation.getParam('chosen','did not find the param');
-    console.log('parkings in reservation page',parkings);
+    // console.log('parkings in reservation page',parkings);
 
     const AndroidShowDateTime = currentMode => {
         setShow(true);
@@ -44,21 +44,20 @@ export default function reservation(props) {
 
     useEffect(() => {
         setDateSubmit(moment(date).format('YYYY-MM-DD hh:mm:ss'))
-        console.log(DateSubmit)
+        // console.log(DateSubmit)
     }, [date]);
     
     useEffect(()=> {
-        console.log("PARKINGGGGGG", parkings)
+        // console.log("PARKINGGGGGG", parkings)
         getInfo()
     },[])
     useEffect(()=> {
-        console.log("Setting Car List")
+        // console.log("Setting Car List")
         let temp = []
         for(let i =0;i<carList.length;i++){
             temp.push({id:i, name: carList[i]})
         }
         setCarArr(temp)
-        console.log("Help me daddy",carArr)
     },[carList])
     // useEffect(() => {
     //     db.collection("cars").doc(firebase.auth().currentUser.uid).onSnapshot((snapShot) => 
@@ -74,13 +73,12 @@ export default function reservation(props) {
       
     const getInfo = async () => {
         const User = await db.collection("users").doc(firebase.auth().currentUser.uid).get()
-        console.log("fetching user:", User.data())
+        // console.log("fetching user:", User.data())
         setUser(User.data())
 
         const usersCars = await db.collection("cars").doc(firebase.auth().currentUser.uid).get()
-        console.log("Fetching users Car List", usersCars.data())
+        // console.log("Fetching users Car List", usersCars.data())
         if(usersCars.data()){
-            console.log('zggg',usersCars.data().registeredCars)
             let cars = usersCars.data()
             setCarList(cars.registeredCars)
             handlePicker(cars.registeredCars)
@@ -88,13 +86,12 @@ export default function reservation(props) {
     }   
 
     const handlePicker = (l) => {
-        console.log("Setting Car List",l)
+        // console.log("Setting Car List",l)
         let temp = []
         for(let i =0;i<carList.length;i++){
             temp.push({id:i, CarPlate: l[i]})
         }
         setCarArr(temp)
-        console.log("Help me daddy",carArr)
     }
 
     const handleNewCar = async (carPlate) => {
@@ -103,7 +100,7 @@ export default function reservation(props) {
 
             if(carPlate){
                 temp.push(carPlate)
-                console.log(carPlate, "=>", temp)
+                // console.log(carPlate, "=>", temp)
                 await db.collection("cars").doc(firebase.auth().currentUser.uid).set({
                     registeredCars:temp
                 })
@@ -131,7 +128,7 @@ export default function reservation(props) {
                     longitude:  parkings[num].longitude
                 })
                 parkings[num].status = 'taken';
-                console.log('turned to taken',parkings);
+                // console.log('turned to taken',parkings);
                 db.collection("parking").doc("yq4MTqaC4xMaAf9HArZp").collection(parkings[num].parkingGroup).doc(parkings[num].parkingNumber).set(parkings[num]);
 
                 db.collection("users").doc(firebase.auth().currentUser.uid).collection("history").doc().set({

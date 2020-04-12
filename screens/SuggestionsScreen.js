@@ -53,14 +53,14 @@ export default function SuggestionsScreen() {
       querySnapshot.forEach(doc => {
         sug.push({ id: doc.id, ...doc.data() });
       });
-      console.log(" Current suggestion: ", sug);
+      // console.log(" Current suggestion: ", sug);
       setSuggestions([...sug]);
     });
 }
 
   const getUser = async () => {
     const User = await db.collection("users").doc(firebase.auth().currentUser.uid).get()
-    console.log(User.data());
+    // console.log(User.data());
     setUser(User.data());
 }
 
@@ -78,7 +78,7 @@ export default function SuggestionsScreen() {
   };
 
   const approve = n => {
-    console.log(n.id);
+    // console.log(n.id);
     db.collection("suggestions").doc(n.id).update({
           status:'approved'
         });

@@ -62,15 +62,15 @@ export default function HistoryScreen(props) {
   // this method will delete news from the database(by the admin)
   const handleDelete = (i) => {
     const d = history[i];
-    console.log(d);
+    // console.log(d);
     db.collection("user").doc(firebase.auth().currentUser.uid).collection('history').doc(d.id).delete()
   };
 
   const handleReserve = async (i) => {
-    console.log('history');
+    // console.log('history');
     const Parking = await db.collection("parking").doc('yq4MTqaC4xMaAf9HArZp').collection('c-2')
     .doc(history[i].parkingNumber).get();
-    console.log(Parking.data().status);
+    // console.log(Parking.data().status);
     if(Parking.data().status === 'free'){
       let chosen = [];
       chosen.push(Parking.data());

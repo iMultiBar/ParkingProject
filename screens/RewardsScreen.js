@@ -153,13 +153,13 @@ export default function RewardsScreen() {
         for (let i = 0; i < rewards.length; i++) {
             let rewardPoints = rewards[i].points;
 
-            console.log("Current Reward Points ", rewardPoints);
+            // console.log("Current Reward Points ", rewardPoints);
 
-            console.log("User Points ", userRewardPoints);
-            console.log("Reward Points", rewardPoints);
+            // console.log("User Points ", userRewardPoints);
+            // console.log("Reward Points", rewardPoints);
 
             if (userRewardPoints === rewardPoints) {
-                console.log("There is a reward");
+                // console.log("There is a reward");
                 setRewardStatus(true);
                 setType(rewards[i].type);
                 setExpiryDuration(rewards[i].expiryDuration);
@@ -167,7 +167,7 @@ export default function RewardsScreen() {
 
 
             else {
-                console.log("There is no reward");
+                // console.log("There is no reward");
                 setRewardStatus(false);
                 setType("");
                 setExpiryDuration("");

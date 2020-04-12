@@ -65,14 +65,14 @@ export default function ReportScreen() {
         querySnapshot.forEach(doc => {
           r.push({ id: doc.id, ...doc.data() });
         });
-        console.log(" Current report: ", r);
+        // console.log(" Current report: ", r);
         setReports([...r]);
       });
   }
   
     const getUser = async () => {
       const User = await db.collection("users").doc(firebase.auth().currentUser.uid).get()
-      console.log(User.data());
+      // console.log(User.data());
       setUser(User.data());
   }
   

@@ -41,7 +41,7 @@ const getCars = () =>{
       }
         
     })
-    console.log(valetCars)
+    // console.log(valetCars)
     setValetCars([...valetCars])
   })
   
@@ -75,12 +75,12 @@ const check = async () =>{
   })
   if(temp != null){
     let user = await db.collection("users").doc(temp).get()
-    console.log("user: ", user.data())
+    // console.log("user: ", user.data())
     setUserInfo({id: user.id, ...user.data()})
   }else{
     alert("car not found")
   }
-  console.log("number: ", parkingnNumber)
+  // console.log("number: ", parkingnNumber)
 }
 
 const submit = () =>{

@@ -44,7 +44,7 @@ export default function NewsScreen() {
       querySnapshot.forEach(doc => {
         news.push({ id: doc.id, ...doc.data() });
       });
-      console.log(" Current news: ", news);
+      // console.log(" Current news: ", news);
       setNews([...news]);
     });
   }, []);
@@ -55,7 +55,7 @@ export default function NewsScreen() {
 
   const getUser = async () => {
     const User = await db.collection("users").doc(firebase.auth().currentUser.uid).get()
-    console.log(User.data());
+    // console.log(User.data());
     setUser(User.data());
     
 }
@@ -63,7 +63,7 @@ export default function NewsScreen() {
   // this method will delete news from the database(by the admin)
   const handleDelete = (i) => {
     const d = news[i];
-    console.log(d);
+    // console.log(d);
     db.collection("news").doc(d.id).delete()
   };
 

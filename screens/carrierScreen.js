@@ -33,7 +33,7 @@ export default function carrierScreen() {
           carrierJobs.push({id: doc.id, ...doc.data()})
         }
       });
-      console.log(" Current jobs: ", jobs);
+      // console.log(" Current jobs: ", jobs);
       setJobs([...jobs]);
       setCarrierJobs([...carrierJobs])
     });

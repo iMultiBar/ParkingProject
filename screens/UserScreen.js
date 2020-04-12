@@ -50,7 +50,7 @@ export default function UserScreen({ navigation }) {
         temp = await db.collection("reservation").doc(firebase.auth().currentUser.uid).get()
         if(temp.data()){
             setReservation(temp.data())
-            console.log("Fetching Reservation: ", temp.data())
+            // console.log("Fetching Reservation: ", temp.data())
         }
 
     }
@@ -62,7 +62,7 @@ export default function UserScreen({ navigation }) {
                 let info = doc.data()
                 if(info.status === "parked"){
                     temp.push({id: doc.id, ...doc.data()})
-                    console.log("temp: ",temp)
+                    // console.log("temp: ",temp)
 
                 }
             })
@@ -96,7 +96,7 @@ export default function UserScreen({ navigation }) {
         let serv = []
         const info = await db.collection('requests').get()
         info.forEach(doc => {
-            console.log("Please",doc.id)
+            // console.log("Please",doc.id)
             serv.push(doc.id)
         })
         
