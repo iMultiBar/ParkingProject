@@ -13,17 +13,14 @@ import {
   View,
   TextInput,
   Picker,
-  KeyboardAvoidingView,Text
+  KeyboardAvoidingView,
+  Text,
+  Image
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-// import {
-//   Select,
-//   Option,
-// } from 'react-native-option-select';
- 
-
+import * as Animatable from "react-native-animatable";
 
 console.disableYellowBox = true;
 import AppNavigator from "./navigation/AppNavigator";
@@ -37,6 +34,7 @@ import { Input,Card,Button  } from "react-native-elements"
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 export default function App(props) {
+  let pickerRef = null;
   const [isLoadingComplete, setLoadingComplete] = useState(false);
   const [user, setUser] = useState(null);
   const [view, setView] = useState("login");
@@ -46,11 +44,14 @@ export default function App(props) {
   const [phone, setPhone] = useState("");
   const [department, setDepartment] = useState("");
   const [displayName, setDisplayName] = useState("");
+  const [loading, setLoading] = useState(false);
 
 
   useEffect(() => {
     return firebase.auth().onAuthStateChanged(setUser);
   }, []);
+
+  
 
   const handleRegister = async () => {
     await firebase.auth().createUserWithEmailAndPassword(email, password);
@@ -61,12 +62,11 @@ export default function App(props) {
       }`
     );
     updateUserLogin();
-    console.log("register time")
   };
 
   const handleLogin = async () => {
-    console.log(email,password)
     await firebase.auth().signInWithEmailAndPassword(email, password);
+    updateUserLogin();
   };
 
   const handleView = async () => {
@@ -74,7 +74,6 @@ export default function App(props) {
       setView( "register" )
     }
     else {
-      console.log("sup")
       setView("login" )
     }
   };
@@ -90,7 +89,7 @@ export default function App(props) {
         role:"student"
       });
   };
-
+  
   if (!isLoadingComplete && !props.skipLoadingScreen) {
     return (
       <AppLoading
@@ -99,11 +98,19 @@ export default function App(props) {
         onFinish={() => handleFinishLoading(setLoadingComplete)}
       />
     );
+  } else if (!loading) {
+    return(
+      <>
+        
+        <Image source={require("./assets/images/animated-logo.gif")} style={{height:"100%",zIndex:0,width:"100%",flex:1,position:"absolute"}} />
+        <Animatable.Text animation="jello" delay={1500} onAnimationEnd={()=> setLoading(true)} iterationCount={1} style={{paddingTop:"140%",width:500,zIndex:1,color:"#fff",justifyContent:"center",alignSelf:"center",textAlign:"center"}} direction="alternate">Welcome To BOLT</Animatable.Text>
+        </>
+      )
   } else if (!user && view === "login") {
     return (
-      <KeyboardAvoidingView behavior="height" style={styles.contentContainer}>
+      <KeyboardAvoidingView behavior="height" style={styles.universalStyle}>
       <View style={{justifyContent:"center",flex:1}}>
-
+      
 
       <Card
         image={require('./assets/images/frontpage.jpg')}>
@@ -162,7 +169,7 @@ export default function App(props) {
 
   else if (!user && view === "register") {
     return (
-      <KeyboardAvoidingView behavior="height" style={styles.contentContainer}>
+      <KeyboardAvoidingView behavior="height" style={styles.universalStyle}>
 <View style={{justifyContent:"center",flex:1}}>
 
 
@@ -233,7 +240,25 @@ export default function App(props) {
     value={phone}
   />
   <Text>Department</Text>
-<Picker
+        {Platform.OS === "ios"? 
+                <>
+                    <TouchableOpacity
+                        onPress={() => {pickerRef.show()}}
+                    >
+                    <Text>{department === null? "Select a Department": department}</Text>
+                    </TouchableOpacity>
+                    <ReactNativePickerModule
+                    pickerRef={e => (pickerRef = e)}
+                    selectedValue={department}
+                    title={"Select a Department"}
+                    items={department}
+                    style={{height: 50, width: "100%",}}
+                    onCancel={() => {console.log("cancelled")}}
+                    onValueChange={(itemValue, itemIndex) =>
+                        setDepartment(itemValue)
+                    } 
+                    />
+                </>:<Picker
           selectedValue={department}
           style={{height: 50, width: "100%"}}
           onValueChange={(itemValue, itemIndex) =>
@@ -246,6 +271,7 @@ export default function App(props) {
           <Picker.Item label="health and science" value="health and science" />
           <Picker.Item label="faculty" value="faculty" />
         </Picker>
+        }
 
   </View>
   <Button
@@ -264,65 +290,11 @@ export default function App(props) {
           
 </Card>
   </View>
-
-
-
-
-
-      {/* <View style={{justifyContent:"center",flex:1}}>
-        <TextInput
-          style={{ height: 40, borderColor: "gray", borderWidth: 1 }}
-          onChangeText={setDisplayName}
-          placeholder="Display Name"
-          value={displayName}
-        />
-        <TextInput
-          style={{ height: 40, borderColor: "gray", borderWidth: 1 }}
-          onChangeText={setEmail}
-          placeholder="Email"
-          value={email}
-        />
-
-        <TextInput
-          style={{ height: 40, borderColor: "gray", borderWidth: 1 }}
-          onChangeText={setPassword}
-          placeholder="Password"
-          secureTextEntry={true}
-          value={password}
-        />
-
-        <TextInput
-          style={{ height: 40, borderColor: "gray", borderWidth: 1 }}
-          onChangeText={setPhone}
-          placeholder="mobile number"
-          secureTextEntry={true}
-          value={phone}
-        />
-
-        <Picker
-          selectedValue={department}
-          style={{height: 50, width: "100%"}}
-          onValueChange={(itemValue, itemIndex) =>
-            setDepartment(itemValue)
-          }>
-          <Picker.Item label="Select a Department" value="" />
-          <Picker.Item label="IT" value="IT" />
-          <Picker.Item label="business" value="business" />
-          <Picker.Item label="engineering" value="engineering" />
-          <Picker.Item label="health and science" value="health and science" />
-          <Picker.Item label="faculty" value="faculty" />
-        </Picker>
-
-
-        <Button title="submit" onPress={handleRegister} />
-        <Button title="have and account? go to login" onPress={handleView} />
-      </View> */}
       </KeyboardAvoidingView>
     );
   } else {
     return (
       <View style={styles.container}>
-        {console.log(user,view)}
         {Platform.OS === "ios" && <StatusBar barStyle="default" />}
         <AppNavigator />
       </View>
@@ -359,15 +331,15 @@ function handleFinishLoading(setLoadingComplete) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff"
-  },
-  contentContainer: {
-    paddingTop: 30,
-    flex:1
   },
   welcomeContainer: {
     alignItems: "center",
     marginTop: 10,
     marginBottom: 20
+  },
+  universalStyle:{
+    backgroundColor: "#fff",
+    paddingTop: 30,
+    flex:1
   }
 });
