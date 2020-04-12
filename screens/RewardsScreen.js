@@ -179,7 +179,7 @@ export default function RewardsScreen() {
     return (
         <View>
             <Text style={{
-                fontSize: 25, fontFamily: "serif",
+                fontSize: 25,
                 textAlign: "center", marginTop: 20
             }}>
                 Welcome to your
@@ -218,7 +218,7 @@ export default function RewardsScreen() {
                         imageStyle={{ height: 250 }}
                     >
                         <Text style={{
-                            marginBottom: 10, fontFamily: "serif",
+                            marginBottom: 10,
                             textAlign: "center", fontSize: 18, fontWeight: "bold"
                         }}>
                             You haven't received any rewards from our parking app system.
