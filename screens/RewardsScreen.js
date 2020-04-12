@@ -21,7 +21,6 @@ require("firebase/firestore");
 import moment from 'moment';
 
 import { Card } from 'react-native-elements';
-import { user } from "firebase-functions/lib/providers/auth";
 
 
 export default function RewardsScreen() {
@@ -31,6 +30,7 @@ export default function RewardsScreen() {
     const [type, setType] = useState("");
     const [rewards, setRewards] = useState([]);
     const [rewardStatus, setRewardStatus] = useState(false);
+    const [reports, setReports] = useState([]); 
 
     useEffect(() => {
         checkUserReports();
@@ -45,6 +45,10 @@ export default function RewardsScreen() {
             setRewards([...rew]);
         });
     }, []);
+
+    useEffect(() => {
+
+    })
 
     useEffect(() => {
         checkForUserRewards(); 
