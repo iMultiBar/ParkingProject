@@ -62,7 +62,7 @@ export default function MapScreen(props) {
     groups.forEach(g => {
       init(g);
     });
-    simulate();
+   // simulate();
     
   }, []);
 
@@ -222,7 +222,7 @@ export default function MapScreen(props) {
         mapType={"satellite"}
         
       >
-        <TouchableOpacity onPress={() => setFocus(!focus)}><Text style={{color:'white'}}>Focus On Me is {focus?'true':'false'}</Text></TouchableOpacity>
+        <TouchableOpacity onPress={() => setFocus(!focus)}><Text style={{color:'white'}}>Focus is {focus?'On':'Off'}</Text></TouchableOpacity>
         {/* here i'm mapping the parkings array to show them as squares on the map */}
         {parkings.map((p,i) =>(
         /*
@@ -233,6 +233,7 @@ export default function MapScreen(props) {
         <Marker
           onPress={() => handleAdd(p,i)}
           key={i}
+          style={{width:20,height:20}}
           image={p.status === "free"? require('../assets/images/green.jpg')
           : p.status === "taken"?require('../assets/images/red.jpg')
           :require('../assets/images/yellow.jpg')}
