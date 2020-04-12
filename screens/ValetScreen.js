@@ -18,6 +18,12 @@ const [pNumber, setPNumber] = useState(null)
 const [availablePP, setAvailablePP] = useState([]);
 const [parkingnNumber1, setParkingNumber1] = useState([])
 const [valetCars, setValetCars] = useState([])
+const [groups , setGroups] = useState(['c-6','c-10','c-2','c-3','c-4','c-5']);
+
+let ggg=[];
+
+
+
 
 const addCar = () =>{
   setFlag(!flag)
@@ -41,18 +47,18 @@ const getCars = () =>{
   })
   
 }
-const getAvailableParkings = async() =>{
+const getAvailableParkings = async(g) =>{
   db.collection("parking").doc("yq4MTqaC4xMaAf9HArZp").
-  collection("c-2").where("status","==","free").onSnapshot(querySnapshot =>{
+  collection(g).where("status","==","free").onSnapshot(querySnapshot =>{
     let temp = []
-    let temp2 = []
     querySnapshot.forEach(doc =>{
       let info = doc.data()
-      temp.push(info.parkingNumber)
-      temp2.push(info)
+      temp.push(info.parkingNumber + ' '+ g)
+      ggg.push({ pGroup:g, ...doc.data()})
     })
+    console.log('t2',ggg);
     setParkingNumber1(temp)
-    setAvailablePP(temp2)
+    setAvailablePP(ggg)
   })
   
 }
@@ -60,7 +66,9 @@ const getAvailableParkings = async() =>{
 
 useEffect(() =>{
   getCars()
-  getAvailableParkings()
+  groups.forEach(g => {
+    getAvailableParkings(g)
+  });
 },[])
 
 
@@ -82,11 +90,12 @@ const check = async () =>{
 }
 
 const submit = () =>{
-  db.collection("parking").doc("yq4MTqaC4xMaAf9HArZp").collection("c-2").doc(pNumber).update({
+  db.collection("parking").doc("yq4MTqaC4xMaAf9HArZp").collection(availablePP[pNumber].pGroup).doc(availablePP[pNumber].parkingNumber).update({
     status: "taken"
   })
   db.collection("requests").doc("valet").collection("valet").add({
-    parkingLocation: pNumber,
+    parkingLocation: availablePP[pNumber].parkingNumber,
+    parkingGroup: availablePP[pNumber].pGroup,
     ValetUid: firebase.auth().currentUser.uid,
     carPlate: carNumber,
     status: "parked",
@@ -95,7 +104,7 @@ const submit = () =>{
 }
 
 const retrunCar = async (n)=>{
-  db.collection("parking").doc("yq4MTqaC4xMaAf9HArZp").collection("c-2").doc(n.parkingLocation).update({
+  db.collection("parking").doc("yq4MTqaC4xMaAf9HArZp").collection(n.parkingGroup).doc(n.parkingLocation).update({
     status: "free"
   })
  db.collection("requests").doc("valet").collection("valet").doc(n.id).update({
@@ -138,7 +147,7 @@ return (
                     style={{height: 50, width: "100%",}}
                     onCancel={() => {console.log("cancelled")}}
                     onValueChange={(itemValue, itemIndex) =>
-                      setPNumber(itemValue)
+                      setPNumber(itemIndex)
                     } 
                     />
           </>
@@ -149,11 +158,13 @@ return (
                   onValueChange={(itemValue, itemIndex) => setPNumber(itemValue)}
                 >
                   {availablePP.map((n,i) =>
-                    <Picker.Item key={i} label={"Parking :"+n.parkingNumber} value={n.parkingNumber} />
+                    <Picker.Item key={i} label={"Parking : "+n.parkingNumber +" " + n.pGroup} value={i} />
                   )}
                 </Picker>
+                
           }
           <Button title="Submit" onPress={() =>submit()} />
+          
       </View>
       
       }
@@ -163,7 +174,8 @@ return (
 
       { valetCars.map((n,i) => (
           <Card key={i} style={{borderColor:"black",borderWidth:3,borderStyle:"solid", marginBottom:20,padding:5}}>
-          <Text><Text style={{ fontWeight: 'bold' }}>parking location</Text>: {n.parkingLocation}</Text>
+          <Text><Text style={{ fontWeight: 'bold' }}>parking Number</Text>: {n.parkingLocation}</Text>
+          <Text><Text style={{ fontWeight: 'bold' }}>parking Location</Text>: {n.parkingGroup}</Text>
           <Text><Text style={{ fontWeight: 'bold' }}>plat number</Text>: {n.carPlate}</Text>
           <Text><Text style={{ fontWeight: 'bold' }}>Status</Text>: {n.status}</Text>
           {n.status === "requested" ? <Button title="retrun car" onPress={() =>retrunCar(n)} />: null}
