@@ -21,10 +21,12 @@ import NewsScreen from '../screens/NewsScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import SuggestionsScreen from '../screens/SuggestionsScreen';
 import CarriersScreen from '../screens/carriersScreen';
+import CarrierScreen from '../screens/carrierScreen';
 import ValetScreen from '../screens/ValetScreen'
 import ReservationScreen from '../screens/Reservation';
 import MapScreen from '../screens/MapScreen';
-import HistoryScreen from '../screens/HistoryScreen';
+import SubscriptionScreen from '../screens/SubscriptionScreen'
+import HistoryScreen from '../screens/HistoryScreen'
 
 
 
@@ -58,19 +60,21 @@ HomeStack.navigationOptions = {
 };
 
 HomeStack.path = '';
+
 ////////////////////////////////////////////////////////////////////////
 
 const UserScreenStack = createStackNavigator(
   {
-    UserScreen: UserScreen, 
-    Map: { screen: MapScreen }, 
+    UserScreen: UserScreen, Map: { screen: MapScreen }, 
     Settings: { screen: SettingsScreen  }, 
     Reservation: { screen: ReservationScreen }, 
     Suggestions: { screen:  SuggestionsScreen},
     Cleaner: { screen: CleanerScreen },
-    Carriers: { screen: CarriersScreen },
-    Valet: { screen: ValetScreen },
-    RequestCleaner: {screen: RequestCleaner},
+    carriers: { screen: CarriersScreen },
+    carrier: { screen: CarrierScreen },
+    valet: { screen: ValetScreen },
+    clean: {screen: RequestCleaner},
+    subscription: {screen: SubscriptionScreen},
     History: {screen: HistoryScreen}
   },
   config
@@ -111,7 +115,7 @@ MapStack.path = '';
 const tabNavigator = createBottomTabNavigator({
   HomeStack,
   MapStack,
-  UserScreenStack
+  UserScreenStack,
 });
 
 
