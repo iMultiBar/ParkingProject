@@ -1,6 +1,6 @@
 //@refresh reset
 import React,{ useState, useEffect} from 'react';
-import { ScrollView, StyleSheet,Text, Picker,View } from 'react-native';
+import { ScrollView, StyleSheet,Text, Picker,View,TouchableOpacity } from 'react-native';
 import db from '../db';
 
 import firebase from "firebase/app";
@@ -10,22 +10,27 @@ import moment from "moment"
 
 import Cleaner from "./CleanerScreen"
 import Valet from "./ValetScreen"
+import Carriar from "./carrierScreen"
+import Reports from "./ReportScreen"
+import Reward from "./RewardsScreen"
+import Suggestions from "./SuggestionsScreen"
+import ReactNativePickerModule from "react-native-picker-module"
 //react elements:
-import { Card , Icon, Divider , Button, Avatar,ButtonGroup   } from 'react-native-elements';
+import { Card , Icon, Divider , Button, Avatar,ButtonGroup,Input   } from 'react-native-elements';
 
 //react animatable:
 import * as Animatable from "react-native-animatable";
 
 
 export default function UserScreen({ navigation }) {
-
+    let pickerRef = null;
     const [user , setUser] = useState(false)
     const [serviceList , setServiceList] = useState([])
     const [service , setService] = useState(false)
     const [selectedService , setSelectedService] = useState(null)
     const [reservation, setReservation] = useState(false)
     const [subscription, setSubscription] = useState(false)
-    const [requestList,setRequestList] = useState(null)
+    const [requestList ,setRequestList] = useState(null)
 
 
     useEffect(()=>{
@@ -113,32 +118,35 @@ export default function UserScreen({ navigation }) {
     const [buttonCarriar, setButtonCarriar ] = useState(['Carriar Manager', 'General']);
     const [buttonCleaner, setButtonCleaner ] = useState(['Cleaner Manager', 'General']);
     const [AdminSection, setButtonAdmin ] = useState(['Admin Manager', 'General']);
+    const [AdminSectionList, setButtonAdminList ] = useState(['Reports','Cleaner', "Valet", "Carriar", "Reward", "Suggest"]);
     const [ selectedIndex, setSelectedIndex ] = useState(0)
+    const [ selectedIndexA, setSelectedIndexA ] = useState(0)
   
   return (
       user ? 
         <View style={styles.container}>
             <View style={{padding:10,flexDirection:"row"}}>
                    
-                <View style={{ alignSelf:"flex-start",flexDirection:"row",marginRight:"60%"}}>
+                <View style={{ alignSelf:"flex-start",flexDirection:"row",marginRight:"50%"}}>
                     <Avatar
                         rounded
                         source={{ uri: firebase.auth().currentUser.photoURL  }}
                         size="medium"
                     />
-                    <Text style={{padding:8}}>{user.displayName}</Text>
-                </View>
-                <Button
+                    <Input value={user.displayName} disabled style={{padding:8}} />
+                    <Button
                 icon={
                         <Icon
-                        name='settings-helper'
-                        type='material-community'
+                        name='settings'
+                        type='AntDesign'
                         color='#517fa4'
                     />
                 }
                 onPress={() => navigation.navigate('Settings')}
                 type="clear"
                 />
+                </View>
+
 
        
             </View>
@@ -156,36 +164,90 @@ export default function UserScreen({ navigation }) {
                 }
                 containerStyle={{marginLeft:-1,height:35,width:"100%"}}
             />
+            {user.role == "admin" && selectedIndex == 0 ?
+            <ButtonGroup
+                onPress={setSelectedIndexA}
+                selectedIndex={selectedIndexA}
+                buttons={AdminSectionList }
+                containerStyle={{marginLeft:-1,height:35,width:"100%",marginTop:-6}}
+            />:null}
 
-
-            {selectedIndex == 0 ? 
+            { selectedIndex == 0 ? 
             <ScrollView >
-                            {/* // Your Carrier View Tap */}
-                            { user.role == "carriar" || user.role == "admin" ?
+                   { user.role == "admin" ? selectedIndexA == 0 ? 
+                            <Card title="Reports">
+                                <Reports />
+                            </Card>
+                            : selectedIndexA == 1 ? 
+                            <Card title="Cleaner Manager">
+                                    <Cleaner />
+                                </Card>
+                                
+                            : selectedIndexA == 2 ? 
+                            <Card title="Valet Manager">
+                            <Valet />
+                    </Card>
+                            
+                            : selectedIndexA == 3 ? 
                             <Card title="Carriar Manager">
-                                    <Text>Soon ;></Text>
+                            <Carriar />
+                    </Card>       
+                            
+                            : selectedIndexA == 4 ? 
+                            <Card title="Reward Manager">
+                            <Reward />
+                    </Card>
+                            : selectedIndexA == 5 ? 
+                            <Card title="Suggestion Manager">
+                            <Suggestions />
+                    </Card>
+                : null : null
+            }
+                            {/* // Your Carrier View Tap */}
+                            { user.role == "carriar" ?
+                            <Card title="Carriar Manager">
+                                    <Carriar />
                             </Card>
                             :null
                             }
-                            { user.role == "cleaner" || user.role == "admin"?
+                            { user.role == "cleaner"?
                             <Card title="Cleaner Manager">
                                 <Cleaner />
                             </Card>
                             :null
                             }
-                            { user.role == "valet" || user.role == "admin" ?
+                            { user.role == "valet" ?
                             <Card title="Valet Manager">
                                     <Valet />
                             </Card>
-                            :null
+                            : null
                             }
-</ScrollView>
+            </ScrollView>
             :
             <ScrollView >
 
                 
                 {/* Request Service */}
                 <Card title="Request Service">
+                {Platform.OS === "ios"? 
+                <>
+                    <TouchableOpacity
+                        onPress={() => {pickerRef.show()}}
+                    >
+                    <Text>{selectedService === ""? "Select Service...": selectedService}</Text>
+                    </TouchableOpacity>
+                    <ReactNativePickerModule
+                    pickerRef={e => (pickerRef = e)}
+                    selectedValue={selectedService}
+                    title={"Select Service... "}
+                    items={serviceList}
+                    style={{height: 50, width: "100%",}}
+                    onCancel={() => {console.log("cancelled")}}
+                    onValueChange={(itemValue, itemIndex) =>
+                        setSelectedService(itemValue)
+                    } 
+                    />
+                </>:
                 <Picker
                     selectedValue={selectedService}
                     style={{height: 50, width: "100%"}}
@@ -201,7 +263,9 @@ export default function UserScreen({ navigation }) {
                             null
                             }
                     </Picker>
+                        }
                     <Button title="Request Page" onPress={() => navigation.navigate(''+selectedService)} />
+            
                 </Card>
 
                 {/* User Parking Reservation List Tap */}
@@ -260,6 +324,30 @@ export default function UserScreen({ navigation }) {
                                     <Text>You are not Subscriped</Text>
                                     <Button onPress={() => navigation.navigate("subscription")} title="Subscribe" />
                                 </>
+                        }
+                </Card>
+                <Card title="Rewards">
+                {
+                       
+                                <View>
+                                   <Reward />
+                                </View>
+                        }
+                </Card>
+                <Card title="Suggestions">
+                {
+                       
+                                <View>
+                                   <Suggestions />
+                                </View>
+                        }
+                </Card>
+                <Card title="Report Or Compaints">
+                {
+                       
+                                <View>
+                                   <Reports />
+                                </View>
                         }
                 </Card>
 
