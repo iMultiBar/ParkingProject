@@ -21,7 +21,7 @@ require("firebase/firestore");
 import moment from 'moment';
 
 import { Card } from 'react-native-elements';
-
+import * as Animatable from 'react-native-animatable';
 
 export default function RewardsScreen() {
     const [points, setPoints] = useState(0);
@@ -31,6 +31,8 @@ export default function RewardsScreen() {
     const [rewards, setRewards] = useState([]);
     const [rewardStatus, setRewardStatus] = useState(false);
     const [reports, setReports] = useState([]); 
+    const [carPlates, setCarPlates] = useState([]); 
+    const [found, setFound] = useState(false); 
 
     useEffect(() => {
         checkUserReports();
@@ -47,8 +49,25 @@ export default function RewardsScreen() {
     }, []);
 
     useEffect(() => {
+        db.collection("reports&complaints").onSnapshot(querySnapshot => {
+            const allReports = []; 
+            querySnapshot.forEach(doc => {
+                allReports.push({ id: doc.id, ...doc.data() }); 
+            }); 
+            setReports([...allReports]);
+        }); 
+    }, []); 
 
-    })
+    useEffect(() => {
+        db.collection("cars").onSnapshot(querySnapshot => {
+            const userCarPlates = []; 
+            querySnapshot.forEach(doc => {
+                userCarPlates.push({ id: doc.id, ...doc.data() });
+            });
+            setCarPlates([...userCarPlates]); 
+        }); 
+    }, []); 
+
 
     useEffect(() => {
         checkForUserRewards(); 
@@ -59,30 +78,70 @@ export default function RewardsScreen() {
 
 
     const checkUserReports = async () => {
-        let check = await db.collection("reports&complaints").doc(firebase.auth().currentUser.uid).get()
-        let reportData = check.data();
-        let reportStatus = reportData.status;
+        
+        for(let i = 0; i < carPlates.length; i++){
+            let firstCarPlateArray = carPlates[i]; 
+            for(let j = 0; j < firstCarPlateArray.length; j++){
+                for(let k = 0; k < reports.length; k++){
+                    if(reports[k].target === firstCarPlateArray[j]){
+                        setFound(true); 
+                    }
 
-        if (reportData !== null) {
-            setPoints(0);
-            await db.collection("users").doc(firebase.auth().currentUser.uid).collection("userRewards").doc("reward").update({
-                reward_points: points
-            });
+                    else{
+                        setFound(false); 
+                    }
+                }
+            }
         }
 
-        else if (reportStatus === "approved") {
-            setPoints(0);
-            await db.collection("users").doc(firebase.auth().currentUser.uid).collection("userRewards").doc("reward").update({
-                reward_points: points
-            });
+        let User = firebase.auth().currentUser.uid; 
+
+        for(let i = 0; i < reports.length; i++){
+            let firstReport = reports[i]; 
+            if(firstReport.from = currentUser && firstReport.status === "unapproved"){
+                setPoints(points + 1);
+                await db.collection("users").doc(User).collection("userRewards").doc("reward").update({
+                    reward_points: points
+                }); 
+            }
+
+            else if (firstReport.from = currentUser && firstReport.status === "approved"){
+                await db.collection("users").doc(User).collection("userRewards").doc("reward").update({
+                    reward_points: points
+                });
+            }
+
+            else {
+                await db.collection("users").doc(User).collection("userRewards").doc("reward").update({
+                    reward_points: points
+                });
+            }
         }
 
-        else {
-            setPoints(points + 1);
-            await db.collection("users").doc(firebase.auth().currentUser.uid).collection("userRewards").doc("reward").update({
-                reward_points: points
-            })
-        }
+
+        // let check = await db.collection("reports&complaints").doc(firebase.auth().currentUser.uid).get()
+        // let reportData = check.data();
+
+        // if (reportData !== null) {
+        //     setPoints(0);
+        //     await db.collection("users").doc(firebase.auth().currentUser.uid).collection("userRewards").doc("reward").update({
+        //         reward_points: points
+        //     });
+        // }
+
+        // else if (reportStatus === "approved") {
+        //     setPoints(0);
+        //     await db.collection("users").doc(firebase.auth().currentUser.uid).collection("userRewards").doc("reward").update({
+        //         reward_points: points
+        //     });
+        // }
+
+        // else {
+        //     setPoints(points + 1);
+        //     await db.collection("users").doc(firebase.auth().currentUser.uid).collection("userRewards").doc("reward").update({
+        //         reward_points: points
+        //     })
+        // }
     }
 
 
@@ -130,7 +189,7 @@ export default function RewardsScreen() {
             </Text>
 
             {rewardStatus === true ?
-                <View>
+                <Animatable.View animation="fadeInDown" direction="alternate" duration={2000}>
                     <Card
                         containerStyle={{ borderColor: "blue" }}
                         image={require('../assets/images/car_wash.png')}
@@ -150,8 +209,8 @@ export default function RewardsScreen() {
                             The expiry date for this reward is {expiryDuration}.
                                         </Text>
                     </Card>
-                </View> :
-                <View>
+                </Animatable.View> :
+                <Animatable.View animation="fadeInDown" direction="alternate" duration={2000}>
                     <Card
                         containerStyle={{ borderColor: "blue" }}
                         image={require('../assets/images/no-reward.png')}
@@ -165,7 +224,7 @@ export default function RewardsScreen() {
                             You haven't received any rewards from our parking app system.
                 </Text>
                     </Card>
-                </View> }
+                </Animatable.View> }
 
         </View>
     )
