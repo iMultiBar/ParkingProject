@@ -53,7 +53,7 @@ const getAvailableParkings = async() =>{
     let temp2 = []
     querySnapshot.forEach(doc =>{
       let info = doc.data()
-      temp.push("ok: ",info.parkingNumber)
+      temp.push(info.parkingNumber)
       temp2.push(info)
     })
     setParkingNumber1(temp)
@@ -94,6 +94,7 @@ const submit = () =>{
     status: "parked",
     userId: userInfo.id
   })
+  alert("done")
 }
 
 const retrunCar = async (n)=>{
