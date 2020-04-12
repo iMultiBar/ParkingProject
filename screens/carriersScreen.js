@@ -44,7 +44,7 @@ export default function carriersScreen() {
   const loadCarNumbers = async() =>{
     let load = await db.collection("cars").doc(firebase.auth().currentUser.uid).get()
     let cars = load.data()
-    let plates = cars.registerdCars
+    let plates = cars.registeredCars
     setUSerCars(plates)
   }
 
