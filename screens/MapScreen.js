@@ -62,7 +62,7 @@ export default function MapScreen(props) {
     groups.forEach(g => {
       init(g);
     });
-   // simulate();
+    simulate();
     
   }, []);
 
@@ -103,7 +103,7 @@ export default function MapScreen(props) {
       
         // select a random item
         const i = Math.floor(Math.random() * ppp.length)
-        
+        setFlag(!flag);
 
         // change it somehow
         // - must modify local copy of db data
@@ -125,15 +125,19 @@ export default function MapScreen(props) {
         // update the db
     
         // console.log('parking after simulation',ppp)
-        setParkings(ppp);
+        
         /* this code in the simulate method was messing up my database
            so i added some changes to it to make it work in my favor.
            i made it work with subcollections. i removed the id that was 
            being added inside my parkings because the database is not 
            made that way.*/
-        // await db.collection("parking").doc("yq4MTqaC4xMaAf9HArZp").collection(ppp[i].parkingGroup).doc(ppp[i].parkingNumber).set(ppp[i]);
-        console.log('simulated with item[', i, ']: ', ppp[i].status)
-        console.log(ppp[i].parkingGroup);
+           console.log(ppp[i]);
+           setParkings(ppp);
+           
+        //await db.collection("parking").doc("yq4MTqaC4xMaAf9HArZp").collection(ppp[i].parkingGroup).doc(ppp[i].parkingNumber).set(ppp[i]);
+        
+        // console.log('simulated with item[', i, ']: ', ppp[i].status)
+        // console.log(ppp[i].parkingGroup);
     }, DELAY * 1000)
 
 }
