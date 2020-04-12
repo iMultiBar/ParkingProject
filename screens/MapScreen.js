@@ -62,7 +62,7 @@ export default function MapScreen(props) {
     groups.forEach(g => {
       init(g);
     });
-    simulate();
+   // simulate();
     
   }, []);
 
@@ -84,7 +84,7 @@ export default function MapScreen(props) {
     const querySnapshot = await db.collection("parking").doc("yq4MTqaC4xMaAf9HArZp").
     collection(g).get()
     querySnapshot.forEach(doc => {
-    ppp.push({ pGroup:g,id: doc.id, ...doc.data() });
+    ppp.push({ parkingGroup:g,id: doc.id, ...doc.data() });
     });
     //console.log("donnnnnnnnnnnnnnnnnne init: ", ppp);
    // ppp = temp;
@@ -131,9 +131,9 @@ export default function MapScreen(props) {
            i made it work with subcollections. i removed the id that was 
            being added inside my parkings because the database is not 
            made that way.*/
-        // await db.collection("parking").doc("yq4MTqaC4xMaAf9HArZp").collection(ppp[i].pGroup).doc(ppp[i].parkingNumber).set(ppp[i]);
+        // await db.collection("parking").doc("yq4MTqaC4xMaAf9HArZp").collection(ppp[i].parkingGroup).doc(ppp[i].parkingNumber).set(ppp[i]);
         console.log('simulated with item[', i, ']: ', ppp[i].status)
-        console.log(ppp[i].pGroup);
+        console.log(ppp[i].parkingGroup);
     }, DELAY * 1000)
 
 }
@@ -163,6 +163,7 @@ export default function MapScreen(props) {
   const handleAdd = async (i,index) => {
     //console.log('chosen parking',chosen);
     var temp = chosen;
+    
     // console.log('this is chosen parks',temp);
     var parks = parkings;
     //console.log(i.status);
@@ -173,16 +174,16 @@ export default function MapScreen(props) {
         // console.log('parks',parks[index].status);
         setChosen(temp);
         setParkings(parks);
-        await db.collection("parking").doc("yq4MTqaC4xMaAf9HArZp").collection(parks[index].pGroup).doc(parks[index].parkingNumber).set(parks[index]);
+        await db.collection("parking").doc("yq4MTqaC4xMaAf9HArZp").collection(parks[index].parkingGroup).doc(parks[index].parkingNumber).set(parks[index]);
         setFlag(!flag);
       }
       else if(temp.includes(i) && i.status === 'hold'){
-        temp.push(i);
+        temp.splice(chosen.lastIndexOf(i),1);
         parks[index].status = 'free';
         // console.log('parks',parks[index].status);
         setChosen(temp);
         setParkings(parks);
-        await db.collection("parking").doc("yq4MTqaC4xMaAf9HArZp").collection(parks[index].pGroup).doc(parks[index].parkingNumber).set(parks[index]);
+        await db.collection("parking").doc("yq4MTqaC4xMaAf9HArZp").collection(parks[index].parkingGroup).doc(parks[index].parkingNumber).set(parks[index]);
         setFlag(!flag);
       } 
         else{
@@ -222,7 +223,7 @@ export default function MapScreen(props) {
         mapType={"satellite"}
         
       >
-        <TouchableOpacity onPress={() => setFocus(!focus)}><Text style={{color:'white'}}>Focus On Me is {focus?'true':'false'}</Text></TouchableOpacity>
+        <TouchableOpacity onPress={() => setFocus(!focus)}><Text style={{color:'white'}}>Focus is {focus?'On':'Off'}</Text></TouchableOpacity>
         {/* here i'm mapping the parkings array to show them as squares on the map */}
         {parkings.map((p,i) =>(
         /*
@@ -233,11 +234,12 @@ export default function MapScreen(props) {
         <Marker
           onPress={() => handleAdd(p,i)}
           key={i}
-          image={p.status === "free"? require('../assets/images/green.jpg')
-          : p.status === "taken"?require('../assets/images/red.jpg')
-          :require('../assets/images/yellow.jpg')}
+          style={{width:20,height:20}}
+          image={p.status === "free"? require('../assets/images/green(2).jpg')
+          : p.status === "taken"?require('../assets/images/red(2).jpg')
+          :require('../assets/images/yellow(2).jpg')}
           coordinate={{latitude:parseFloat(p.latitude),longitude:parseFloat(p.longitude)}}
-          title={`parking No.${p.parkingNumber} in parking group ${p.pGroup}`}
+          title={`parking No.${p.parkingNumber} in parking group ${p.parkingGroup}`}
           description={`Press here to reserve parking number ${p.parkingNumber}`}
         />
 
