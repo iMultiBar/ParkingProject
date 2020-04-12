@@ -77,13 +77,13 @@ export default function reservation(props) {
         console.log("fetching user:", User.data())
         setUser(User.data())
 
-
         const usersCars = await db.collection("cars").doc(firebase.auth().currentUser.uid).get()
         console.log("Fetching users Car List", usersCars.data())
         if(usersCars.data()){
+            console.log('zggg',usersCars.data().registeredCars)
             let cars = usersCars.data()
-            setCarList(cars.registerdCars)
-            handlePicker(cars.registerdCars)
+            setCarList(cars.registeredCars)
+            handlePicker(cars.registeredCars)
         }
     }   
 
@@ -96,6 +96,7 @@ export default function reservation(props) {
         setCarArr(temp)
         console.log("Help me daddy",carArr)
     }
+
     const handleNewCar = async (carPlate) => {
         if(carList){
             let temp = carList
@@ -125,19 +126,19 @@ export default function reservation(props) {
                 tempParking.push({
                     carPlate : carList[selectedCar[num]],
                     parking_id : parkings[num].id,
-                    parkingGroup: parkings[num].pGroup,
+                    parkingGroup: parkings[num].parkingGroup,
                     latitude:  parkings[num].latitude,
                     longitude:  parkings[num].longitude
                 })
                 parkings[num].status = 'taken';
                 console.log('turned to taken',parkings);
-                db.collection("parking").doc("yq4MTqaC4xMaAf9HArZp").collection(parkings[num].pGroup).doc(parkings[num].parkingNumber).set(parkings[num]);
+                db.collection("parking").doc("yq4MTqaC4xMaAf9HArZp").collection(parkings[num].parkingGroup).doc(parkings[num].parkingNumber).set(parkings[num]);
 
                 db.collection("users").doc(firebase.auth().currentUser.uid).collection("history").doc().set({
                     startDate: startTime,
                     endDate: endTime,
                     parkingNumber: parkings[num].parkingNumber,
-                    parkingGroup: parkings[num].pGroup
+                    parkingGroup: parkings[num].parkingGroup
                 })
             }
     

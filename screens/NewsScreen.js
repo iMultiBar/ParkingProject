@@ -101,6 +101,7 @@ export default function NewsScreen() {
 
 
   return (
+   
     <KeyboardAvoidingView behavior="padding">
     <ScrollView >
       <View style={styles.container}>

@@ -62,7 +62,7 @@ export default function MapScreen(props) {
     groups.forEach(g => {
       init(g);
     });
-    simulate();
+    //simulate();
     
   }, []);
 
@@ -103,7 +103,7 @@ export default function MapScreen(props) {
       
         // select a random item
         const i = Math.floor(Math.random() * ppp.length)
-        setFlag(!flag);
+        
 
         // change it somehow
         // - must modify local copy of db data
@@ -131,9 +131,9 @@ export default function MapScreen(props) {
            i made it work with subcollections. i removed the id that was 
            being added inside my parkings because the database is not 
            made that way.*/
-           console.log(ppp[i]);
-           setParkings(ppp);
-           
+          //  console.log(ppp[i]);
+          //  setParkings(ppp);
+          //  setFlag(!flag);
         //await db.collection("parking").doc("yq4MTqaC4xMaAf9HArZp").collection(ppp[i].parkingGroup).doc(ppp[i].parkingNumber).set(ppp[i]);
         
         // console.log('simulated with item[', i, ']: ', ppp[i].status)
