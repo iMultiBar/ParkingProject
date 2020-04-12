@@ -33,6 +33,7 @@ export default function MapScreen(props) {
   const [parkings, setParkings] = useState([]);
   const [flag, setFlag] = useState(true);
   const [chosen, setChosen] = useState([]);
+  const [groups , setGroups] = useState(['c-6','c-10','c-2','c-3','c-4','c-5']);
   // i used this variable because i was having a problem with the parkings
   // not loading in time therefore giving me errors. i used a second 
   // variable to help me solve that problem
@@ -57,7 +58,10 @@ export default function MapScreen(props) {
     simulate method.
   */
   useEffect(() => {
-    init();
+    groups.forEach(g => {
+      init(g);
+    });
+    
     // simulate();
     
   }, []);
@@ -73,62 +77,64 @@ export default function MapScreen(props) {
     
   // }
 
-  const init = async () => {
-    const temp = [];
+  const init = async (g) => {
+    //const temp = [];
     // do once only, not a listener
+    
     const querySnapshot = await db.collection("parking").doc("yq4MTqaC4xMaAf9HArZp").
-    collection('c-2').get()
+    collection(g).get()
     querySnapshot.forEach(doc => {
-      temp.push({ id: doc.id, ...doc.data() });
+    ppp.push({ pGroup:g,id: doc.id, ...doc.data() });
     });
-    // console.log("donnnnnnnnnnnnnnnnnne init: ", parkings);
-    ppp = temp;
-    setParkings(temp);
+    //console.log("donnnnnnnnnnnnnnnnnne init: ", ppp);
+   // ppp = temp;
+    setParkings([...ppp]);
 };
 
 
 
-//   const simulate = async () => {
-//     // get necessary data from db for simulation to start
-//     // await init()
+  const simulate = async () => {
+    // get necessary data from db for simulation to start
+    // await init()
 
-//     // simulate something (e.g. db update) every DELAY seconds
-//     setInterval(async () => {
+    // simulate something (e.g. db update) every DELAY seconds
+    setInterval(async () => {
       
-//         // select a random item
-//         const i = Math.floor(Math.random() * ppp.length)
+        // select a random item
+        const i = Math.floor(Math.random() * ppp.length)
+        const g = Math.floor(Math.random() * groups.length)
 
-//         // change it somehow
-//         // - must modify local copy of db data
-//         //   to avoid reloading from db
-//         const rnd = Math.random()
-//         let choice = ""
+        // change it somehow
+        // - must modify local copy of db data
+        //   to avoid reloading from db
+        const rnd = Math.random()
+        let choice = ""
 
-//         // - use percentages to decide what to do
-//         // - change to suit your own needs
-//         if(rnd < 0.3333) {
-//             choice = "free"
-//         } else if (rnd < .6666) {
-//             choice = "taken"
-//         } else {
-//             choice = "hold"
-//         }
-//         ppp[i].status = choice
+        // - use percentages to decide what to do
+        // - change to suit your own needs
+        if(rnd < 0.3333) {
+            choice = "free"
+        } else if (rnd < .6666) {
+            choice = "taken"
+        } else {
+            choice = "hold"
+        }
+        ppp[i].status = choice
         
-//         // update the db
+        // update the db
     
-//         console.log('parking after simulation',ppp)
-//         setParkings(ppp);
-//         /* this code in the simulate method was messing up my database
-//            so i added some changes to it to make it work in my favor.
-//            i made it work with subcollections. i removed the id that was 
-//            being added inside my parkings because the database is not 
-//            made that way.*/
-//         await db.collection("parking").doc("yq4MTqaC4xMaAf9HArZp").collection('c-2').doc(ppp[i].parkingNumber).set(ppp[i]);
-//         console.log('simulated with item[', i, ']: ', ppp[i].status)
-//     }, DELAY * 1000)
+        console.log('parking after simulation',ppp)
+        setParkings(ppp);
+        /* this code in the simulate method was messing up my database
+           so i added some changes to it to make it work in my favor.
+           i made it work with subcollections. i removed the id that was 
+           being added inside my parkings because the database is not 
+           made that way.*/
+        await db.collection("parking").doc("yq4MTqaC4xMaAf9HArZp").collection(groups[g]).doc(ppp[i].parkingNumber).set(ppp[i]);
+        console.log('simulated with item[', i, ']: ', ppp[i].status)
+    }, DELAY * 1000)
 
-// }
+}
 
 /* this method will get the user's current location as an object
    so that it will be used later */
@@ -165,7 +171,7 @@ export default function MapScreen(props) {
         console.log('parks',parks[index].status);
         setChosen(temp);
         setParkings(parks);
-        await db.collection("parking").doc("yq4MTqaC4xMaAf9HArZp").collection('c-2').doc(parks[index].parkingNumber).set(parks[index]);
+        await db.collection("parking").doc("yq4MTqaC4xMaAf9HArZp").collection(parks[index].pGroup).doc(parks[index].parkingNumber).set(parks[index]);
         setFlag(!flag);
       }
       else if(temp.includes(i) && i.status === 'hold'){
@@ -174,7 +180,7 @@ export default function MapScreen(props) {
         console.log('parks',parks[index].status);
         setChosen(temp);
         setParkings(parks);
-        await db.collection("parking").doc("yq4MTqaC4xMaAf9HArZp").collection('c-2').doc(parks[index].parkingNumber).set(parks[index]);
+        await db.collection("parking").doc("yq4MTqaC4xMaAf9HArZp").collection(parks[index].pGroup).doc(parks[index].parkingNumber).set(parks[index]);
         setFlag(!flag);
       } 
         else{
@@ -185,7 +191,7 @@ export default function MapScreen(props) {
     else{
       alert('this parking is taken')
     }
- 
+
   }
   const handleReserve = () => {
     props.navigation.navigate('Reservation',{chosen:chosen})
@@ -205,7 +211,14 @@ export default function MapScreen(props) {
         style={{width:"100%",height:500,flex:1}}
         showsUserLocation={true}
         followsUserLocation={false}
+        initialRegion={{
+          latitude: 25.360995,
+          longitude: 51.479728,
+          latitudeDelta:0,
+          longitudeDelta:0
+        }}
         mapType={"satellite"}
+        
       >
         {/* here i'm mapping the parkings array to show them as squares on the map */}
         {parkings.map((p,i) =>(
@@ -221,7 +234,7 @@ export default function MapScreen(props) {
           : p.status === "taken"?require('../assets/images/red.jpg')
           :require('../assets/images/yellow.jpg')}
           coordinate={{latitude:parseFloat(p.latitude),longitude:parseFloat(p.longitude)}}
-          title={`parking No.${p.parkingNumber}`}
+          title={`parking No.${p.parkingNumber} in parking group ${p.pGroup}`}
           description={`Press here to reserve parking number ${p.parkingNumber}`}
         />
 

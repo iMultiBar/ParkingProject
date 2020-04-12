@@ -10,13 +10,8 @@ import moment from "moment"
 
 import Cleaner from "./CleanerScreen"
 import Valet from "./ValetScreen"
-import Carriar from "./carrierScreen"
-import Reports from "./ReportScreen"
-import Reward from "./RewardsScreen"
-import Suggestions from "./SuggestionsScreen"
-
 //react elements:
-import { Card , Icon, Divider , Button, Avatar,ButtonGroup,Input   } from 'react-native-elements';
+import { Card , Icon, Divider , Button, Avatar,ButtonGroup   } from 'react-native-elements';
 
 //react animatable:
 import * as Animatable from "react-native-animatable";
@@ -30,7 +25,7 @@ export default function UserScreen({ navigation }) {
     const [selectedService , setSelectedService] = useState(null)
     const [reservation, setReservation] = useState(false)
     const [subscription, setSubscription] = useState(false)
-    const [requestList ,setRequestList] = useState(null)
+    const [requestList,setRequestList] = useState(null)
 
 
     useEffect(()=>{
@@ -118,35 +113,32 @@ export default function UserScreen({ navigation }) {
     const [buttonCarriar, setButtonCarriar ] = useState(['Carriar Manager', 'General']);
     const [buttonCleaner, setButtonCleaner ] = useState(['Cleaner Manager', 'General']);
     const [AdminSection, setButtonAdmin ] = useState(['Admin Manager', 'General']);
-    const [AdminSectionList, setButtonAdminList ] = useState(['Reports','Cleaner', "Valet", "Carriar", "Reward", "Suggest"]);
     const [ selectedIndex, setSelectedIndex ] = useState(0)
-    const [ selectedIndexA, setSelectedIndexA ] = useState(0)
   
   return (
       user ? 
         <View style={styles.container}>
             <View style={{padding:10,flexDirection:"row"}}>
                    
-                <View style={{ alignSelf:"flex-start",flexDirection:"row",marginRight:"50%"}}>
+                <View style={{ alignSelf:"flex-start",flexDirection:"row",marginRight:"60%"}}>
                     <Avatar
                         rounded
                         source={{ uri: firebase.auth().currentUser.photoURL  }}
                         size="medium"
                     />
-                    <Input value={user.displayName} disabled style={{padding:8}} />
-                    <Button
+                    <Text style={{padding:8}}>{user.displayName}</Text>
+                </View>
+                <Button
                 icon={
                         <Icon
-                        name='settings'
-                        type='AntDesign'
+                        name='settings-helper'
+                        type='material-community'
                         color='#517fa4'
                     />
                 }
                 onPress={() => navigation.navigate('Settings')}
                 type="clear"
                 />
-                </View>
-
 
        
             </View>
@@ -164,65 +156,30 @@ export default function UserScreen({ navigation }) {
                 }
                 containerStyle={{marginLeft:-1,height:35,width:"100%"}}
             />
-            {user.role == "admin" && selectedIndex == 0 ?
-            <ButtonGroup
-                onPress={setSelectedIndexA}
-                selectedIndex={selectedIndexA}
-                buttons={AdminSectionList }
-                containerStyle={{marginLeft:-1,height:35,width:"100%",marginTop:-6}}
-            />:null}
 
-            { selectedIndex == 0 ? 
+
+            {selectedIndex == 0 ? 
             <ScrollView >
-                   { user.role == "admin" ? selectedIndexA == 0 ? 
-                            <Card title="Reports">
-                                <Reports />
-                            </Card>
-                            : selectedIndexA == 1 ? 
-                            <Card title="Cleaner Manager">
-                                    <Cleaner />
-                                </Card>
-                                
-                            : selectedIndexA == 2 ? 
-                            <Card title="Valet Manager">
-                            <Valet />
-                    </Card>
-                            
-                            : selectedIndexA == 3 ? 
-                            <Card title="Carriar Manager">
-                            <Carriar />
-                    </Card>       
-                            
-                            : selectedIndexA == 4 ? 
-                            <Card title="Reward Manager">
-                            <Reward />
-                    </Card>
-                            : selectedIndexA == 5 ? 
-                            <Card title="Suggestion Manager">
-                            <Suggestions />
-                    </Card>
-                : null : null
-            }
                             {/* // Your Carrier View Tap */}
-                            { user.role == "carriar" ?
+                            { user.role == "carriar" || user.role == "admin" ?
                             <Card title="Carriar Manager">
-                                    <Carriar />
+                                    <Text>Soon ;></Text>
                             </Card>
                             :null
                             }
-                            { user.role == "cleaner"?
+                            { user.role == "cleaner" || user.role == "admin"?
                             <Card title="Cleaner Manager">
                                 <Cleaner />
                             </Card>
                             :null
                             }
-                            { user.role == "valet" ?
+                            { user.role == "valet" || user.role == "admin" ?
                             <Card title="Valet Manager">
                                     <Valet />
                             </Card>
-                            : null
+                            :null
                             }
-            </ScrollView>
+</ScrollView>
             :
             <ScrollView >
 
@@ -303,30 +260,6 @@ export default function UserScreen({ navigation }) {
                                     <Text>You are not Subscriped</Text>
                                     <Button onPress={() => navigation.navigate("subscription")} title="Subscribe" />
                                 </>
-                        }
-                </Card>
-                <Card title="Rewards">
-                {
-                       
-                                <View>
-                                   <Reward />
-                                </View>
-                        }
-                </Card>
-                <Card title="Suggestions">
-                {
-                       
-                                <View>
-                                   <Suggestions />
-                                </View>
-                        }
-                </Card>
-                <Card title="Report Or Compaints">
-                {
-                       
-                                <View>
-                                   <Reports />
-                                </View>
                         }
                 </Card>
 
