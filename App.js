@@ -252,7 +252,7 @@ export default function App(props) {
                     pickerRef={e => (pickerRef = e)}
                     selectedValue={department}
                     title={"Select a Department"}
-                    items={department}
+                    items={["IT","business","engineering","health and science","faculty"]}
                     style={{height: 50, width: "100%",}}
                     onCancel={() => {console.log("cancelled")}}
                     onValueChange={(itemValue, itemIndex) =>
