@@ -20,8 +20,8 @@ import CleanerScreen from '../screens/CleanerScreen'; // import the cleanerScree
 import NewsScreen from '../screens/NewsScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import SuggestionsScreen from '../screens/SuggestionsScreen';
-import CarriersScreen from '../screens/carriersScreen';
-import CarrierScreen from '../screens/carrierScreen';
+import CarrierScreen from '../screens/carriersScreen';
+import CarriersScreen from '../screens/carrierScreen';
 import ValetScreen from '../screens/ValetScreen'
 import ReservationScreen from '../screens/Reservation';
 import MapScreen from '../screens/MapScreen';
@@ -70,8 +70,8 @@ const UserScreenStack = createStackNavigator(
     Reservation: { screen: ReservationScreen }, 
     Suggestions: { screen:  SuggestionsScreen},
     Cleaner: { screen: CleanerScreen },
-    carriers: { screen: CarriersScreen },
     carrier: { screen: CarrierScreen },
+    carriers: { screen: CarriersScreen },
     valet: { screen: ValetScreen },
     clean: {screen: RequestCleaner},
     subscription: {screen: SubscriptionScreen},

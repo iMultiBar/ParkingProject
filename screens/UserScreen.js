@@ -44,6 +44,16 @@ export default function UserScreen({ navigation }) {
        getResList()
     },[])
 
+    const getResList = async () => {
+        console.log("god save the queen")
+        let temp = []
+        temp = await db.collection("reservation").doc(firebase.auth().currentUser.uid).get()
+        if(temp.data()){
+            setReservation(temp.data())
+            console.log("Fetching Reservation: ", temp.data())
+        }
+
+    }
     const getCarFromValet = async() =>{
         db.collection("requests").doc("valet").collection("valet").
         where("userId", "==", firebase.auth().currentUser.uid).onSnapshot(querySnapshot =>{
@@ -63,18 +73,6 @@ export default function UserScreen({ navigation }) {
     const getcar = () =>{
         db.collection("requests").doc("valet").collection("valet").doc(myCar[0].id).update({status: "requested"})
     }
-
-    const getResList = async () => {
-        console.log("god save the queen")
-        let temp = []
-        temp = await db.collection("reservation").doc(firebase.auth().currentUser.uid).get()
-        if(temp.data()){
-            setReservation(temp.data())
-            console.log("Fetching Reservation: ", temp.data())
-        }
-
-    }
-
     const EndRes = () => {
          db.collection("reservation").doc(firebase.auth().currentUser.uid).delete()
          getResList()
@@ -96,31 +94,9 @@ export default function UserScreen({ navigation }) {
             console.log("Please",doc.id)
             serv.push(doc.id)
         })
-
-        // let temp = [];
-        // if(user.role == "valet"){
-        //     const info = await db.collection('requests').doc("valet").collection("valet").get()
-        //     info.forEach(doc => {
-        //         console.log("Please",doc.id)
-        //         temp.push({id = doc.id,  ...doc.data()})
-        //     })
-        //     setRequestList(temp)
-        // } else if(user.role == "cleaner"){
-        //     const info = await db.collection('requests').doc("clean").collection("cleanRequest").get()
-        //     info.forEach(doc => {
-        //         console.log("Please",doc.id)
-        //         temp.push({id = doc.id,  ...doc.data()})
-        //     })
-        //     setRequestList(temp)
-        // } else if(user.role == "carrier"){
-        //     const info = await db.collection('requests').doc("carrier").collection("carrierRequest").get()
-        //     info.forEach(doc => {
-        //         console.log("Please",doc.id)
-        //         temp.push({id = doc.id,  ...doc.data()})
-        //     })
-        //     setRequestList(temp)
-        // }
-
+        
+        let s = serv.indexOf("valet")
+        serv.splice(s,1)
         setServiceList(serv)
     }
 
@@ -276,15 +252,15 @@ export default function UserScreen({ navigation }) {
                             {
                             serviceList ? 
                                 serviceList.map( (item, index) =>
-                                        <Picker.Item key={index} label={item} value={item} />
+                                    <Picker.Item key={index} label={item} value={item} /> 
                                 )
                             :
                             null
                             }
                     </Picker>
                         }
-                    <Button title="Request Page" onPress={() => navigation.push(selectedService)} />
-                    {myCar.length !== 0? <View>
+                            <Button title="Request Page" onPress={() => navigation.push(selectedService)} />
+                            {myCar.length !== 0? <View>
                         <Text>Your card is parked at: c-2</Text>
                         <Text>At parking number: {myCar[0].parkingLocation}</Text>
                         <Button title="Request the car" onPress={() =>getcar()} />
@@ -341,7 +317,7 @@ export default function UserScreen({ navigation }) {
                                    <Text>subscription Level: {subscription.type} </Text>
                                    <Text>Car wash Points: {subscription.carWashPoints} </Text>
                                    <Text>Valet Points: {subscription.valetPoints} </Text>
-                                    <Button title="Extend"/>  
+                                   <Button title="Subscribe" onPress={() => navigation.navigate("subscription")}/>  
                                 </View>
                             :
                                 <>
@@ -405,7 +381,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 15,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     paddingBottom:1
   },
 });
