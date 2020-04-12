@@ -118,7 +118,7 @@ export default function UserScreen({ navigation }) {
     const [buttonCarriar, setButtonCarriar ] = useState(['General','Carriar Manager' ]);
     const [buttonCleaner, setButtonCleaner ] = useState(['General', 'Cleaner Manager' ]);
     const [AdminSection, setButtonAdmin ] = useState(['General','Admin Manager']);
-    const [AdminSectionList, setButtonAdminList ] = useState(['Reports','Cleaner', "Valet", "Carriar", "Reward", "Suggest"]);
+    const [ AdminSectionList, setButtonAdminList ] = useState(['Reports','Cleaner', "Valet", "Carriar", "Reward", "Suggest"]);
     const [ selectedIndex, setSelectedIndex ] = useState(0)
     const [ selectedIndexA, setSelectedIndexA ] = useState(0)
   
@@ -262,7 +262,7 @@ export default function UserScreen({ navigation }) {
                             }
                     </Picker>
                         }
-                    <Button title="Request Page" onPress={() => navigation.navigate(selectedService)} />
+                    <Button title="Request Page" onPress={() => navigation.push(selectedService)} />
             
                 </Card>
 
