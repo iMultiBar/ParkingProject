@@ -113,11 +113,11 @@ export default function UserScreen({ navigation }) {
         });
         getResList()
     }
-    const [buttons, setButtons ] = useState(['','General']);
-    const [buttonValet, setButtonValet ] = useState(['Valet Manager', 'General']);
-    const [buttonCarriar, setButtonCarriar ] = useState(['Carriar Manager', 'General']);
-    const [buttonCleaner, setButtonCleaner ] = useState(['Cleaner Manager', 'General']);
-    const [AdminSection, setButtonAdmin ] = useState(['Admin Manager', 'General']);
+    const [buttons, setButtons ] = useState(['General']);
+    const [buttonValet, setButtonValet ] = useState(['General','Valet Manager' ]);
+    const [buttonCarriar, setButtonCarriar ] = useState(['General','Carriar Manager' ]);
+    const [buttonCleaner, setButtonCleaner ] = useState(['General', 'Cleaner Manager' ]);
+    const [AdminSection, setButtonAdmin ] = useState(['General','Admin Manager']);
     const [AdminSectionList, setButtonAdminList ] = useState(['Reports','Cleaner', "Valet", "Carriar", "Reward", "Suggest"]);
     const [ selectedIndex, setSelectedIndex ] = useState(0)
     const [ selectedIndexA, setSelectedIndexA ] = useState(0)
@@ -164,7 +164,7 @@ export default function UserScreen({ navigation }) {
                 }
                 containerStyle={{marginLeft:-1,height:35,width:"100%"}}
             />
-            {user.role == "admin" && selectedIndex == 0 ?
+            {user.role == "admin" && selectedIndex == 1 ?
             <ButtonGroup
                 onPress={setSelectedIndexA}
                 selectedIndex={selectedIndexA}
@@ -172,7 +172,7 @@ export default function UserScreen({ navigation }) {
                 containerStyle={{marginLeft:-1,height:35,width:"100%",marginTop:-6}}
             />:null}
 
-            { selectedIndex == 0 ? 
+            { selectedIndex == 1 ? 
             <ScrollView >
                    { user.role == "admin" ? selectedIndexA == 0 ? 
                             <Card title="Reports">
@@ -232,7 +232,7 @@ export default function UserScreen({ navigation }) {
                     <TouchableOpacity
                         onPress={() => {pickerRef.show()}}
                     >
-                    <Text>{selectedService === ""? "Select Service...": selectedService}</Text>
+                    <Text>{selectedService === null? "Select Service...": selectedService}</Text>
                     </TouchableOpacity>
                     <ReactNativePickerModule
                     pickerRef={e => (pickerRef = e)}
@@ -262,7 +262,7 @@ export default function UserScreen({ navigation }) {
                             }
                     </Picker>
                         }
-                    <Button title="Request Page" onPress={() => navigation.navigate(''+selectedService)} />
+                    <Button title="Request Page" onPress={() => navigation.navigate(selectedService)} />
             
                 </Card>
 
