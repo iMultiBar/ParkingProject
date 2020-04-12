@@ -62,7 +62,7 @@ export default function MapScreen(props) {
     groups.forEach(g => {
       init(g);
     });
-    //simulate();
+    simulate();
     
   }, []);
 
@@ -131,10 +131,12 @@ export default function MapScreen(props) {
            i made it work with subcollections. i removed the id that was 
            being added inside my parkings because the database is not 
            made that way.*/
-          //  console.log(ppp[i]);
-          //  setParkings(ppp);
-          //  setFlag(!flag);
-        //await db.collection("parking").doc("yq4MTqaC4xMaAf9HArZp").collection(ppp[i].parkingGroup).doc(ppp[i].parkingNumber).set(ppp[i]);
+
+           // simulator will make the code a bit slower
+           // turnning it off will enhance the app's performance
+         
+        setParkings(ppp);
+        await db.collection("parking").doc("yq4MTqaC4xMaAf9HArZp").collection(ppp[i].parkingGroup).doc(ppp[i].parkingNumber).set(ppp[i]);
         
         // console.log('simulated with item[', i, ']: ', ppp[i].status)
         // console.log(ppp[i].parkingGroup);

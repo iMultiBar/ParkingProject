@@ -10,7 +10,7 @@ class Payments {
             date: moment().format('DD/MM/YYYY, h:mm:ss a'),
             ammount: ammount
         })
-        console.log("done")
+        // console.log("done")
     }
 }
 export default new Payments()
