@@ -33,6 +33,7 @@ export default function MapScreen(props) {
   const [parkings, setParkings] = useState([]);
   const [flag, setFlag] = useState(true);
   const [chosen, setChosen] = useState([]);
+  const [focus,setFocus] = useState(false);
   const [groups , setGroups] = useState(['c-6','c-10','c-2','c-3','c-4','c-5']);
   // i used this variable because i was having a problem with the parkings
   // not loading in time therefore giving me errors. i used a second 
@@ -61,8 +62,7 @@ export default function MapScreen(props) {
     groups.forEach(g => {
       init(g);
     });
-    
-    // simulate();
+    simulate();
     
   }, []);
 
@@ -94,6 +94,7 @@ export default function MapScreen(props) {
 
 
   const simulate = async () => {
+    
     // get necessary data from db for simulation to start
     // await init()
 
@@ -102,7 +103,7 @@ export default function MapScreen(props) {
       
         // select a random item
         const i = Math.floor(Math.random() * ppp.length)
-        const g = Math.floor(Math.random() * groups.length)
+        
 
         // change it somehow
         // - must modify local copy of db data
@@ -123,15 +124,16 @@ export default function MapScreen(props) {
         
         // update the db
     
-        console.log('parking after simulation',ppp)
+        // console.log('parking after simulation',ppp)
         setParkings(ppp);
         /* this code in the simulate method was messing up my database
            so i added some changes to it to make it work in my favor.
            i made it work with subcollections. i removed the id that was 
            being added inside my parkings because the database is not 
            made that way.*/
-        await db.collection("parking").doc("yq4MTqaC4xMaAf9HArZp").collection(groups[g]).doc(ppp[i].parkingNumber).set(ppp[i]);
+        // await db.collection("parking").doc("yq4MTqaC4xMaAf9HArZp").collection(ppp[i].pGroup).doc(ppp[i].parkingNumber).set(ppp[i]);
         console.log('simulated with item[', i, ']: ', ppp[i].status)
+        console.log(ppp[i].pGroup);
     }, DELAY * 1000)
 
 }
@@ -161,14 +163,14 @@ export default function MapScreen(props) {
   const handleAdd = async (i,index) => {
     //console.log('chosen parking',chosen);
     var temp = chosen;
-    console.log('this is chosen parks',temp);
+    // console.log('this is chosen parks',temp);
     var parks = parkings;
     //console.log(i.status);
     if(i.status === 'free' || i.status === 'hold'){
       if(!temp.includes(i) && i.status === 'free'){
         temp.push(i);
         parks[index].status = 'hold';
-        console.log('parks',parks[index].status);
+        // console.log('parks',parks[index].status);
         setChosen(temp);
         setParkings(parks);
         await db.collection("parking").doc("yq4MTqaC4xMaAf9HArZp").collection(parks[index].pGroup).doc(parks[index].parkingNumber).set(parks[index]);
@@ -177,7 +179,7 @@ export default function MapScreen(props) {
       else if(temp.includes(i) && i.status === 'hold'){
         temp.push(i);
         parks[index].status = 'free';
-        console.log('parks',parks[index].status);
+        // console.log('parks',parks[index].status);
         setChosen(temp);
         setParkings(parks);
         await db.collection("parking").doc("yq4MTqaC4xMaAf9HArZp").collection(parks[index].pGroup).doc(parks[index].parkingNumber).set(parks[index]);
@@ -210,8 +212,8 @@ export default function MapScreen(props) {
       <MapView
         style={{width:"100%",height:500,flex:1}}
         showsUserLocation={true}
-        followsUserLocation={false}
-        initialRegion={{
+        followsUserLocation={focus}
+        Region={{
           latitude: 25.360995,
           longitude: 51.479728,
           latitudeDelta:0,
@@ -220,6 +222,7 @@ export default function MapScreen(props) {
         mapType={"satellite"}
         
       >
+        <TouchableOpacity onPress={() => setFocus(!focus)}><Text style={{color:'white'}}>Focus On Me is {focus?'true':'false'}</Text></TouchableOpacity>
         {/* here i'm mapping the parkings array to show them as squares on the map */}
         {parkings.map((p,i) =>(
         /*
