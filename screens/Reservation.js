@@ -125,19 +125,17 @@ export default function reservation(props) {
                 tempParking.push({
                     carPlate : carList[selectedCar[num]],
                     parking_id : parkings[num].id,
-                    parkingGroup: parkings[num].pGroup,
                     latitude:  parkings[num].latitude,
                     longitude:  parkings[num].longitude
                 })
                 parkings[num].status = 'taken';
                 console.log('turned to taken',parkings);
-                db.collection("parking").doc("yq4MTqaC4xMaAf9HArZp").collection(parkings[num].pGroup).doc(parkings[num].parkingNumber).set(parkings[num]);
+                db.collection("parking").doc("yq4MTqaC4xMaAf9HArZp").collection('c-2').doc(parkings[num].parkingNumber).set(parkings[num]);
 
                 db.collection("users").doc(firebase.auth().currentUser.uid).collection("history").doc().set({
                     startDate: startTime,
                     endDate: endTime,
-                    parkingNumber: parkings[num].parkingNumber,
-                    parkingGroup: parkings[num].pGroup
+                    parkingNumber: parkings[num].parkingNumber
                 })
             }
     
@@ -150,9 +148,6 @@ export default function reservation(props) {
                     startTime,
                     endTime
             })
-
-            props.navigation.navigate('Map');
-
         }
 
 
