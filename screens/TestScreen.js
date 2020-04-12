@@ -92,13 +92,16 @@ export default function TestScreen() {
       const requestClean = firebase.functions().httpsCallable("requestCarClean");
       const  res = await requestClean({parkingLocation, plat, dateSubmit})
       Payments.pay("clean request", "one point", firebase.auth().currentUser.uid)
+      alert("Done")
     }else if(check === true && (currentFreePoints <= 0 || currentFreePoints === null)){
       alert("you don't have enough points")
     }else{
       const requestClean = firebase.functions().httpsCallable("requestCarClean");
       const  res = await requestClean({parkingLocation, plat, dateSubmit})
       Payments.pay("clean request", 30, firebase.auth().currentUser.uid)
+      alert("Done")
     }
+    
   }
 
 

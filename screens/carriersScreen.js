@@ -7,6 +7,7 @@ import ReactNativePickerModule from "react-native-picker-module"
 import firebase from "firebase/app";
 import "firebase/auth";
 import db from "../db.js";
+import Payments from "./Payments"
 
 
 export default function carriersScreen() {
@@ -61,7 +62,7 @@ export default function carriersScreen() {
     showMode('time');
   };
 
-  const sendCarrierRequest = async () =>{
+  const sendCarrierRequest = () =>{
     db.collection("requests").doc("carrier").collection("carrierRequest").add({
       parkingLocation: parkingLocation,
       platNumber: plat,
@@ -70,6 +71,7 @@ export default function carriersScreen() {
       carrierUid: null
     })
     Payments.pay("carrier request", 30, firebase.auth().currentUser.uid)
+    alert("Done")
   }
 
   return (
@@ -134,7 +136,7 @@ export default function carriersScreen() {
             onChange={onChange}
           />)}
         </View>
-        <Button onPress={() =>sendCarrierRequest()} title="Send Clean Request!" />
+        <Button onPress={() =>sendCarrierRequest()} title="Send carriar Request!" />
     </ScrollView>
   );
 }

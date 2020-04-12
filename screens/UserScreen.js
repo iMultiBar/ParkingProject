@@ -266,7 +266,7 @@ export default function UserScreen({ navigation }) {
                         }
                             <Button title="Request Page" onPress={() => navigation.push(selectedService)} />
                             {myCar.length !== 0? <View>
-                        <Text>Your card is parked at: c-2</Text>
+                        <Text>Your car is parked at: c-2</Text>
                         <Text>At parking number: {myCar[0].parkingLocation}</Text>
                         <Button title="Request the car" onPress={() =>getcar()} />
                     </View> : null}
