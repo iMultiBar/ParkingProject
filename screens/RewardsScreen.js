@@ -184,7 +184,7 @@ export default function RewardsScreen() {
             }}>
                 Welcome to your
             </Text>
-            <Text style={{ fontSize: 25, fontFamily: "serif", textAlign: "center", marginBottom: 20 }}>
+            <Text style={{ fontSize: 25, textAlign: "center", marginBottom: 20 }}>
                 Rewards Screen!
             </Text>
 
@@ -197,13 +197,13 @@ export default function RewardsScreen() {
                         imageStyle={{ height: 250 }}
                     >
                         <Text style={{
-                            marginBottom: 10, fontFamily: "serif",
+                            marginBottom: 10,
                             textAlign: "center", fontSize: 18, fontWeight: "bold"
                         }}>
                             You have received a reward for a {type} service.
                                         </Text>
                         <Text style={{
-                            marginBottom: 10, fontFamily: "serif",
+                            marginBottom: 10, 
                             textAlign: "center", fontSize: 18, fontWeight: "bold"
                         }}>
                             The expiry date for this reward is {expiryDuration}.
