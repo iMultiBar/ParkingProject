@@ -4,6 +4,7 @@
  global.atob = global.atob || decode;
 import { AppLoading } from "expo";
 import { Asset } from "expo-asset";
+import ReactNativePickerModule from "react-native-picker-module"
 import * as Font from "expo-font";
 import React, { useState, useEffect } from "react";
 import {
