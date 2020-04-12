@@ -10,7 +10,7 @@ import ReactNativePickerModule from "react-native-picker-module"
 import { Button } from "react-native-elements"
 import { Card, Input } from "react-native-elements";
 
-   export default function SubscriptionScreen() {
+   export default function SubscriptionScreen(props) {
     let pickerRef = null;
      const [subscription, setSubscription] = useState(null)
      const [userSub, setUserSub] = useState([]);
@@ -80,6 +80,8 @@ import { Card, Input } from "react-native-elements";
           Payments.pay("gold subscription", 80, firebase.auth().currentUser.uid)
         }
         GetInfo();
+        alert("Done")
+        props.navigation.navigate('UserScreen');
       };
    return(
             flag == false ? <Card>
@@ -122,8 +124,8 @@ import { Card, Input } from "react-native-elements";
                 </Card>
                 {subscription != null ? <Card>
                 <Text>you selected: {details[0]}</Text>
-                <Text>you selected: {details[1]}</Text>
-                <Text>you selected: {details[2]}</Text>
+                <Text>you car wash points: {details[1]}</Text>
+                <Text>you valet point: {details[2]}</Text>
                 </Card> : null}
                 <View style={{height: 20}}></View>
                     <Button title="subscribe and pay" onPress={handleSubscription}/>

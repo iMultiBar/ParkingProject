@@ -81,10 +81,15 @@ export default function UserScreen({ navigation }) {
     const GetUser = async () => {
         const User = await db.collection("users").doc(firebase.auth().currentUser.uid).get()
         setUser(User.data())
-        const Sub = await db.collection("users").doc(firebase.auth().currentUser.uid).collection("subscription").doc("sub").get()
-        if(Sub.data()){
-            setSubscription(Sub.data());
-        }
+        db.collection("users").doc(firebase.auth().currentUser.uid).collection("subscription").onSnapshot(subscription =>{
+            subscription.forEach( doc=>{
+                if(doc.data()){
+                    setSubscription(doc.data());
+                }
+            })
+            
+        })
+        
     }
 
     const getServices = async ()  => {
