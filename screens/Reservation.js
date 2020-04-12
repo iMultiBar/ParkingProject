@@ -104,7 +104,7 @@ export default function reservation(props) {
                 temp.push(carPlate)
                 console.log(carPlate, "=>", temp)
                 await db.collection("cars").doc(firebase.auth().currentUser.uid).set({
-                    registerdCars:temp
+                    registeredCars:temp
                 })
             } else {
                 console.log("Wrong input")

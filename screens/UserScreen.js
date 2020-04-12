@@ -31,17 +31,38 @@ export default function UserScreen({ navigation }) {
     const [reservation, setReservation] = useState(false)
     const [subscription, setSubscription] = useState(false)
     const [requestList ,setRequestList] = useState(null)
-
+    const [myCar, setMyCar] = useState([])
 
     useEffect(()=>{
         GetUser()
         getServices()
+        getCarFromValet()
     },[])
     //...............
 
     useEffect(() => {
        getResList()
     },[])
+
+    const getCarFromValet = async() =>{
+        db.collection("requests").doc("valet").collection("valet").
+        where("userId", "==", firebase.auth().currentUser.uid).onSnapshot(querySnapshot =>{
+            let temp = []
+            querySnapshot.forEach(doc =>{
+                let info = doc.data()
+                if(info.status === "parked"){
+                    temp.push({id: doc.id, ...doc.data()})
+                    console.log("temp: ",temp)
+
+                }
+            })
+            setMyCar([...temp])
+        })
+    }
+
+    const getcar = () =>{
+        db.collection("requests").doc("valet").collection("valet").doc(myCar[0].id).update({status: "requested"})
+    }
 
     const getResList = async () => {
         console.log("god save the queen")
@@ -263,6 +284,11 @@ export default function UserScreen({ navigation }) {
                     </Picker>
                         }
                     <Button title="Request Page" onPress={() => navigation.push(selectedService)} />
+                    {myCar.length !== 0? <View>
+                        <Text>Your card is parked at: c-2</Text>
+                        <Text>At parking number: {myCar[0].parkingLocation}</Text>
+                        <Button title="Request the car" onPress={() =>getcar()} />
+                    </View> : null}
             
                 </Card>
 

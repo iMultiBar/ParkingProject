@@ -77,7 +77,7 @@ export default function SettingsScreen() {
             temp.push(carPlate)
             console.log(carPlate, "=>", temp)
             await db.collection("cars").doc(firebase.auth().currentUser.uid).set({
-                registerdCars:temp
+                registeredCars:temp
             })
         } else {
             console.log("Wrong input")
@@ -93,7 +93,7 @@ export default function SettingsScreen() {
     let index = carList.indexOf(carPlate)
     temp.splice(index, 1)
     await db.collection("cars").doc(firebase.auth().currentUser.uid).set({
-      registerdCars:temp
+      registeredCars:temp
     })
   }
 

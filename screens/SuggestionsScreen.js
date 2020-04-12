@@ -112,7 +112,6 @@ export default function SuggestionsScreen() {
    </Animatable.View>
      
    ))}
-        <Button title="Logout" onPress={handleLogout} />
     </View> 
     : 
     <ScrollView>
@@ -177,7 +176,6 @@ export default function SuggestionsScreen() {
 
         </View>
         <Button title="submit" onPress={handleSubmit} />
-        <Button title="Logout" onPress={handleLogout} />
     </View>
     </ScrollView>
   );

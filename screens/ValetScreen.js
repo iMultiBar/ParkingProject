@@ -19,6 +19,11 @@ const [availablePP, setAvailablePP] = useState([]);
 const [parkingnNumber1, setParkingNumber1] = useState([])
 const [valetCars, setValetCars] = useState([])
 
+useEffect(() =>{
+  getCars()
+  getAvailableParkings()
+},[])
+
 const addCar = () =>{
   setFlag(!flag)
   setUserInfo(null)
@@ -48,7 +53,7 @@ const getAvailableParkings = async() =>{
     let temp2 = []
     querySnapshot.forEach(doc =>{
       let info = doc.data()
-      temp.push(info.parkingNumber)
+      temp.push("ok: ",info.parkingNumber)
       temp2.push(info)
     })
     setParkingNumber1(temp)
@@ -58,10 +63,7 @@ const getAvailableParkings = async() =>{
 }
 
 
-useEffect(() =>{
-  getCars()
-  getAvailableParkings()
-},[])
+
 
 
 
