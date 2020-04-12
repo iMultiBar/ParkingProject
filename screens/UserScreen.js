@@ -1,6 +1,6 @@
 //@refresh reset
 import React,{ useState, useEffect} from 'react';
-import { ScrollView, StyleSheet,Text, Picker,View,Image, ShadowPropTypesIOS } from 'react-native';
+import { ScrollView, StyleSheet,Text, Picker,View } from 'react-native';
 import db from '../db';
 
 import firebase from "firebase/app";
@@ -11,7 +11,7 @@ import moment from "moment"
 import Cleaner from "./CleanerScreen"
 import Valet from "./ValetScreen"
 //react elements:
-import { Card , Icon, Divider , Button, Avatar   } from 'react-native-elements';
+import { Card , Icon, Divider , Button, Avatar,ButtonGroup   } from 'react-native-elements';
 
 //react animatable:
 import * as Animatable from "react-native-animatable";
@@ -108,16 +108,23 @@ export default function UserScreen({ navigation }) {
         });
         getResList()
     }
-
+    const [buttons, setButtons ] = useState(['General']);
+    const [buttonValet, setButtonValet ] = useState(['Valet Manager', 'General']);
+    const [buttonCarriar, setButtonCarriar ] = useState(['Carriar Manager', 'General']);
+    const [buttonCleaner, setButtonCleaner ] = useState(['Cleaner Manager', 'General']);
+    const [AdminSection, setButtonAdmin ] = useState(['Admin Manager', 'General']);
+    const [ selectedIndex, setSelectedIndex ] = useState(0)
+  
   return (
       user ? 
         <View style={styles.container}>
-            <View style={{padding:15,flexDirection:"row"}}>
+            <View style={{padding:10,flexDirection:"row"}}>
                    
                 <View style={{ alignSelf:"flex-start",flexDirection:"row",marginRight:"60%"}}>
                     <Avatar
                         rounded
                         source={{ uri: firebase.auth().currentUser.photoURL  }}
+                        size="medium"
                     />
                     <Text style={{padding:8}}>{user.displayName}</Text>
                 </View>
@@ -136,13 +143,47 @@ export default function UserScreen({ navigation }) {
        
             </View>
 
-            <Divider style={{ backgroundColor: 'blue' }} />
+            <Divider style={{ backgroundColor: 'blue', marginBottom:-6 }} />
+            <ButtonGroup
+                onPress={setSelectedIndex}
+                selectedIndex={selectedIndex}
+                buttons={
+                    user.role == "carriar" ? buttonCarriar 
+                :   user.role == "cleaner" ? buttonCleaner  
+                :   user.role == "valet" ? buttonValet 
+                :   user.role == "admin" ? AdminSection
+                :   buttons
+                }
+                containerStyle={{marginLeft:-1,height:35,width:"100%"}}
+            />
 
 
-
-
+            {selectedIndex == 0 ? 
+            <ScrollView >
+                            {/* // Your Carrier View Tap */}
+                            { user.role == "carriar" || user.role == "admin" ?
+                            <Card title="Carriar Manager">
+                                    <Text>Soon ;></Text>
+                            </Card>
+                            :null
+                            }
+                            { user.role == "cleaner" || user.role == "admin"?
+                            <Card title="Cleaner Manager">
+                                <Cleaner />
+                            </Card>
+                            :null
+                            }
+                            { user.role == "valet" || user.role == "admin" ?
+                            <Card title="Valet Manager">
+                                    <Valet />
+                            </Card>
+                            :null
+                            }
+</ScrollView>
+            :
             <ScrollView >
 
+                
                 {/* Request Service */}
                 <Card title="Request Service">
                 <Picker
@@ -224,27 +265,9 @@ export default function UserScreen({ navigation }) {
 
     
                         
-                {/* // Your Carrier View Tap */}
-                { user.role == "carriar" ?
-                <Card title="Carriar Manager">
-                        <Text>Soon ;></Text>
-                </Card>
-                :null
-                }
-                { user.role == "cleaner" ?
-                <Card title="Cleaner Manager">
-                    <Cleaner />
-                </Card>
-                :null
-                }
-                { user.role == "valet" ?
-                <Card title="Valet Manager">
-                        <Valet />
-                </Card>
-                :null
-                }
-                
+
             </ScrollView>
+            }
         </View> 
     :
     
