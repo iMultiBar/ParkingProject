@@ -113,7 +113,7 @@ export default function UserScreen({ navigation }) {
         });
         getResList()
     }
-    const [buttons, setButtons ] = useState(['General']);
+    const [buttons, setButtons ] = useState(['','General']);
     const [buttonValet, setButtonValet ] = useState(['Valet Manager', 'General']);
     const [buttonCarriar, setButtonCarriar ] = useState(['Carriar Manager', 'General']);
     const [buttonCleaner, setButtonCleaner ] = useState(['Cleaner Manager', 'General']);
@@ -223,10 +223,8 @@ export default function UserScreen({ navigation }) {
                             : null
                             }
             </ScrollView>
-            :
+            : 
             <ScrollView >
-
-                
                 {/* Request Service */}
                 <Card title="Request Service">
                 {Platform.OS === "ios"? 
