@@ -84,19 +84,8 @@ export default function TestScreen() {
     showMode('time');
   };
 
-  // this function will decide and send the clean request. 
-  // the function will receive an argument called check which it will be eather true or false.
-  // which will be used in the if statement.
 
-  // the if statement will handle the request that user press on yes button and if the user have more than 1 point to do the action
-  // the action will cut a point from his subscription by updateing the value in the database.
-  // after that it will call a serverless function called (requestCarClean) which from it it will add the request in the database.
-
-  // the else if will handle if the user clicked yes without haveing point in his account.
-
-  // the else will handle the request without haveing a point. like from his money.
-
-  // one each query i added await so the request clean waits for the data to come back to complete the promise
+  
   const sendCleanRequest = async (check) =>{
     if(check === true && currentFreePoints > 0){
       let c = await db.collection("users").doc(firebase.auth().currentUser.uid).collection("subscription").doc("sub").update({carWashPoints: currentFreePoints-1})

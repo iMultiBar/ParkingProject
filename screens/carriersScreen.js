@@ -69,6 +69,7 @@ export default function carriersScreen() {
       status: false,
       carrierUid: null
     })
+    Payments.pay("carrier request", 30, firebase.auth().currentUser.uid)
   }
 
   return (
